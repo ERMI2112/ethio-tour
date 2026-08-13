@@ -1,0 +1,16 @@
+@import 'bootstrap/dist/css/bootstrap.min.css';
+
+:root {
+    --ethio-tour-green: #0f5132;
+    --ethio-tour-gold: #d4a017;
+}
+
+body {
+    min-height: 100vh;
+    background: #f8f9fa;
+}
+
+.navbar-brand {
+    color: var(--ethio-tour-green) !important;
+    font-weight: 700;
+}
