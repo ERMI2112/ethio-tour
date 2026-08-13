@@ -6,9 +6,6 @@
             <div class="col-md-8 col-lg-6">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body p-4 p-md-5">
-                        @if (session('status'))
-                            <div class="alert alert-success">{{ session('status') }}</div>
-                        @endif
                         @yield('auth-content')
                     </div>
                 </div>

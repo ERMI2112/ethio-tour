@@ -8,34 +8,14 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="d-flex flex-column">
-    <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
-        <div class="container">
-            <a class="navbar-brand" href="{{ route('home') }}">Ethio Tour</a>
-            <div class="d-flex align-items-center gap-2">
-                <span class="navbar-text text-muted">Smart Tourism Services</span>
-                @auth
-                    <a class="btn btn-outline-secondary btn-sm" href="{{ route('account') }}">Account</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button class="btn btn-outline-danger btn-sm" type="submit">Log out</button>
-                    </form>
-                @else
-                    <a class="btn btn-outline-primary btn-sm" href="{{ route('login') }}">Log in</a>
-                    <a class="btn btn-primary btn-sm" href="{{ route('register') }}">Register</a>
-                @endauth
-            </div>
-        </div>
-    </nav>
+    @include('layouts.partials.navigation')
 
     <main class="flex-grow-1">
+        @include('layouts.partials.flash-messages')
         @yield('content')
     </main>
 
-    <footer class="border-top bg-white py-3 mt-auto">
-        <div class="container text-center text-muted small">
-            &copy; {{ now()->year }} Ethio Tour. Foundation phase.
-        </div>
-    </footer>
+    @include('layouts.partials.footer')
     @stack('scripts')
 </body>
 </html>
