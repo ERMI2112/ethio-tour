@@ -3,15 +3,15 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
+    protected $primaryKey = 'user_id';
 
     /**
      * The attributes that are mass assignable.
@@ -19,9 +19,9 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
+        'role',
     ];
 
     /**
@@ -42,8 +42,42 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function tourist()
+    {
+        return $this->hasOne(Tourist::class, 'user_id', 'user_id');
+    }
+
+    public function tourGuide()
+    {
+        return $this->hasOne(TourGuide::class, 'user_id', 'user_id');
+    }
+
+    public function serviceProvider()
+    {
+        return $this->hasOne(ServiceProvider::class, 'user_id', 'user_id');
+    }
+
+    public function tourismBureauOfficer()
+    {
+        return $this->hasOne(TourismBureauOfficer::class, 'user_id', 'user_id');
+    }
+
+    public function administrator()
+    {
+        return $this->hasOne(Administrator::class, 'user_id', 'user_id');
+    }
+
+    public function reportsGenerated()
+    {
+        return $this->hasMany(Report::class, 'generated_by_user_id', 'user_id');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id', 'user_id');
     }
 }
