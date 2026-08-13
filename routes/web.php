@@ -6,11 +6,23 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\PublicCategoryController;
+use App\Http\Controllers\PublicDestinationController;
+use App\Http\Controllers\PublicHeritageSiteController;
+use App\Http\Controllers\PublicTourismServiceController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
 })->name('home');
+
+Route::get('/destinations', [PublicDestinationController::class, 'index'])->name('destinations.index');
+Route::get('/destinations/{destination}', [PublicDestinationController::class, 'show'])->name('destinations.show');
+Route::get('/heritage-sites', [PublicHeritageSiteController::class, 'index'])->name('heritage-sites.index');
+Route::get('/heritage-sites/{heritageSite}', [PublicHeritageSiteController::class, 'show'])->name('heritage-sites.show');
+Route::get('/tourism-services', [PublicTourismServiceController::class, 'index'])->name('tourism-services.index');
+Route::get('/tourism-services/{tourismService}', [PublicTourismServiceController::class, 'show'])->name('tourism-services.show');
+Route::get('/categories', [PublicCategoryController::class, 'index'])->name('categories.index');
 
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');

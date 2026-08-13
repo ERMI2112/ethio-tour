@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Category;
+use App\Models\Destination;
+use App\Models\TourismService;
+use Illuminate\Http\Request;
+use Illuminate\View\View;
+
+class PublicTourismServiceController extends Controller
+{
+    public function index(Request $request): View
+    {
+        $categoryId = $request->integer('category');
+        $destinationId = $request->integer('destination');
+        $search = $request->string('q')->trim()->value();
+
+        $services = TourismService::query()
+            ->with(['category', 'destination', 'serviceProvider'])
+            ->when($categoryId, fn ($query) => $query->where('category_id', $categoryId))
+            ->when($destinationId, fn ($query) => $query->where('destination_id', $destinationId))
+            ->when($search, fn ($query) => $query->where(function ($query) use ($search) {
+                $query->where('service_name', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%")
+                    ->orWhereHas('serviceProvider', fn ($query) => $query->where('business_name', 'like', "%{$search}%"));
+            }))
+            ->orderBy('service_name')
+            ->get();
+
+        $categories = Category::orderBy('category_name')->get();
+        $destinations = Destination::orderBy('name')->get();
+
+        return view('public.tourism-services.index', compact('services', 'categories', 'destinations', 'categoryId', 'destinationId', 'search'));
+    }
+
+    public function show(TourismService $tourismService): View
+    {
+        $tourismService->load(['category', 'destination', 'serviceProvider']);
+
+        return view('public.tourism-services.show', compact('tourismService'));
+    }
+}

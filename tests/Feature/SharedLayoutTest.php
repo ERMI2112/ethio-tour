@@ -16,7 +16,10 @@ class SharedLayoutTest extends TestCase
 
         $response->assertOk()
             ->assertSee('Primary navigation', false)
-            ->assertSee('Tourism Information')
+            ->assertSee('Destinations')
+            ->assertSee('Heritage Sites')
+            ->assertSee('Tourism Services')
+            ->assertSee('Categories')
             ->assertSee('Map')
             ->assertSee('Log in')
             ->assertSee('Register')

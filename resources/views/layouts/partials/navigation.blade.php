@@ -7,7 +7,10 @@
 
         <div class="collapse navbar-collapse" id="primary-navigation">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><x-ui.nav-placeholder label="Tourism Information" /></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('destinations.index') }}">Destinations</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('heritage-sites.index') }}">Heritage Sites</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('tourism-services.index') }}">Tourism Services</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Categories</a></li>
                 <li class="nav-item"><x-ui.nav-placeholder label="Map" /></li>
                 @auth
                     <li class="nav-item"><x-ui.nav-placeholder label="Bookings" /></li>
