@@ -27,6 +27,7 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
             'role' => 'tourist',
+            'is_active' => true,
         ];
     }
 }

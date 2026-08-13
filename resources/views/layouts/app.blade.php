@@ -11,7 +11,19 @@
     <nav class="navbar navbar-expand-lg bg-white border-bottom shadow-sm">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">Ethio Tour</a>
-            <span class="navbar-text text-muted">Smart Tourism Services</span>
+            <div class="d-flex align-items-center gap-2">
+                <span class="navbar-text text-muted">Smart Tourism Services</span>
+                @auth
+                    <a class="btn btn-outline-secondary btn-sm" href="{{ route('account') }}">Account</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button class="btn btn-outline-danger btn-sm" type="submit">Log out</button>
+                    </form>
+                @else
+                    <a class="btn btn-outline-primary btn-sm" href="{{ route('login') }}">Log in</a>
+                    <a class="btn btn-primary btn-sm" href="{{ route('register') }}">Register</a>
+                @endauth
+            </div>
         </div>
     </nav>
 
@@ -24,5 +36,6 @@
             &copy; {{ now()->year }} Ethio Tour. Foundation phase.
         </div>
     </footer>
+    @stack('scripts')
 </body>
 </html>

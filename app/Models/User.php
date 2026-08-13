@@ -22,6 +22,7 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'is_active',
     ];
 
     /**
@@ -43,6 +44,7 @@ class User extends Authenticatable
     {
         return [
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
     }
 
@@ -79,5 +81,10 @@ class User extends Authenticatable
     public function notifications()
     {
         return $this->hasMany(Notification::class, 'user_id', 'user_id');
+    }
+
+    public function ownsProfile(object $profile): bool
+    {
+        return isset($profile->user_id) && (int) $profile->user_id === (int) $this->user_id;
     }
 }
