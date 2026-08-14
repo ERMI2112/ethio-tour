@@ -8,6 +8,10 @@ class TourGuide extends Model
 {
     protected $primaryKey = 'guide_id';
 
+    protected $attributes = [
+        'verification_status' => 'pending',
+    ];
+
     protected $fillable = ['user_id', 'license_number', 'expertise', 'availability_status'];
 
     public function user()

@@ -18,9 +18,14 @@
                 <a class="btn btn-primary" href="{{ route('tour-guide.profile.edit') }}">Edit profile</a>
             </div>
 
+            @php($verificationClass = match ($guide->verification_status) {
+                'verified' => 'text-bg-success',
+                'rejected' => 'text-bg-danger',
+                default => 'text-bg-warning text-dark',
+            })
             <div class="alert alert-secondary d-flex gap-3 align-items-start" role="status">
                 <span class="fw-semibold">Verification status</span>
-                <span>The current approved database does not yet store a guide verification decision. Verification is managed in a later Tourism Bureau phase.</span>
+                <span><span class="badge {{ $verificationClass }}">{{ ucfirst($guide->verification_status) }}</span> This Bureau-controlled decision cannot be changed from your profile.</span>
             </div>
 
             <div class="row g-3 mb-4">
