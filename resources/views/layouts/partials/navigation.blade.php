@@ -26,10 +26,15 @@
                     @elseif (auth()->user()->role === 'tour_guide')
                         <li class="nav-item"><x-ui.nav-placeholder label="Tour Guide Portal" /></li>
                     @elseif (auth()->user()->role === 'service_provider')
-                        <li class="nav-item"><x-ui.nav-placeholder label="Service Provider Portal" /></li>
                         @if (auth()->user()->serviceProvider?->provider_type === 'hotel')
-                            <li class="nav-item"><a class="nav-link" href="{{ route('hotel.profile') }}">Hotel Management</a></li>
-                            <li class="nav-item"><a class="nav-link" href="{{ route('hotel.reservations.index') }}">Hotel Reservations</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('hotel.dashboard') }}">Hotel Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('hotel.profile') }}">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('hotel.services.index') }}">Room Types</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('hotel.rooms.index') }}">Rooms</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('hotel.reservations.index') }}">Reservations</a></li>
+                            <li class="nav-item"><x-ui.nav-placeholder label="Reports" /></li>
+                        @else
+                            <li class="nav-item"><x-ui.nav-placeholder label="Service Provider Portal" /></li>
                         @endif
                     @elseif (auth()->user()->role === 'tourism_bureau_officer')
                         <li class="nav-item"><x-ui.nav-placeholder label="Tourism Bureau Portal" /></li>

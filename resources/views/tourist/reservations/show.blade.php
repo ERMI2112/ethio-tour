@@ -3,8 +3,14 @@
 @section('title', 'Reservation Details #BK-' . sprintf('%05d', $booking->booking_id))
 
 @section('content')
-<div class="container py-5">
-    <a href="{{ route('tourist.reservations.index') }}" class="text-decoration-none small">&larr; Back to My Reservations</a>
+<div class="container py-4 py-lg-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small mb-2">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('tourist.reservations.index') }}">My Bookings</a></li>
+            <li class="breadcrumb-item active" aria-current="page">#BK-{{ sprintf('%05d', $booking->booking_id) }}</li>
+        </ol>
+    </nav>
 
     <div class="d-flex justify-content-between align-items-center mt-3 mb-4">
         <div>
@@ -12,28 +18,7 @@
             <p class="text-muted small mb-0">Requested on {{ $booking->booking_date ? $booking->booking_date->format('F d, Y at H:i') : $booking->created_at->format('F d, Y') }}</p>
         </div>
         <div>
-            @switch($booking->status)
-                @case('pending')
-                    <span class="badge bg-warning text-dark fs-6 px-3 py-2">Pending Review</span>
-                    @break
-                @case('accepted')
-                    <span class="badge bg-info text-dark fs-6 px-3 py-2">Accepted</span>
-                    @break
-                @case('payment_pending')
-                    <span class="badge bg-primary fs-6 px-3 py-2">Payment Pending</span>
-                    @break
-                @case('confirmed')
-                    <span class="badge bg-success fs-6 px-3 py-2">Confirmed</span>
-                    @break
-                @case('rejected')
-                    <span class="badge bg-danger fs-6 px-3 py-2">Rejected</span>
-                    @break
-                @case('cancelled')
-                    <span class="badge bg-secondary fs-6 px-3 py-2">Cancelled</span>
-                    @break
-                @default
-                    <span class="badge bg-light text-dark fs-6 px-3 py-2">{{ ucfirst($booking->status) }}</span>
-            @endswitch
+            <x-ui.status-badge :status="$booking->status" />
         </div>
     </div>
 
@@ -48,14 +33,24 @@
                 <div class="card-body p-4">
                     <h3 class="h4 text-primary">{{ $booking->tourismService->service_name ?? 'N/A' }}</h3>
                     <p class="text-muted mb-3">Provided by <strong>{{ $booking->tourismService->serviceProvider->business_name ?? 'N/A' }}</strong></p>
-                    <p class="mb-4">{{ $booking->tourismService->description ?? '' }}</p>
+                    <p class="mb-2">{{ $booking->tourismService->description ?? '' }}</p>
 
                     @php
+                        $roomType = $booking->tourismService->hotelRoomType ?? null;
                         $res = $booking->hotelRoomReservation;
                         $nights = $res ? max(1, (int) $res->check_in_date->diffInDays($res->check_out_date)) : 1;
                         $nightlyPrice = $booking->tourismService->price ?? 0;
                         $totalCost = $nights * $nightlyPrice;
                     @endphp
+
+                    @if ($roomType)
+                        <div class="d-flex flex-wrap gap-2 mb-4">
+                            <span class="badge bg-light text-dark border">Capacity: {{ $roomType->capacity }} guest(s)</span>
+                            @foreach ($roomType->amenities ?? [] as $amenity)
+                                <span class="badge bg-secondary-subtle text-secondary border">{{ $amenity }}</span>
+                            @endforeach
+                        </div>
+                    @endif
 
                     <div class="row g-3 p-3 bg-light rounded border">
                         <div class="col-sm-6">
@@ -112,7 +107,7 @@
                         </form>
                     @elseif ($booking->status === 'payment_pending')
                         <div class="alert alert-info small mb-0">
-                            <strong>Acceptance Confirmed!</strong> Payment integration will be enabled in Phase 6E.
+                            <strong>Awaiting Payment</strong> — Your request was accepted and a room is allocated, but your stay is not yet confirmed.
                         </div>
                     @endif
                 </div>

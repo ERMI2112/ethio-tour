@@ -3,8 +3,14 @@
 @section('title', 'Hotel Reservation #BK-' . sprintf('%05d', $booking->booking_id))
 
 @section('content')
-<div class="container py-5">
-    <a href="{{ route('hotel.reservations.index') }}" class="text-decoration-none small">&larr; Back to Reservations</a>
+<div class="container py-4 py-lg-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small mb-2">
+            <li class="breadcrumb-item"><a href="{{ route('hotel.dashboard') }}">Hotel Dashboard</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('hotel.reservations.index') }}">Reservations</a></li>
+            <li class="breadcrumb-item active" aria-current="page">#BK-{{ sprintf('%05d', $booking->booking_id) }}</li>
+        </ol>
+    </nav>
 
     <div class="d-flex justify-content-between align-items-center mt-3 mb-4">
         <div>
@@ -12,28 +18,7 @@
             <p class="text-muted small mb-0">Received on {{ $booking->booking_date ? $booking->booking_date->format('F d, Y at H:i') : $booking->created_at->format('F d, Y') }}</p>
         </div>
         <div>
-            @switch($booking->status)
-                @case('pending')
-                    <span class="badge bg-warning text-dark fs-6 px-3 py-2">Pending Decision</span>
-                    @break
-                @case('accepted')
-                    <span class="badge bg-info text-dark fs-6 px-3 py-2">Accepted</span>
-                    @break
-                @case('payment_pending')
-                    <span class="badge bg-primary fs-6 px-3 py-2">Payment Pending</span>
-                    @break
-                @case('confirmed')
-                    <span class="badge bg-success fs-6 px-3 py-2">Confirmed</span>
-                    @break
-                @case('rejected')
-                    <span class="badge bg-danger fs-6 px-3 py-2">Rejected</span>
-                    @break
-                @case('cancelled')
-                    <span class="badge bg-secondary fs-6 px-3 py-2">Cancelled</span>
-                    @break
-                @default
-                    <span class="badge bg-light text-dark fs-6 px-3 py-2">{{ ucfirst($booking->status) }}</span>
-            @endswitch
+            <x-ui.status-badge :status="$booking->status" />
         </div>
     </div>
 
@@ -110,7 +95,7 @@
                         <span>{{ $nights }} night(s)</span>
                     </div>
                     <div class="d-flex justify-content-between fs-5 fw-bold text-primary mb-4">
-                        <span>Calculated Revenue</span>
+                        <span>Estimated Booking Value</span>
                         <span>{{ number_format($totalCost, 2) }} ETB</span>
                     </div>
 

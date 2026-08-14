@@ -3,7 +3,13 @@
 @section('title', 'My Hotel Bookings')
 
 @section('content')
-<div class="container py-5">
+<div class="container py-4 py-lg-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small mb-2">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">My Bookings</li>
+        </ol>
+    </nav>
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 mb-1">My Hotel Reservations</h1>
@@ -27,7 +33,7 @@
                     <a class="nav-link {{ $status === 'accepted' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'accepted']) }}">Accepted</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $status === 'payment_pending' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'payment_pending']) }}">Payment Pending</a>
+                    <a class="nav-link {{ $status === 'payment_pending' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'payment_pending']) }}">Awaiting Payment</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ $status === 'rejected' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'rejected']) }}">Rejected</a>
@@ -87,28 +93,7 @@
                                         <span class="fw-bold">{{ number_format($totalCost, 2) }} ETB</span>
                                     </td>
                                     <td>
-                                        @switch($booking->status)
-                                            @case('pending')
-                                                <span class="badge bg-warning text-dark">Pending Review</span>
-                                                @break
-                                            @case('accepted')
-                                                <span class="badge bg-info text-dark">Accepted</span>
-                                                @break
-                                            @case('payment_pending')
-                                                <span class="badge bg-primary">Payment Pending</span>
-                                                @break
-                                            @case('confirmed')
-                                                <span class="badge bg-success">Confirmed</span>
-                                                @break
-                                            @case('rejected')
-                                                <span class="badge bg-danger">Rejected</span>
-                                                @break
-                                            @case('cancelled')
-                                                <span class="badge bg-secondary">Cancelled</span>
-                                                @break
-                                            @default
-                                                <span class="badge bg-light text-dark">{{ ucfirst($booking->status) }}</span>
-                                        @endswitch
+                                        <x-ui.status-badge :status="$booking->status" />
                                     </td>
                                     <td>
                                         <div class="d-flex gap-2">

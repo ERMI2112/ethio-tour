@@ -7,17 +7,16 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\HotelProviderController;
+use App\Http\Controllers\HotelProviderReservationController;
+use App\Http\Controllers\HotelReservationController;
 use App\Http\Controllers\HotelRoomController;
 use App\Http\Controllers\HotelServiceController;
 use App\Http\Controllers\PublicCategoryController;
 use App\Http\Controllers\PublicDestinationController;
 use App\Http\Controllers\PublicHeritageSiteController;
 use App\Http\Controllers\PublicTourismServiceController;
-use Illuminate\Support\Facades\Route;
-
-use App\Http\Controllers\HotelProviderReservationController;
-use App\Http\Controllers\HotelReservationController;
 use App\Http\Controllers\TouristReservationController;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
@@ -62,8 +61,9 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::patch('/reservations/{booking}/cancel', [TouristReservationController::class, 'cancel'])->name('reservations.cancel');
     });
 
-    Route::prefix('hotel-management')->name('hotel.')->middleware(['role:service_provider', 'hotel-provider'])->group(function () {
-        Route::get('/', [HotelProviderController::class, 'show'])->name('profile');
+    Route::prefix('hotel')->name('hotel.')->middleware(['role:service_provider', 'hotel-provider'])->group(function () {
+        Route::get('/', [HotelProviderController::class, 'dashboard'])->name('dashboard');
+        Route::get('/profile', [HotelProviderController::class, 'show'])->name('profile');
         Route::get('/profile/edit', [HotelProviderController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [HotelProviderController::class, 'update'])->name('profile.update');
 
@@ -76,4 +76,3 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::patch('/reservations/{booking}/reject', [HotelProviderReservationController::class, 'reject'])->name('reservations.reject');
     });
 });
-

@@ -213,11 +213,16 @@ class HotelProviderManagementTest extends TestCase
     public function test_hotel_navigation_is_only_shown_to_hotel_providers(): void
     {
         $hotel = $this->hotelContext();
-        $this->actingAs($hotel['user'])->get('/')->assertSee('Hotel Management')->assertSee(route('hotel.profile'));
+        $this->actingAs($hotel['user'])->get('/')
+            ->assertSee('Hotel Dashboard')
+            ->assertSee(route('hotel.dashboard'))
+            ->assertSee(route('hotel.reservations.index'));
 
         $restaurant = User::factory()->create(['role' => 'service_provider']);
         ServiceProvider::create(['user_id' => $restaurant->user_id, 'business_name' => 'Restaurant', 'provider_type' => 'restaurant', 'status' => 'approved']);
-        $this->actingAs($restaurant)->get('/')->assertDontSee('Hotel Management');
+        $this->actingAs($restaurant)->get('/')
+            ->assertDontSee('Hotel Dashboard')
+            ->assertSee('Service Provider Portal');
     }
 
     private function hotelContext(string $email = 'hotel@example.com'): array

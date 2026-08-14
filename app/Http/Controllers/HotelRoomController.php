@@ -13,13 +13,18 @@ class HotelRoomController extends Controller
 {
     public function index(Request $request): View
     {
-        $rooms = HotelRoom::query()
-            ->with('hotelRoomType.tourismService')
-            ->whereHas('hotelRoomType.tourismService', fn ($query) => $query->where('provider_id', $request->user()->serviceProvider->provider_id))
-            ->orderBy('room_number')
+        $roomTypes = HotelRoomType::query()
+            ->with([
+                'tourismService',
+                'hotelRooms' => fn ($query) => $query->withCount('hotelRoomReservations')->orderBy('room_number'),
+            ])
+            ->whereHas('tourismService', fn ($query) => $query->where('provider_id', $request->user()->serviceProvider->provider_id))
+            ->orderBy('room_type_id')
             ->get();
 
-        return view('hotel.rooms.index', compact('rooms'));
+        $rooms = $roomTypes->flatMap->hotelRooms;
+
+        return view('hotel.rooms.index', compact('roomTypes', 'rooms'));
     }
 
     public function create(Request $request): View

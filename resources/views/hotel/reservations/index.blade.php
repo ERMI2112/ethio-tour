@@ -1,13 +1,20 @@
 @extends('layouts.app')
 
-@section('title', 'Incoming Hotel Reservations')
+@section('title', 'Hotel Reservations')
 
 @section('content')
-<div class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="container py-4 py-lg-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small mb-2">
+            <li class="breadcrumb-item"><a href="{{ route('hotel.dashboard') }}">Hotel Dashboard</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Reservations</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div>
-            <h1 class="h3 mb-1">Incoming Hotel Reservations</h1>
-            <p class="text-muted small mb-0">Manage customer booking requests for your hotel</p>
+            <h1 class="h2 mb-1">Reservations</h1>
+            <p class="text-muted small mb-0">Requests shown here apply only to your hotel.</p>
         </div>
         <div class="d-flex gap-2">
             <a href="{{ route('hotel.services.index') }}" class="btn btn-outline-secondary btn-sm">Room Types</a>
@@ -19,25 +26,14 @@
 
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-white py-3">
-            <ul class="nav nav-pills card-header-pills">
-                <li class="nav-item">
-                    <a class="nav-link {{ empty($status) ? 'active' : '' }}" href="{{ route('hotel.reservations.index') }}">All</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ $status === 'pending' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'pending']) }}">Pending</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ $status === 'payment_pending' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'payment_pending']) }}">Payment Pending</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ $status === 'accepted' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'accepted']) }}">Accepted</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ $status === 'rejected' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'rejected']) }}">Rejected</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link {{ $status === 'cancelled' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'cancelled']) }}">Cancelled</a>
-                </li>
+            <ul class="nav nav-pills card-header-pills flex-wrap">
+                <li class="nav-item"><a class="nav-link {{ empty($status) ? 'active' : '' }}" href="{{ route('hotel.reservations.index') }}">All</a></li>
+                <li class="nav-item"><a class="nav-link {{ $status === 'pending' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'pending']) }}">Pending</a></li>
+                <li class="nav-item"><a class="nav-link {{ $status === 'accepted' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'accepted']) }}">Accepted</a></li>
+                <li class="nav-item"><a class="nav-link {{ $status === 'payment_pending' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'payment_pending']) }}">Awaiting Payment</a></li>
+                <li class="nav-item"><a class="nav-link {{ $status === 'confirmed' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'confirmed']) }}">Confirmed</a></li>
+                <li class="nav-item"><a class="nav-link {{ $status === 'rejected' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'rejected']) }}">Rejected</a></li>
+                <li class="nav-item"><a class="nav-link {{ $status === 'cancelled' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'cancelled']) }}">Cancelled</a></li>
             </ul>
         </div>
         <div class="card-body p-0">
@@ -62,10 +58,7 @@
                         </thead>
                         <tbody>
                             @foreach ($bookings as $booking)
-                                @php
-                                    $res = $booking->hotelRoomReservation;
-                                    $nights = $res ? max(1, (int) $res->check_in_date->diffInDays($res->check_out_date)) : 1;
-                                @endphp
+                                @php($res = $booking->hotelRoomReservation)
                                 <tr>
                                     <td>
                                         <a href="{{ route('hotel.reservations.show', $booking) }}" class="fw-bold text-decoration-none">
@@ -80,7 +73,7 @@
                                     <td>
                                         @if ($res)
                                             <div class="small fw-semibold">{{ $res->check_in_date->format('M d, Y') }}</div>
-                                            <div class="small text-muted">to {{ $res->check_out_date->format('M d, Y') }} ({{ $nights }} n, {{ $res->guest_count }} g)</div>
+                                            <div class="small text-muted">to {{ $res->check_out_date->format('M d, Y') }} ({{ $res->guest_count }} guest(s))</div>
                                         @else
                                             <span class="text-muted small">N/A</span>
                                         @endif
@@ -92,30 +85,7 @@
                                             <span class="text-muted small">Unassigned</span>
                                         @endif
                                     </td>
-                                    <td>
-                                        @switch($booking->status)
-                                            @case('pending')
-                                                <span class="badge bg-warning text-dark">Pending</span>
-                                                @break
-                                            @case('accepted')
-                                                <span class="badge bg-info text-dark">Accepted</span>
-                                                @break
-                                            @case('payment_pending')
-                                                <span class="badge bg-primary">Payment Pending</span>
-                                                @break
-                                            @case('confirmed')
-                                                <span class="badge bg-success">Confirmed</span>
-                                                @break
-                                            @case('rejected')
-                                                <span class="badge bg-danger">Rejected</span>
-                                                @break
-                                            @case('cancelled')
-                                                <span class="badge bg-secondary">Cancelled</span>
-                                                @break
-                                            @default
-                                                <span class="badge bg-light text-dark">{{ ucfirst($booking->status) }}</span>
-                                        @endswitch
-                                    </td>
+                                    <td><x-ui.status-badge :status="$booking->status" /></td>
                                     <td>
                                         <div class="d-flex gap-1">
                                             <a href="{{ route('hotel.reservations.show', $booking) }}" class="btn btn-outline-secondary btn-sm">View</a>
@@ -139,11 +109,24 @@
                     </table>
                 </div>
                 @if ($bookings->hasPages())
-                    <div class="p-3 border-top">
-                        {{ $bookings->links() }}
-                    </div>
+                    <div class="p-3 border-top">{{ $bookings->links() }}</div>
                 @endif
             @endif
+        </div>
+    </div>
+<div class="card border-0 shadow-sm">
+        <div class="card-header bg-white py-3">
+            <h2 class="h5 mb-0">Reservation status guide</h2>
+        </div>
+        <div class="card-body py-3">
+            <div class="d-flex flex-wrap gap-3 small">
+                <span><x-ui.status-badge :status="'pending'" /> Awaiting your decision.</span>
+                <span><x-ui.status-badge :status="'accepted'" /> Accepted; awaiting payment before confirmation.</span>
+                <span><x-ui.status-badge :status="'payment_pending'" /> Room allocated; not yet confirmed until paid.</span>
+                <span><x-ui.status-badge :status="'confirmed'" /> Payment received and stay confirmed.</span>
+                <span><x-ui.status-badge :status="'rejected'" /> Request declined.</span>
+                <span><x-ui.status-badge :status="'cancelled'" /> Cancelled by the guest.</span>
+            </div>
         </div>
     </div>
 </div>
