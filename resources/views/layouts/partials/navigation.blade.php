@@ -11,6 +11,7 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('heritage-sites.index') }}">Heritage Sites</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('tourism-services.index') }}">Tourism Services</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Categories</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('tour-guides.index') }}">Tour Guides</a></li>
                 <li class="nav-item"><x-ui.nav-placeholder label="Map" /></li>
                 @auth
                     @if (auth()->user()->role === 'tourist')

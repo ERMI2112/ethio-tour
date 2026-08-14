@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'My Hotel Bookings')
+@section('title', 'My Bookings')
 
 @section('content')
 <div class="container py-4 py-lg-5">
@@ -12,10 +12,10 @@
     </nav>
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h1 class="h3 mb-1">My Hotel Reservations</h1>
-            <p class="text-muted small mb-0">View and manage your hotel reservation requests</p>
+            <h1 class="h3 mb-1">My Bookings</h1>
+            <p class="text-muted small mb-0">View and manage your tourism booking requests</p>
         </div>
-        <a href="{{ route('tourism-services.index') }}" class="btn btn-primary btn-sm">Explore Hotels</a>
+        <a href="{{ route('tourism-services.index') }}" class="btn btn-primary btn-sm">Explore Services</a>
     </div>
 
     @include('layouts.partials.flash-messages')
@@ -55,43 +55,37 @@
                         <thead class="table-light">
                             <tr>
                                 <th>Booking Ref</th>
-                                <th>Hotel & Room</th>
-                                <th>Check-in / Check-out</th>
-                                <th>Guests</th>
-                                <th>Total Cost</th>
+                                <th>Service / Guide</th>
+                                <th>Dates</th>
+                                <th>Party size</th>
+                                <th>Cost</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($bookings as $booking)
-                                @php
-                                    $res = $booking->hotelRoomReservation;
-                                    $nights = $res ? max(1, (int) $res->check_in_date->diffInDays($res->check_out_date)) : 1;
-                                    $totalCost = $booking->tourismService ? $nights * $booking->tourismService->price : 0;
-                                @endphp
+                                @php($isGuideBooking = $booking->guide_id !== null && $booking->tourGuideReservation)
+                                @php($res = $booking->hotelRoomReservation)
                                 <tr>
                                     <td>
                                         <a href="{{ route('tourist.reservations.show', $booking) }}" class="fw-bold text-decoration-none">
                                             #BK-{{ sprintf('%05d', $booking->booking_id) }}
                                         </a>
                                     </td>
-                                    <td>
-                                        <div class="fw-bold">{{ $booking->tourismService->service_name ?? 'N/A' }}</div>
-                                        <div class="small text-muted">{{ $booking->tourismService->serviceProvider->business_name ?? '' }}</div>
-                                    </td>
-                                    <td>
-                                        @if ($res)
-                                            <div class="small fw-semibold">{{ $res->check_in_date->format('M d, Y') }}</div>
-                                            <div class="small text-muted">to {{ $res->check_out_date->format('M d, Y') }} ({{ $nights }} night(s))</div>
-                                        @else
-                                            <span class="text-muted small">N/A</span>
-                                        @endif
-                                    </td>
-                                    <td>{{ $res->guest_count ?? '-' }}</td>
-                                    <td>
-                                        <span class="fw-bold">{{ number_format($totalCost, 2) }} ETB</span>
-                                    </td>
+                                    @if ($isGuideBooking)
+                                        <td><div class="fw-bold">Tour Guide</div><div class="small text-muted">License {{ $booking->tourGuide->license_number }}</div></td>
+                                        <td><div class="small fw-semibold">{{ $booking->tourGuideReservation->start_date->format('M d, Y') }}</div><div class="small text-muted">to {{ $booking->tourGuideReservation->end_date->format('M d, Y') }}</div></td>
+                                        <td>{{ $booking->tourGuideReservation->number_of_tourists }}</td>
+                                        <td><span class="text-muted">Not priced</span></td>
+                                    @else
+                                        @php($nights = $res ? max(1, (int) $res->check_in_date->diffInDays($res->check_out_date)) : 1)
+                                        @php($totalCost = $booking->tourismService ? $nights * $booking->tourismService->price : 0)
+                                        <td><div class="fw-bold">{{ $booking->tourismService->service_name ?? 'N/A' }}</div><div class="small text-muted">{{ $booking->tourismService->serviceProvider->business_name ?? '' }}</div></td>
+                                        <td>@if ($res)<div class="small fw-semibold">{{ $res->check_in_date->format('M d, Y') }}</div><div class="small text-muted">to {{ $res->check_out_date->format('M d, Y') }} ({{ $nights }} night(s))</div>@else<span class="text-muted small">N/A</span>@endif</td>
+                                        <td>{{ $res->guest_count ?? '-' }}</td>
+                                        <td><span class="fw-bold">{{ number_format($totalCost, 2) }} ETB</span></td>
+                                    @endif
                                     <td>
                                         <x-ui.status-badge :status="$booking->status" />
                                     </td>

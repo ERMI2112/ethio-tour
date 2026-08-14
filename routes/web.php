@@ -14,10 +14,12 @@ use App\Http\Controllers\HotelServiceController;
 use App\Http\Controllers\PublicCategoryController;
 use App\Http\Controllers\PublicDestinationController;
 use App\Http\Controllers\PublicHeritageSiteController;
+use App\Http\Controllers\PublicTourGuideController;
 use App\Http\Controllers\PublicTourismServiceController;
-use App\Http\Controllers\TouristReservationController;
-use App\Http\Controllers\TourGuidePortalController;
+use App\Http\Controllers\TourGuideBookingController;
 use App\Http\Controllers\TourGuideBookingRequestController;
+use App\Http\Controllers\TourGuidePortalController;
+use App\Http\Controllers\TouristReservationController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -32,6 +34,8 @@ Route::get('/tourism-services', [PublicTourismServiceController::class, 'index']
 Route::get('/tourism-services/{tourismService}', [PublicTourismServiceController::class, 'show'])->name('tourism-services.show');
 Route::post('/tourism-services/{tourismService}/check-availability', [HotelReservationController::class, 'checkAvailability'])->name('tourism-services.check-availability');
 Route::get('/categories', [PublicCategoryController::class, 'index'])->name('categories.index');
+Route::get('/tour-guides', [PublicTourGuideController::class, 'index'])->name('tour-guides.index');
+Route::get('/tour-guides/{guide}', [PublicTourGuideController::class, 'show'])->name('tour-guides.show');
 
 Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
@@ -73,6 +77,11 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/reservations', [TouristReservationController::class, 'index'])->name('reservations.index');
         Route::get('/reservations/{booking}', [TouristReservationController::class, 'show'])->name('reservations.show');
         Route::patch('/reservations/{booking}/cancel', [TouristReservationController::class, 'cancel'])->name('reservations.cancel');
+    });
+
+    Route::middleware('role:tourist')->prefix('tour-guides/{guide}')->name('tour-guides.')->group(function () {
+        Route::get('/book', [TourGuideBookingController::class, 'create'])->name('book');
+        Route::post('/book', [TourGuideBookingController::class, 'store'])->name('book.store');
     });
 
     Route::prefix('hotel')->name('hotel.')->middleware(['role:service_provider', 'hotel-provider'])->group(function () {

@@ -66,6 +66,25 @@ class TourGuideAvailabilityService
         }
     }
 
+    public function hasOverlappingTouristRequest(
+        int $touristId,
+        TourGuide $guide,
+        string|CarbonInterface $startDate,
+        string|CarbonInterface $endDate,
+    ): bool {
+        [$start, $end] = $this->validatedDateRange($startDate, $endDate);
+
+        return TourGuideReservation::query()
+            ->whereHas('booking', function (Builder $query) use ($touristId, $guide): void {
+                $query->where('tourist_id', $touristId)
+                    ->where('guide_id', $guide->guide_id)
+                    ->whereIn('status', ['pending', ...self::INVENTORY_RESERVING_STATUSES]);
+            })
+            ->whereDate('start_date', '<', $end->toDateString())
+            ->whereDate('end_date', '>', $start->toDateString())
+            ->exists();
+    }
+
     /**
      * @return array{0: CarbonImmutable, 1: CarbonImmutable}
      */

@@ -24,6 +24,43 @@
 
     @include('layouts.partials.flash-messages')
 
+    @if ($booking->guide_id !== null && $booking->tourGuideReservation)
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3">
+                        <h2 class="h5 mb-0">Tour Guide Booking Details</h2>
+                    </div>
+                    <div class="card-body p-4">
+                        <h3 class="h4 text-primary">Tour Guide</h3>
+                        <p class="text-muted mb-3">License {{ $booking->tourGuide->license_number ?? 'N/A' }}</p>
+                        <div class="row g-3 p-3 bg-light rounded border">
+                            <div class="col-sm-6"><span class="text-muted small d-block">Start Date</span><strong>{{ $booking->tourGuideReservation->start_date->format('F d, Y') }}</strong></div>
+                            <div class="col-sm-6"><span class="text-muted small d-block">End Date</span><strong>{{ $booking->tourGuideReservation->end_date->format('F d, Y') }}</strong></div>
+                            <div class="col-sm-6"><span class="text-muted small d-block">Party Size</span><strong>{{ $booking->tourGuideReservation->number_of_tourists }} tourist(s)</strong></div>
+                            <div class="col-sm-6"><span class="text-muted small d-block">Cost</span><strong class="text-muted">Not priced</strong></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm mb-4">
+                    <div class="card-header bg-white py-3"><h2 class="h5 mb-0">Booking Status</h2></div>
+                    <div class="card-body p-4">
+                        @if ($booking->status === 'pending')
+                            <form method="POST" action="{{ route('tourist.reservations.cancel', $booking) }}" onsubmit="return confirm('Are you sure you want to cancel this booking request?');">
+                                @csrf
+                                @method('PATCH')
+                                <button type="submit" class="btn btn-outline-danger w-100">Cancel Request</button>
+                            </form>
+                        @elseif ($booking->status === 'payment_pending')
+                            <div class="alert alert-info small mb-0"><strong>Awaiting Payment</strong> — Payment will be available in a later phase.</div>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    @else
     <div class="row g-4">
         <div class="col-lg-8">
             <div class="card border-0 shadow-sm mb-4">
@@ -114,5 +151,6 @@
             </div>
         </div>
     </div>
+    @endif
 </div>
 @endsection

@@ -25,6 +25,8 @@ class TouristReservationController extends Controller
                 'tourismService.serviceProvider',
                 'tourismService.hotelRoomType',
                 'hotelRoomReservation.hotelRoom',
+                'tourGuide',
+                'tourGuideReservation',
             ])
             ->where('tourist_id', $tourist->tourist_id)
             ->when($status, fn ($query) => $query->where('status', $status))
@@ -44,6 +46,8 @@ class TouristReservationController extends Controller
             'tourismService.destination',
             'tourismService.hotelRoomType',
             'hotelRoomReservation.hotelRoom',
+            'tourGuide',
+            'tourGuideReservation',
             'payment',
         ]);
 
