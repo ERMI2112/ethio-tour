@@ -26,6 +26,8 @@
                     @elseif (auth()->user()->role === 'tour_guide')
                         <li class="nav-item"><a class="nav-link" href="{{ route('tour-guide.dashboard') }}">Tour Guide Portal</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('tour-guide.profile') }}">My Profile</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('tour-guide.availability') }}">Availability</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('tour-guide.requests.index') }}">Booking Requests</a></li>
                     @elseif (auth()->user()->role === 'service_provider')
                         @if (auth()->user()->serviceProvider?->provider_type === 'hotel')
                             <li class="nav-item"><a class="nav-link" href="{{ route('hotel.dashboard') }}">Hotel Dashboard</a></li>

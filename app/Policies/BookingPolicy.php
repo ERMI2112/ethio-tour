@@ -28,4 +28,11 @@ class BookingPolicy
             && $booking->tourismService !== null
             && (int) $booking->tourismService->provider_id === (int) $user->serviceProvider->provider_id;
     }
+
+    public function manageTourGuide(User $user, Booking $booking): bool
+    {
+        return $user->role === 'tour_guide'
+            && $user->tourGuide !== null
+            && (int) $booking->guide_id === (int) $user->tourGuide->guide_id;
+    }
 }

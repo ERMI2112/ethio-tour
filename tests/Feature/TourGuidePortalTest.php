@@ -142,8 +142,9 @@ class TourGuidePortalTest extends TestCase
         $this->actingAs($context['user'])->get(route('tour-guide.dashboard'))
             ->assertSee(route('tour-guide.dashboard'))
             ->assertSee(route('tour-guide.profile'))
+            ->assertSee(route('tour-guide.availability'))
+            ->assertSee(route('tour-guide.requests.index'))
             ->assertSee('data-tour-guide-coming-soon="true"', false)
-            ->assertSee('Availability Calendar')
             ->assertSee('Earnings')
             ->assertDontSee('Hotel Dashboard');
     }

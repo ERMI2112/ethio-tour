@@ -4,8 +4,10 @@
         <div class="list-group list-group-flush">
             <a href="{{ route('tour-guide.dashboard') }}" @class(['list-group-item list-group-item-action', 'active' => request()->routeIs('tour-guide.dashboard')])>Dashboard</a>
             <a href="{{ route('tour-guide.profile') }}" @class(['list-group-item list-group-item-action', 'active' => request()->routeIs('tour-guide.profile*')])>My Profile</a>
+            <a href="{{ route('tour-guide.availability') }}" @class(['list-group-item list-group-item-action', 'active' => request()->routeIs('tour-guide.availability')])>Availability</a>
+            <a href="{{ route('tour-guide.requests.index') }}" @class(['list-group-item list-group-item-action', 'active' => request()->routeIs('tour-guide.requests.*')])>Booking Requests</a>
 
-            @foreach (['My Tours', 'Availability Calendar', 'Tourist Requests', 'Messages', 'Reviews', 'Earnings', 'Settings'] as $item)
+            @foreach (['My Tours', 'Messages', 'Reviews', 'Earnings', 'Settings'] as $item)
                 <span class="list-group-item d-flex justify-content-between align-items-center text-muted" data-tour-guide-coming-soon="true">
                     {{ $item }}
                     <span class="badge text-bg-light border">Coming soon</span>

@@ -17,6 +17,7 @@ use App\Http\Controllers\PublicHeritageSiteController;
 use App\Http\Controllers\PublicTourismServiceController;
 use App\Http\Controllers\TouristReservationController;
 use App\Http\Controllers\TourGuidePortalController;
+use App\Http\Controllers\TourGuideBookingRequestController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -60,6 +61,11 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/profile', [TourGuidePortalController::class, 'showProfile'])->name('profile');
         Route::get('/profile/edit', [TourGuidePortalController::class, 'editProfile'])->name('profile.edit');
         Route::put('/profile', [TourGuidePortalController::class, 'updateProfile'])->name('profile.update');
+        Route::get('/availability', [TourGuideBookingRequestController::class, 'availability'])->name('availability');
+        Route::get('/requests', [TourGuideBookingRequestController::class, 'index'])->name('requests.index');
+        Route::get('/requests/{booking}', [TourGuideBookingRequestController::class, 'show'])->name('requests.show');
+        Route::patch('/requests/{booking}/accept', [TourGuideBookingRequestController::class, 'accept'])->name('requests.accept');
+        Route::patch('/requests/{booking}/reject', [TourGuideBookingRequestController::class, 'reject'])->name('requests.reject');
     });
 
     Route::middleware('role:tourist')->prefix('tourist')->name('tourist.')->group(function () {
