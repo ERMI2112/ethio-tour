@@ -39,4 +39,9 @@ class Booking extends Model
     {
         return $this->hasOne(Review::class, 'booking_id', 'booking_id');
     }
+
+    public function hotelRoomReservation()
+    {
+        return $this->hasOne(HotelRoomReservation::class, 'booking_id', 'booking_id');
+    }
 }

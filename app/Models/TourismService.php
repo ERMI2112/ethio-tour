@@ -29,4 +29,9 @@ class TourismService extends Model
     {
         return $this->hasMany(Booking::class, 'service_id', 'service_id');
     }
+
+    public function hotelRoomType()
+    {
+        return $this->hasOne(HotelRoomType::class, 'service_id', 'service_id');
+    }
 }
