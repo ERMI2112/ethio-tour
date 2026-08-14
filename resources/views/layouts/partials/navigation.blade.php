@@ -23,6 +23,9 @@
                         <li class="nav-item"><x-ui.nav-placeholder label="Tour Guide Portal" /></li>
                     @elseif (auth()->user()->role === 'service_provider')
                         <li class="nav-item"><x-ui.nav-placeholder label="Service Provider Portal" /></li>
+                        @if (auth()->user()->serviceProvider?->provider_type === 'hotel')
+                            <li class="nav-item"><a class="nav-link" href="{{ route('hotel.profile') }}">Hotel Management</a></li>
+                        @endif
                     @elseif (auth()->user()->role === 'tourism_bureau_officer')
                         <li class="nav-item"><x-ui.nav-placeholder label="Tourism Bureau Portal" /></li>
                     @elseif (auth()->user()->role === 'administrator')

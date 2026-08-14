@@ -1,0 +1,7 @@
+@extends('layouts.app')
+
+@section('title', 'Physical Rooms')
+
+@section('content')
+<div class="container py-5"><div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4"><div><a class="small text-decoration-none" href="{{ route('hotel.profile') }}">&larr; Hotel management</a><h1 class="h2 mt-2 mb-1">Physical rooms</h1><p class="text-muted mb-0">Activate or deactivate inventory without adding booking logic.</p></div><a class="btn btn-primary" href="{{ route('hotel.rooms.create') }}">Add physical room</a></div>@if($rooms->isEmpty())<x-ui.empty-state title="No physical rooms yet" message="Add rooms after creating a room-type service." />@else<div class="table-responsive"><table class="table align-middle bg-white shadow-sm"><thead><tr><th>Room number</th><th>Room type</th><th>Status</th><th class="text-end">Actions</th></tr></thead><tbody>@foreach($rooms as $room)<tr><td><strong>{{ $room->room_number }}</strong></td><td>{{ $room->hotelRoomType->tourismService->service_name }}</td><td><span class="badge text-bg-{{ $room->status === 'active' ? 'success' : 'secondary' }}">{{ $room->status }}</span></td><td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{{ route('hotel.rooms.edit', $room) }}">Edit</a><form class="d-inline" method="POST" action="{{ route('hotel.rooms.destroy', $room) }}" onsubmit="return confirm('Remove this physical room?')">@csrf @method('DELETE')<button class="btn btn-sm btn-outline-danger" type="submit">Remove</button></form></td></tr>@endforeach</tbody></table></div>@endif</div>
+@endsection

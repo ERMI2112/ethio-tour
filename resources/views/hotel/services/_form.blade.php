@@ -1,0 +1,19 @@
+@php
+    $editing = isset($service);
+    $amenityValue = old('amenities', $editing ? ($service->hotelRoomType?->amenities ?? []) : []);
+    $amenityValue = is_array($amenityValue) ? implode(PHP_EOL, $amenityValue) : $amenityValue;
+@endphp
+<form method="POST" action="{{ $formAction }}">
+    @csrf
+    @if($editing) @method('PUT') @endif
+    <div class="row g-3">
+        <div class="col-md-6"><label class="form-label" for="service_name">Room type name</label><input class="form-control @error('service_name') is-invalid @enderror" id="service_name" name="service_name" value="{{ old('service_name', $editing ? $service->service_name : '') }}" placeholder="Standard Room" required>@error('service_name')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+        <div class="col-md-6"><label class="form-label" for="price">Nightly price</label><input class="form-control @error('price') is-invalid @enderror" id="price" name="price" type="number" min="0" step="0.01" value="{{ old('price', $editing ? $service->price : '') }}" required>@error('price')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+        <div class="col-md-6"><label class="form-label" for="category_id">Category</label><select class="form-select @error('category_id') is-invalid @enderror" id="category_id" name="category_id" required><option value="">Select a category</option>@foreach($categories as $category)<option value="{{ $category->category_id }}" @selected((string) old('category_id', $editing ? $service->category_id : '') === (string) $category->category_id)>{{ $category->category_name }}</option>@endforeach</select>@error('category_id')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+        <div class="col-md-6"><label class="form-label" for="destination_id">Destination</label><select class="form-select @error('destination_id') is-invalid @enderror" id="destination_id" name="destination_id" required><option value="">Select a destination</option>@foreach($destinations as $destination)<option value="{{ $destination->destination_id }}" @selected((string) old('destination_id', $editing ? $service->destination_id : '') === (string) $destination->destination_id)>{{ $destination->name }}</option>@endforeach</select>@error('destination_id')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+        <div class="col-md-4"><label class="form-label" for="capacity">Guest capacity</label><input class="form-control @error('capacity') is-invalid @enderror" id="capacity" name="capacity" type="number" min="1" value="{{ old('capacity', $editing ? $service->hotelRoomType?->capacity : '') }}" required>@error('capacity')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+        <div class="col-md-8"><label class="form-label" for="amenities">Amenities <span class="text-muted">(one per line)</span></label><textarea class="form-control @error('amenities') is-invalid @enderror" id="amenities" name="amenities" rows="3" placeholder="Wi-Fi&#10;TV&#10;Private Bathroom">{{ $amenityValue }}</textarea>@error('amenities')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+        <div class="col-12"><label class="form-label" for="description">Description</label><textarea class="form-control @error('description') is-invalid @enderror" id="description" name="description" rows="4" required>{{ old('description', $editing ? $service->description : '') }}</textarea>@error('description')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+    </div>
+    <div class="mt-4 d-flex gap-2"><button class="btn btn-primary" type="submit">{{ $submitLabel }}</button><a class="btn btn-outline-secondary" href="{{ route('hotel.services.index') }}">Cancel</a></div>
+</form>

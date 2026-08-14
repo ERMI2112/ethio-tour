@@ -6,6 +6,9 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\HotelProviderController;
+use App\Http\Controllers\HotelRoomController;
+use App\Http\Controllers\HotelServiceController;
 use App\Http\Controllers\PublicCategoryController;
 use App\Http\Controllers\PublicDestinationController;
 use App\Http\Controllers\PublicHeritageSiteController;
@@ -46,4 +49,13 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::view('/access-check/service-provider', 'account.access-check')->middleware('role:service_provider')->defaults('role', 'Service Provider');
     Route::view('/access-check/bureau', 'account.access-check')->middleware('role:tourism_bureau_officer')->defaults('role', 'Tourism Bureau Officer');
     Route::view('/access-check/administrator', 'account.access-check')->middleware('role:administrator')->defaults('role', 'Administrator');
+
+    Route::prefix('hotel-management')->name('hotel.')->middleware(['role:service_provider', 'hotel-provider'])->group(function () {
+        Route::get('/', [HotelProviderController::class, 'show'])->name('profile');
+        Route::get('/profile/edit', [HotelProviderController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [HotelProviderController::class, 'update'])->name('profile.update');
+
+        Route::resource('services', HotelServiceController::class)->except(['show'])->parameters(['services' => 'tourismService']);
+        Route::resource('rooms', HotelRoomController::class)->except(['show'])->parameters(['rooms' => 'hotelRoom']);
+    });
 });
