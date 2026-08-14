@@ -112,6 +112,7 @@ class HotelProviderManagementTest extends TestCase
 
     public function test_tourist_cannot_access_hotel_management(): void
     {
+        /** @var User $tourist */
         $tourist = User::factory()->create(['role' => 'tourist']);
 
         $this->actingAs($tourist)->get(route('hotel.profile'))->assertForbidden();
@@ -120,6 +121,7 @@ class HotelProviderManagementTest extends TestCase
     #[DataProvider('nonHotelProviderTypes')]
     public function test_non_hotel_provider_types_cannot_access_hotel_management(string $providerType): void
     {
+        /** @var User $user */
         $user = User::factory()->create(['role' => 'service_provider']);
         ServiceProvider::create([
             'user_id' => $user->user_id,
@@ -218,6 +220,7 @@ class HotelProviderManagementTest extends TestCase
             ->assertSee(route('hotel.dashboard'))
             ->assertSee(route('hotel.reservations.index'));
 
+        /** @var User $restaurant */
         $restaurant = User::factory()->create(['role' => 'service_provider']);
         ServiceProvider::create(['user_id' => $restaurant->user_id, 'business_name' => 'Restaurant', 'provider_type' => 'restaurant', 'status' => 'approved']);
         $this->actingAs($restaurant)->get('/')

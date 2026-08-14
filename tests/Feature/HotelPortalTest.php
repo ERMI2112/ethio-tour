@@ -25,6 +25,7 @@ class HotelPortalTest extends TestCase
 
     public function test_tourist_is_denied_from_hotel_management_routes(): void
     {
+        /** @var \App\Models\User $tourist */
         $tourist = User::factory()->create(['role' => 'tourist']);
 
         $this->actingAs($tourist)->get(route('hotel.dashboard'))->assertForbidden();
@@ -185,6 +186,7 @@ class HotelPortalTest extends TestCase
             ->assertSee('Room Types')
             ->assertSee('Reservations');
 
+        /** @var User $restaurantUser */
         $restaurantUser = User::factory()->create(['role' => 'service_provider']);
         ServiceProvider::create(['user_id' => $restaurantUser->user_id, 'business_name' => 'Cafe', 'provider_type' => 'restaurant', 'status' => 'approved']);
         $this->actingAs($restaurantUser)->get(route('home'))
