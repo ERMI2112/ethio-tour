@@ -16,6 +16,7 @@ use App\Http\Controllers\PublicDestinationController;
 use App\Http\Controllers\PublicHeritageSiteController;
 use App\Http\Controllers\PublicTourismServiceController;
 use App\Http\Controllers\TouristReservationController;
+use App\Http\Controllers\TourGuidePortalController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -53,6 +54,13 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::view('/access-check/service-provider', 'account.access-check')->middleware('role:service_provider')->defaults('role', 'Service Provider');
     Route::view('/access-check/bureau', 'account.access-check')->middleware('role:tourism_bureau_officer')->defaults('role', 'Tourism Bureau Officer');
     Route::view('/access-check/administrator', 'account.access-check')->middleware('role:administrator')->defaults('role', 'Administrator');
+
+    Route::prefix('tour-guide')->name('tour-guide.')->middleware('role:tour_guide')->group(function () {
+        Route::get('/', [TourGuidePortalController::class, 'dashboard'])->name('dashboard');
+        Route::get('/profile', [TourGuidePortalController::class, 'showProfile'])->name('profile');
+        Route::get('/profile/edit', [TourGuidePortalController::class, 'editProfile'])->name('profile.edit');
+        Route::put('/profile', [TourGuidePortalController::class, 'updateProfile'])->name('profile.update');
+    });
 
     Route::middleware('role:tourist')->prefix('tourist')->name('tourist.')->group(function () {
         Route::post('/services/{tourismService}/reservations', [HotelReservationController::class, 'store'])->name('reservations.store');
