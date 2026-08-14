@@ -13,7 +13,11 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Categories</a></li>
                 <li class="nav-item"><x-ui.nav-placeholder label="Map" /></li>
                 @auth
-                    <li class="nav-item"><x-ui.nav-placeholder label="Bookings" /></li>
+                    @if (auth()->user()->role === 'tourist')
+                        <li class="nav-item"><a class="nav-link" href="{{ route('tourist.reservations.index') }}">My Bookings</a></li>
+                    @else
+                        <li class="nav-item"><x-ui.nav-placeholder label="Bookings" /></li>
+                    @endif
                     @if (in_array(auth()->user()->role, ['tourist', 'tour_guide', 'service_provider', 'tourism_bureau_officer', 'administrator'], true))
                         <li class="nav-item"><x-ui.nav-placeholder label="Reports" /></li>
                     @endif
@@ -25,6 +29,7 @@
                         <li class="nav-item"><x-ui.nav-placeholder label="Service Provider Portal" /></li>
                         @if (auth()->user()->serviceProvider?->provider_type === 'hotel')
                             <li class="nav-item"><a class="nav-link" href="{{ route('hotel.profile') }}">Hotel Management</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('hotel.reservations.index') }}">Hotel Reservations</a></li>
                         @endif
                     @elseif (auth()->user()->role === 'tourism_bureau_officer')
                         <li class="nav-item"><x-ui.nav-placeholder label="Tourism Bureau Portal" /></li>
