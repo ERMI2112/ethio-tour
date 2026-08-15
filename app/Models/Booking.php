@@ -8,11 +8,14 @@ class Booking extends Model
 {
     protected $primaryKey = 'booking_id';
 
-    protected $fillable = ['tourist_id', 'service_id', 'guide_id', 'status', 'booking_date'];
+    protected $fillable = ['tourist_id', 'service_id', 'guide_id', 'status', 'booking_date', 'total_amount', 'currency'];
 
     protected function casts(): array
     {
-        return ['booking_date' => 'datetime'];
+        return [
+            'booking_date' => 'datetime',
+            'total_amount' => 'decimal:2',
+        ];
     }
 
     public function tourist()

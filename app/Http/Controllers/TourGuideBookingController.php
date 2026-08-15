@@ -6,6 +6,7 @@ use App\Http\Requests\StoreTourGuideBookingRequest;
 use App\Models\Booking;
 use App\Models\Review;
 use App\Models\TourGuide;
+use App\Services\BookingAmountService;
 use App\Services\TourGuideAvailabilityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +27,7 @@ class TourGuideBookingController extends Controller
         StoreTourGuideBookingRequest $request,
         TourGuide $guide,
         TourGuideAvailabilityService $availabilityService,
+        BookingAmountService $amountService,
     ): RedirectResponse {
         $this->ensureBookable($guide);
         $validated = $request->validated();
@@ -39,13 +41,17 @@ class TourGuideBookingController extends Controller
             return back()->withInput()->with('error', 'You already have an active overlapping request for this guide.');
         }
 
-        $booking = DB::transaction(function () use ($tourist, $guide, $validated): Booking {
+        $amount = $amountService->calculateGuideBooking($guide, $validated['start_date'], $validated['end_date']);
+
+        $booking = DB::transaction(function () use ($tourist, $guide, $validated, $amount): Booking {
             $booking = Booking::create([
                 'tourist_id' => $tourist->tourist_id,
                 'service_id' => null,
                 'guide_id' => $guide->guide_id,
                 'status' => 'pending',
                 'booking_date' => now(),
+                'total_amount' => $amount['total_amount'],
+                'currency' => $amount['currency'],
             ]);
 
             $booking->tourGuideReservation()->create([
@@ -64,6 +70,6 @@ class TourGuideBookingController extends Controller
     {
         $guide->loadMissing('user');
 
-        abort_unless($guide->verification_status === 'verified' && $guide->user?->is_active, 404);
+        abort_unless($guide->verification_status === 'verified' && $guide->user?->is_active && $guide->daily_rate !== null, 404);
     }
 }

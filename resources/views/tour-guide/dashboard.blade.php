@@ -13,7 +13,7 @@
                 <div>
                     <p class="text-muted small text-uppercase mb-1">Tour Guide Portal</p>
                     <h1 class="h2 mb-1">Welcome back, {{ $guide->user?->email }}</h1>
-                    <p class="text-muted mb-0">License {{ $guide->license_number }}</p>
+                    <p class="text-muted mb-0">License {{ $guide->license_number }} · Daily rate: {{ $guide->daily_rate === null ? 'Not set' : number_format((float) $guide->daily_rate, 2).' ETB' }}</p>
                 </div>
                 <a class="btn btn-primary" href="{{ route('tour-guide.profile.edit') }}">Edit profile</a>
             </div>

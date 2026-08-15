@@ -17,6 +17,7 @@ class UpdateTourGuideProfileRequest extends FormRequest
         return [
             'expertise' => ['required', 'string', 'max:2000'],
             'availability_status' => ['required', Rule::in(['available', 'unavailable'])],
+            'daily_rate' => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
         ];
     }
 }

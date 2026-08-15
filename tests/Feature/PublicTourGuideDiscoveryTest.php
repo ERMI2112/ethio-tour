@@ -115,7 +115,7 @@ class PublicTourGuideDiscoveryTest extends TestCase
             'expertise' => 'Historical tours',
             'availability_status' => 'available',
         ]);
-        $guide->forceFill(['verification_status' => $verification])->save();
+        $guide->forceFill(['daily_rate' => 1000, 'verification_status' => $verification])->save();
 
         return compact('user', 'guide');
     }
