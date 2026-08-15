@@ -14,9 +14,12 @@ class AdminProviderController extends Controller
     public function index(Request $request): View
     {
         $status = $request->string('status')->trim()->value();
-        $providers = ServiceProvider::with('user')->when(in_array($status, ['pending', 'approved', 'suspended', 'rejected'], true), fn ($q) => $q->where('status', $status))->orderBy('status')->orderBy('business_name')->get();
+        $verification = $request->string('verification')->trim()->value();
+        $type = $request->string('type')->trim()->value();
+        $search = $request->string('q')->trim()->value();
+        $providers = ServiceProvider::with('user')->when(in_array($status, ['pending', 'approved', 'suspended', 'rejected'], true), fn ($q) => $q->where('status', $status))->when(in_array($verification, ['pending', 'verified', 'rejected'], true), fn ($q) => $q->where('verification_status', $verification))->when(in_array($type, ['hotel', 'restaurant', 'transportation_car_rental', 'event_organizer'], true), fn ($q) => $q->where('provider_type', $type))->when($search, fn ($q) => $q->where('business_name', 'like', "%{$search}%"))->orderBy('status')->orderBy('business_name')->paginate(15)->withQueryString();
 
-        return view('admin.providers.index', compact('providers', 'status'));
+        return view('admin.providers.index', compact('providers', 'status', 'verification', 'type', 'search'));
     }
 
     public function show(ServiceProvider $serviceProvider): View

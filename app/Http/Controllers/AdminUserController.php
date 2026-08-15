@@ -13,9 +13,11 @@ class AdminUserController extends Controller
     public function index(Request $request): View
     {
         $search = $request->string('q')->trim()->value();
-        $users = User::query()->when($search, fn ($q) => $q->where('email', 'like', "%{$search}%"))->orderBy('email')->get();
+        $role = $request->string('role')->trim()->value();
+        $active = $request->input('active');
+        $users = User::query()->when($search, fn ($q) => $q->where('email', 'like', "%{$search}%"))->when($role, fn ($q) => $q->where('role', $role))->when(in_array($active, ['0', '1'], true), fn ($q) => $q->where('is_active', (bool) $active))->orderBy('email')->paginate(15)->withQueryString();
 
-        return view('admin.users.index', compact('users', 'search'));
+        return view('admin.users.index', compact('users', 'search', 'role', 'active'));
     }
 
     public function toggle(Request $request, User $user, AuditService $audit): RedirectResponse

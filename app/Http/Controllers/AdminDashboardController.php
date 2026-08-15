@@ -24,6 +24,8 @@ class AdminDashboardController extends Controller
             'pendingGuides' => TourGuide::where('verification_status', 'pending')->count(),
             'bookings' => Booking::count(),
             'auditEntries' => AuditLog::count(),
+            'recentAudit' => AuditLog::with('actor')->latest()->limit(8)->get(),
+            'pendingActions' => ServiceProvider::where('verification_status', 'verified')->where('status', 'pending')->count() + TourGuide::where('verification_status', 'pending')->count(),
         ]);
     }
 }
