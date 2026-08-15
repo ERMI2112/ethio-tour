@@ -16,7 +16,9 @@ class EnsureHotelProvider
             $user
             && $user->is_active
             && $user->role === 'service_provider'
-            && $user->serviceProvider?->provider_type === 'hotel',
+            && $user->serviceProvider?->provider_type === 'hotel'
+            && $user->serviceProvider?->verification_status === 'verified'
+            && $user->serviceProvider?->status === 'approved',
             403
         );
 

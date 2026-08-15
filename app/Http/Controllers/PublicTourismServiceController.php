@@ -18,6 +18,7 @@ class PublicTourismServiceController extends Controller
 
         $services = TourismService::query()
             ->with(['category', 'destination', 'serviceProvider'])
+            ->whereHas('serviceProvider', fn ($query) => $query->publiclyOperational())
             ->when($categoryId, fn ($query) => $query->where('category_id', $categoryId))
             ->when($destinationId, fn ($query) => $query->where('destination_id', $destinationId))
             ->when($search, fn ($query) => $query->where(function ($query) use ($search) {
@@ -36,6 +37,7 @@ class PublicTourismServiceController extends Controller
 
     public function show(TourismService $tourismService): View
     {
+        abort_unless($tourismService->serviceProvider?->isOperational(), 404);
         $tourismService->load(['category', 'destination', 'serviceProvider', 'hotelRoomType']);
         $isRestaurant = $tourismService->serviceProvider?->provider_type === 'restaurant';
         $isRestaurantReservationOffering = $isRestaurant && $tourismService->isRestaurantReservationOffering();

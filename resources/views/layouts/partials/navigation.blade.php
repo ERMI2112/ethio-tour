@@ -60,6 +60,7 @@
                         @else
                             <li class="nav-item"><x-ui.nav-placeholder label="Service Provider Portal" /></li>
                         @endif
+                        <li class="nav-item"><a class="nav-link" href="{{ route('provider.status') }}">Application Status</a></li>
                     @elseif (auth()->user()->role === 'tourism_bureau_officer')
                         <li class="nav-item"><x-ui.nav-placeholder label="Tourism Bureau Portal" /></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.dashboard') }}">Bureau Dashboard</a></li>

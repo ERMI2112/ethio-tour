@@ -20,6 +20,7 @@ use App\Http\Controllers\HotelProviderReservationController;
 use App\Http\Controllers\HotelReservationController;
 use App\Http\Controllers\HotelRoomController;
 use App\Http\Controllers\HotelServiceController;
+use App\Http\Controllers\ProviderOnboardingController;
 use App\Http\Controllers\PublicCategoryController;
 use App\Http\Controllers\PublicCulturalEventController;
 use App\Http\Controllers\PublicDestinationController;
@@ -110,6 +111,12 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('/services/{tourismService}/restaurant-reservations', [RestaurantTouristReservationController::class, 'store'])->name('restaurant-reservations.store');
         Route::post('/services/{tourismService}/transportation-reservations', [TransportationTouristReservationController::class, 'store'])->name('transportation-reservations.store');
         Route::post('/events/{culturalEvent}/reservations', [EventTouristBookingController::class, 'store'])->name('event-reservations.store');
+    });
+
+    Route::middleware('role:service_provider')->prefix('provider')->name('provider.')->group(function () {
+        Route::get('/status', [ProviderOnboardingController::class, 'show'])->name('status');
+        Route::get('/profile', [ProviderOnboardingController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [ProviderOnboardingController::class, 'update'])->name('profile.update');
     });
 
     Route::middleware('role:tourist')->prefix('tour-guides/{guide}')->name('tour-guides.')->group(function () {

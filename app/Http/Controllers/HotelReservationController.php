@@ -18,7 +18,7 @@ class HotelReservationController extends Controller
     {
         $tourismService->loadMissing(['serviceProvider', 'hotelRoomType']);
 
-        if ($tourismService->serviceProvider?->provider_type !== 'hotel' || ! $tourismService->hotelRoomType) {
+        if ($tourismService->serviceProvider?->provider_type !== 'hotel' || ! $tourismService->serviceProvider?->isOperational() || ! $tourismService->hotelRoomType) {
             return back()->with('error', 'The selected service is not a hotel room-type service.');
         }
 
@@ -53,7 +53,7 @@ class HotelReservationController extends Controller
     {
         $tourismService->loadMissing(['serviceProvider', 'hotelRoomType']);
 
-        if ($tourismService->serviceProvider?->provider_type !== 'hotel' || ! $tourismService->hotelRoomType) {
+        if ($tourismService->serviceProvider?->provider_type !== 'hotel' || ! $tourismService->serviceProvider?->isOperational() || ! $tourismService->hotelRoomType) {
             return back()->with('error', 'This service is not available for hotel reservation.');
         }
 

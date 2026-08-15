@@ -10,7 +10,7 @@ class EnsureEventOrganizer
 {
     public function handle(Request $request, Closure $next): Response
     {
-        abort_unless($request->user()?->is_active && $request->user()->role === 'service_provider' && $request->user()->serviceProvider?->provider_type === 'event_organizer', 403);
+        abort_unless($request->user()?->is_active && $request->user()->role === 'service_provider' && $request->user()->serviceProvider?->provider_type === 'event_organizer' && $request->user()->serviceProvider?->verification_status === 'verified' && $request->user()->serviceProvider?->status === 'approved', 403);
 
         return $next($request);
     }

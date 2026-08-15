@@ -64,6 +64,6 @@ class TransportationTouristReservationController extends Controller
     private function ensureTransportationService(TourismService $service): void
     {
         $service->loadMissing('serviceProvider');
-        abort_unless($service->serviceProvider?->provider_type === 'transportation_car_rental', 404);
+        abort_unless($service->serviceProvider?->provider_type === 'transportation_car_rental' && $service->serviceProvider?->isOperational(), 404);
     }
 }

@@ -99,6 +99,6 @@ class RestaurantTouristReservationController extends Controller
     {
         $service->loadMissing('serviceProvider');
 
-        abort_unless($service->serviceProvider?->provider_type === 'restaurant' && $service->isRestaurantReservationOffering(), 404);
+        abort_unless($service->serviceProvider?->provider_type === 'restaurant' && $service->serviceProvider?->isOperational() && $service->isRestaurantReservationOffering(), 404);
     }
 }

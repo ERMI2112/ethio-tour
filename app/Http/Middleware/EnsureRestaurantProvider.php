@@ -14,7 +14,9 @@ class EnsureRestaurantProvider
             $request->user()
             && $request->user()->is_active
             && $request->user()->role === 'service_provider'
-            && $request->user()->serviceProvider?->provider_type === 'restaurant',
+            && $request->user()->serviceProvider?->provider_type === 'restaurant'
+            && $request->user()->serviceProvider?->verification_status === 'verified'
+            && $request->user()->serviceProvider?->status === 'approved',
             403
         );
 

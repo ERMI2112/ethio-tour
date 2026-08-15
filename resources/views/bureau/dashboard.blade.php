@@ -8,7 +8,7 @@
         <div><h1 class="h3 mb-1">Tourism Bureau</h1><p class="text-muted mb-0">Verification and information management.</p></div>
     </div>
     <div class="row g-3 mb-4">
-        @foreach ([['Pending guides', $pendingGuides, 'bureau.guides.index', 'pending'], ['Verified guides', $verifiedGuides, 'bureau.guides.index', 'verified'], ['Pending providers', $pendingProviders, 'bureau.providers.index', 'pending'], ['Approved providers', $approvedProviders, 'bureau.providers.index', 'approved'], ['Museum records', $museumCount, 'bureau.museums.index', null]] as [$label, $count, $route, $filter])
+        @foreach ([['Pending guides', $pendingGuides, 'bureau.guides.index', 'pending'], ['Verified guides', $verifiedGuides, 'bureau.guides.index', 'verified'], ['Pending providers', $pendingProviders, 'bureau.providers.index', 'pending'], ['Approved providers', $approvedProviders, 'bureau.providers.index', 'verified'], ['Museum records', $museumCount, 'bureau.museums.index', null]] as [$label, $count, $route, $filter])
             <div class="col-sm-6 col-lg-4"><div class="card h-100 shadow-sm"><div class="card-body"><div class="text-muted small">{{ $label }}</div><div class="display-6 fw-semibold">{{ $count }}</div><a class="stretched-link" href="{{ route($route, $filter ? ['status' => $filter] : []) }}">Review</a></div></div></div>
         @endforeach
     </div>

@@ -14,8 +14,8 @@ class BureauDashboardController extends Controller
         return view('bureau.dashboard', [
             'pendingGuides' => TourGuide::where('verification_status', 'pending')->count(),
             'verifiedGuides' => TourGuide::where('verification_status', 'verified')->count(),
-            'pendingProviders' => ServiceProvider::where('status', 'pending')->count(),
-            'approvedProviders' => ServiceProvider::where('status', 'approved')->count(),
+            'pendingProviders' => ServiceProvider::where('verification_status', 'pending')->count(),
+            'approvedProviders' => ServiceProvider::where('verification_status', 'verified')->where('status', 'approved')->count(),
             'museumCount' => MuseumInformation::count(),
         ]);
     }

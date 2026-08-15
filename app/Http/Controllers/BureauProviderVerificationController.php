@@ -14,8 +14,8 @@ class BureauProviderVerificationController extends Controller
     {
         $status = $request->string('status')->trim()->value();
         $providers = ServiceProvider::with('user')
-            ->when(in_array($status, ['pending', 'approved', 'rejected'], true), fn ($q) => $q->where('status', $status))
-            ->orderBy('status')->orderBy('business_name')->get();
+            ->when(in_array($status, ['pending', 'verified', 'rejected'], true), fn ($q) => $q->where('verification_status', $status))
+            ->orderBy('verification_status')->orderBy('business_name')->get();
 
         return view('bureau.providers.index', compact('providers', 'status'));
     }
@@ -29,12 +29,12 @@ class BureauProviderVerificationController extends Controller
 
     public function decide(BureauVerificationDecisionRequest $request, ServiceProvider $serviceProvider): RedirectResponse
     {
-        abort_unless($serviceProvider->status === 'pending', 422, 'Only pending providers can be reviewed.');
+        abort_unless($serviceProvider->verification_status === 'pending', 422, 'Only pending providers can be reviewed.');
         $data = $request->validated();
-        $serviceProvider->update([
-            'status' => $data['decision'] === 'approve' ? 'approved' : 'rejected',
+        $serviceProvider->forceFill([
+            'verification_status' => $data['decision'] === 'approve' ? 'verified' : 'rejected',
             'verification_notes' => $data['verification_notes'] ?? null,
-        ]);
+        ])->save();
 
         return to_route('bureau.providers.show', $serviceProvider)->with('success', 'Provider verification decision saved.');
     }

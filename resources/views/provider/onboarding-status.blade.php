@@ -1,0 +1,5 @@
+@extends('layouts.app')
+@section('title', 'Provider Application Status')
+@section('content')
+<div class="container py-4"><h1 class="h3">Provider Application Status</h1><p class="text-muted">Your onboarding account remains available while the platform reviews both regulatory verification and operational activation.</p><div class="card shadow-sm"><div class="card-body"><dl class="row mb-0"><dt class="col-sm-4">Business</dt><dd class="col-sm-8">{{ $provider->business_name }}</dd><dt class="col-sm-4">Bureau verification</dt><dd class="col-sm-8"><x-ui.status-badge :status="$provider->verification_status" /></dd><dt class="col-sm-4">Platform activation</dt><dd class="col-sm-8"><x-ui.status-badge :status="$provider->status" /></dd><dt class="col-sm-4">Feedback</dt><dd class="col-sm-8">{{ $provider->verification_notes ?: 'No feedback has been recorded.' }}</dd></dl><a class="btn btn-outline-primary mt-3" href="{{ route('provider.profile.edit') }}">Edit profile</a></div></div></div>
+@endsection

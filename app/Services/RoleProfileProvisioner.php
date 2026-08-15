@@ -41,6 +41,7 @@ class RoleProfileProvisioner
                     'business_name' => $attributes['business_name'],
                     'provider_type' => $attributes['provider_type'],
                     'status' => 'pending',
+                    'verification_status' => 'pending',
                 ]),
             };
 

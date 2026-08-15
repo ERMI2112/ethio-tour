@@ -13,7 +13,7 @@ class PublicDestinationController extends Controller
         $search = $request->string('q')->trim()->value();
 
         $destinations = Destination::query()
-            ->withCount(['heritageSites', 'tourismServices'])
+            ->withCount(['heritageSites', 'tourismServices' => fn ($query) => $query->whereHas('serviceProvider', fn ($provider) => $provider->publiclyOperational())])
             ->when($search, fn ($query) => $query->where(function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%")
                     ->orWhere('location', 'like', "%{$search}%")
@@ -29,7 +29,7 @@ class PublicDestinationController extends Controller
     {
         $destination->load([
             'heritageSites' => fn ($query) => $query->orderBy('heritage_type'),
-            'tourismServices' => fn ($query) => $query->with(['category', 'serviceProvider'])->orderBy('service_name'),
+            'tourismServices' => fn ($query) => $query->whereHas('serviceProvider', fn ($provider) => $provider->publiclyOperational())->with(['category', 'serviceProvider'])->orderBy('service_name'),
         ]);
 
         return view('public.destinations.show', compact('destination'));

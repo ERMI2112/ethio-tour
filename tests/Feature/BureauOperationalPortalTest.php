@@ -62,7 +62,7 @@ class BureauOperationalPortalTest extends TestCase
         $this->actingAs($bureau)->get(route('bureau.providers.index'))->assertOk()->assertSee($provider->business_name);
         $this->actingAs($bureau)->patch(route('bureau.providers.decide', $provider), ['decision' => 'reject'])->assertSessionHasErrors('verification_notes');
         $this->actingAs($bureau)->patch(route('bureau.providers.decide', $provider), ['decision' => 'reject', 'verification_notes' => 'Registration information requires correction.'])->assertRedirect();
-        $this->assertDatabaseHas('service_providers', ['provider_id' => $provider->provider_id, 'status' => 'rejected']);
+        $this->assertDatabaseHas('service_providers', ['provider_id' => $provider->provider_id, 'verification_status' => 'rejected', 'status' => 'pending']);
         $this->actingAs($bureau)->patch(route('bureau.providers.decide', $approved), ['decision' => 'reject', 'verification_notes' => 'No'])->assertStatus(422);
     }
 
