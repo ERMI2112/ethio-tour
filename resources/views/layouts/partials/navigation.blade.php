@@ -14,6 +14,7 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('tour-guides.index') }}">Tour Guides</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('museums.index') }}">Museums</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('transportation.index') }}">Transportation</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('events.index') }}">Events</a></li>
                 <li class="nav-item"><x-ui.nav-placeholder label="Map" /></li>
                 @auth
                     @if (auth()->user()->role === 'tourist')
@@ -52,6 +53,10 @@
                             <li class="nav-item"><a class="nav-link" href="{{ route('transportation.services.index') }}">Services</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('transportation.vehicles.index') }}">Vehicles</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('transportation.reservations.index') }}">Reservations</a></li>
+                        @elseif (auth()->user()->serviceProvider?->provider_type === 'event_organizer')
+                            <li class="nav-item"><a class="nav-link" href="{{ route('event-organizer.dashboard') }}">Event Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('event-organizer.events.index') }}">My Events</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('event-organizer.events.bookings') }}">Bookings</a></li>
                         @else
                             <li class="nav-item"><x-ui.nav-placeholder label="Service Provider Portal" /></li>
                         @endif

@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 class CulturalEvent extends Model
 {
+    public const STATUSES = ['draft', 'published', 'cancelled'];
+
     protected $primaryKey = 'event_id';
 
-    protected $fillable = ['destination_id', 'provider_id', 'event_name', 'event_date', 'venue'];
+    protected $fillable = ['destination_id', 'provider_id', 'service_id', 'event_name', 'description', 'event_date', 'start_time', 'end_time', 'venue', 'status'];
 
     protected function casts(): array
     {
@@ -23,5 +25,15 @@ class CulturalEvent extends Model
     public function serviceProvider()
     {
         return $this->belongsTo(ServiceProvider::class, 'provider_id', 'provider_id');
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(TourismService::class, 'service_id', 'service_id');
+    }
+
+    public function ticketTypes()
+    {
+        return $this->hasMany(EventTicketType::class, 'event_id', 'event_id');
     }
 }

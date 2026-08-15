@@ -1,0 +1,3 @@
+@extends('layouts.app')
+@section('title',$event->event_name)
+@section('content')<div class="container py-4"><div class="d-flex justify-content-between mb-4"><div><h1 class="h3">{{ $event->event_name }}</h1><p class="text-muted">{{ $event->event_date->format('F d, Y') }} · {{ $event->venue }}</p></div><div><a class="btn btn-outline-secondary" href="{{ route('event-organizer.events.edit',$event) }}">Edit</a> <a class="btn btn-primary" href="{{ route('event-organizer.events.tickets',$event) }}">Manage tickets</a></div></div><div class="card border-0 shadow-sm"><div class="card-body"><p>{{ $event->description }}</p><p class="mb-0">Status: <strong>{{ ucfirst($event->status) }}</strong></p></div></div></div>@endsection

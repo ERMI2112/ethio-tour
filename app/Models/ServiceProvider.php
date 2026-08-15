@@ -39,4 +39,9 @@ class ServiceProvider extends Model
     {
         return $this->hasMany(TransportationVehicle::class, 'provider_id', 'provider_id');
     }
+
+    public function events()
+    {
+        return $this->hasMany(CulturalEvent::class, 'provider_id', 'provider_id');
+    }
 }

@@ -7,12 +7,18 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\BureauMuseumController;
+use App\Http\Controllers\CulturalEventController;
+use App\Http\Controllers\EventOrganizerController;
+use App\Http\Controllers\EventReservationController;
+use App\Http\Controllers\EventTicketController;
+use App\Http\Controllers\EventTouristBookingController;
 use App\Http\Controllers\HotelProviderController;
 use App\Http\Controllers\HotelProviderReservationController;
 use App\Http\Controllers\HotelReservationController;
 use App\Http\Controllers\HotelRoomController;
 use App\Http\Controllers\HotelServiceController;
 use App\Http\Controllers\PublicCategoryController;
+use App\Http\Controllers\PublicCulturalEventController;
 use App\Http\Controllers\PublicDestinationController;
 use App\Http\Controllers\PublicHeritageSiteController;
 use App\Http\Controllers\PublicMuseumController;
@@ -49,6 +55,8 @@ Route::get('/museums', [PublicMuseumController::class, 'index'])->name('museums.
 Route::get('/museums/{museumInformation}', [PublicMuseumController::class, 'show'])->name('museums.show');
 Route::get('/transportation', [PublicTransportationController::class, 'index'])->name('transportation.index');
 Route::get('/transportation/{tourismService}', [PublicTransportationController::class, 'show'])->name('transportation.show');
+Route::get('/events', [PublicCulturalEventController::class, 'index'])->name('events.index');
+Route::get('/events/{culturalEvent}', [PublicCulturalEventController::class, 'show'])->name('events.show');
 Route::post('/transportation/{tourismService}/availability', [TransportationTouristReservationController::class, 'checkAvailability'])->name('transportation.availability');
 Route::post('/restaurants/{tourismService}/availability', [RestaurantTouristReservationController::class, 'checkAvailability'])->name('restaurants.availability');
 Route::post('/tourism-services/{tourismService}/check-availability', [HotelReservationController::class, 'checkAvailability'])->name('tourism-services.check-availability');
@@ -98,6 +106,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::patch('/reservations/{booking}/cancel', [TouristReservationController::class, 'cancel'])->name('reservations.cancel');
         Route::post('/services/{tourismService}/restaurant-reservations', [RestaurantTouristReservationController::class, 'store'])->name('restaurant-reservations.store');
         Route::post('/services/{tourismService}/transportation-reservations', [TransportationTouristReservationController::class, 'store'])->name('transportation-reservations.store');
+        Route::post('/events/{culturalEvent}/reservations', [EventTouristBookingController::class, 'store'])->name('event-reservations.store');
     });
 
     Route::middleware('role:tourist')->prefix('tour-guides/{guide}')->name('tour-guides.')->group(function () {
@@ -144,6 +153,17 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/reservations/{booking}', [TransportationReservationController::class, 'show'])->name('reservations.show');
         Route::patch('/reservations/{booking}/accept', [TransportationReservationController::class, 'accept'])->name('reservations.accept');
         Route::patch('/reservations/{booking}/reject', [TransportationReservationController::class, 'reject'])->name('reservations.reject');
+    });
+
+    Route::prefix('event-organizer')->name('event-organizer.')->middleware(['role:service_provider', 'event-organizer'])->group(function () {
+        Route::get('/', [EventOrganizerController::class, 'dashboard'])->name('dashboard');
+        Route::get('/profile', [EventOrganizerController::class, 'profile'])->name('profile');
+        Route::resource('events', CulturalEventController::class)->parameters(['events' => 'culturalEvent']);
+        Route::get('/events/{culturalEvent}/tickets', [EventTicketController::class, 'index'])->name('events.tickets');
+        Route::post('/events/{culturalEvent}/tickets', [EventTicketController::class, 'store'])->name('events.tickets.store');
+        Route::put('/events/{culturalEvent}/tickets/{eventTicketType}', [EventTicketController::class, 'update'])->name('events.tickets.update');
+        Route::delete('/events/{culturalEvent}/tickets/{eventTicketType}', [EventTicketController::class, 'destroy'])->name('events.tickets.destroy');
+        Route::get('/events-bookings', [EventReservationController::class, 'index'])->name('events.bookings');
     });
 
     Route::prefix('bureau')->name('bureau.')->middleware('role:tourism_bureau_officer')->group(function () {

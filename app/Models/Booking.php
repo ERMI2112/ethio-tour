@@ -62,4 +62,9 @@ class Booking extends Model
     {
         return $this->hasOne(TransportationReservation::class, 'booking_id', 'booking_id');
     }
+
+    public function eventReservation()
+    {
+        return $this->hasOne(EventReservation::class, 'booking_id', 'booking_id');
+    }
 }

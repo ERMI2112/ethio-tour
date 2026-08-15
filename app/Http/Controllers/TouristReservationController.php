@@ -29,6 +29,7 @@ class TouristReservationController extends Controller
                 'tourGuide',
                 'tourGuideReservation',
                 'transportationReservation.vehicle',
+                'eventReservation.ticketType.event',
             ])
             ->where('tourist_id', $tourist->tourist_id)
             ->when($status, fn ($query) => $query->where('status', $status))
@@ -52,6 +53,7 @@ class TouristReservationController extends Controller
             'tourGuide',
             'tourGuideReservation',
             'transportationReservation.vehicle',
+            'eventReservation.ticketType.event',
             'payment',
         ]);
 

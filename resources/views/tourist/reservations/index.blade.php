@@ -79,6 +79,11 @@
                                         <td><div class="small fw-semibold">{{ $booking->tourGuideReservation->start_date->format('M d, Y') }}</div><div class="small text-muted">to {{ $booking->tourGuideReservation->end_date->format('M d, Y') }}</div></td>
                                         <td>{{ $booking->tourGuideReservation->number_of_tourists }}</td>
                                         <td><span class="text-muted">Not priced</span></td>
+                                    @elseif ($booking->eventReservation)
+                                        <td><div class="fw-bold">{{ $booking->eventReservation->ticketType->event->event_name }}</div><div class="small text-muted">{{ $booking->eventReservation->ticketType->name }}</div></td>
+                                        <td><div class="small fw-semibold">{{ $booking->eventReservation->ticketType->event->event_date->format('M d, Y') }}</div><div class="small text-muted">Event tickets</div></td>
+                                        <td>{{ $booking->eventReservation->quantity }}</td>
+                                        <td><span class="fw-bold">{{ number_format($booking->total_amount ?? 0, 2) }} {{ $booking->currency ?? 'ETB' }}</span></td>
                                     @elseif ($booking->transportationReservation)
                                         @php($transportRes = $booking->transportationReservation)
                                         <td><div class="fw-bold">{{ $booking->tourismService->service_name ?? 'Transportation reservation' }}</div><div class="small text-muted">{{ $booking->tourismService->serviceProvider->business_name ?? '' }}</div></td>

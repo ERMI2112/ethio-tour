@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\EnsureEventOrganizer;
 use App\Http\Middleware\EnsureHotelProvider;
 use App\Http\Middleware\EnsureRestaurantProvider;
 use App\Http\Middleware\EnsureTransportationProvider;
@@ -22,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'hotel-provider' => EnsureHotelProvider::class,
             'restaurant-provider' => EnsureRestaurantProvider::class,
             'transportation-provider' => EnsureTransportationProvider::class,
+            'event-organizer' => EnsureEventOrganizer::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
