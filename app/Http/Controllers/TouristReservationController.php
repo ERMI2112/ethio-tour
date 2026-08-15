@@ -25,6 +25,7 @@ class TouristReservationController extends Controller
                 'tourismService.serviceProvider',
                 'tourismService.hotelRoomType',
                 'hotelRoomReservation.hotelRoom',
+                'restaurantReservation.restaurantTable',
                 'tourGuide',
                 'tourGuideReservation',
             ])
@@ -46,6 +47,7 @@ class TouristReservationController extends Controller
             'tourismService.destination',
             'tourismService.hotelRoomType',
             'hotelRoomReservation.hotelRoom',
+            'restaurantReservation.restaurantTable',
             'tourGuide',
             'tourGuideReservation',
             'payment',

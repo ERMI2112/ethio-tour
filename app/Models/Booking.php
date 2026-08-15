@@ -52,4 +52,9 @@ class Booking extends Model
     {
         return $this->hasOne(TourGuideReservation::class, 'booking_id', 'booking_id');
     }
+
+    public function restaurantReservation()
+    {
+        return $this->hasOne(RestaurantReservation::class, 'booking_id', 'booking_id');
+    }
 }

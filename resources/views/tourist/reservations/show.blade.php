@@ -60,6 +60,14 @@
                 </div>
             </div>
         </div>
+    @elseif ($booking->restaurantReservation)
+    @php
+        $restaurantRes = $booking->restaurantReservation;
+    @endphp
+    <div class="row g-4">
+        <div class="col-lg-8"><div class="card border-0 shadow-sm"><div class="card-header bg-white py-3"><h2 class="h5 mb-0">Restaurant Reservation Details</h2></div><div class="card-body p-4"><h3 class="h4 text-primary">{{ $booking->tourismService->service_name ?? 'Restaurant reservation' }}</h3><p class="text-muted mb-3">Provided by <strong>{{ $booking->tourismService->serviceProvider->business_name ?? 'N/A' }}</strong></p><div class="row g-3 p-3 bg-light rounded border"><div class="col-sm-6"><span class="text-muted small d-block">Date</span><strong>{{ $restaurantRes->reservation_date->format('F d, Y') }}</strong></div><div class="col-sm-6"><span class="text-muted small d-block">Time</span><strong>{{ substr($restaurantRes->start_time, 0, 5) }}–{{ substr($restaurantRes->end_time, 0, 5) }}</strong></div><div class="col-sm-6"><span class="text-muted small d-block">Guests</span><strong>{{ $restaurantRes->guest_count }} guest(s)</strong></div><div class="col-sm-6"><span class="text-muted small d-block">Table</span><strong>{{ $restaurantRes->restaurantTable ? 'Table '.$restaurantRes->restaurantTable->table_number : 'Unassigned' }}</strong></div></div></div></div></div>
+        <div class="col-lg-4"><div class="card border-0 shadow-sm"><div class="card-header bg-white py-3"><h2 class="h5 mb-0">Booking Status</h2></div><div class="card-body p-4">@if($booking->status === 'pending')<form method="POST" action="{{ route('tourist.reservations.cancel', $booking) }}" onsubmit="return confirm('Cancel this request?');">@csrf @method('PATCH')<button class="btn btn-outline-danger w-100">Cancel Request</button></form>@elseif($booking->status === 'accepted')<div class="alert alert-info small mb-0">Your table request was accepted. Payment is handled in a later phase.</div>@elseif($booking->status === 'payment_pending')<div class="alert alert-info small mb-0"><strong>Awaiting Payment</strong> — Payment is handled in a later phase.</div>@endif</div></div></div>
+    </div>
     @else
     <div class="row g-4">
         <div class="col-lg-8">

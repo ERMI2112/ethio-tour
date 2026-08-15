@@ -7,7 +7,7 @@
     <a class="text-decoration-none small" href="{{ route('tourism-services.index') }}">&larr; All tourism services</a>
 
     <div class="row g-4 mt-1">
-        <div class="{{ $tourismService->hotelRoomType ? 'col-lg-7' : 'col-12' }}">
+        <div class="{{ ($tourismService->hotelRoomType || $isRestaurantReservationOffering) ? 'col-lg-7' : 'col-12' }}">
             <article class="card border-0 shadow-sm h-100">
                 <div class="card-body p-4 p-md-5">
                     <p class="text-uppercase text-muted small mb-2">
@@ -108,6 +108,35 @@
                             <div class="alert alert-secondary small mb-0 text-center">
                                 Please <a href="{{ route('login') }}" class="alert-link">log in as a tourist</a> to book this room.
                             </div>
+                        @endauth
+                    </div>
+                </div>
+            </div>
+        @elseif ($isRestaurantReservationOffering)
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm">
+                    <div class="card-header bg-primary text-white p-3"><h2 class="h5 mb-0">Reserve a table</h2></div>
+                    <div class="card-body p-4">
+                        @include('layouts.partials.flash-messages')
+                        <form method="POST" action="{{ route('restaurants.availability', $tourismService) }}" class="mb-4">
+                            @csrf
+                            <div class="mb-3"><label class="form-label small fw-bold" for="reservation_date">Reservation date</label><input type="date" class="form-control @error('reservation_date') is-invalid @enderror" id="reservation_date" name="reservation_date" value="{{ old('reservation_date', session('restaurant_reservation_date')) }}" min="{{ date('Y-m-d') }}" required>@error('reservation_date')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+                            <div class="row g-2"><div class="col-6"><label class="form-label small fw-bold" for="start_time">Start time</label><input type="time" class="form-control @error('start_time') is-invalid @enderror" id="start_time" name="start_time" value="{{ old('start_time', session('restaurant_start_time')) }}" required>@error('start_time')<div class="invalid-feedback">{{ $message }}</div>@enderror</div><div class="col-6"><label class="form-label small fw-bold" for="end_time">End time</label><input type="time" class="form-control @error('end_time') is-invalid @enderror" id="end_time" name="end_time" value="{{ old('end_time', session('restaurant_end_time')) }}" required>@error('end_time')<div class="invalid-feedback">{{ $message }}</div>@enderror</div></div>
+                            <div class="mt-3 mb-3"><label class="form-label small fw-bold" for="guest_count">Guests</label><input type="number" class="form-control @error('guest_count') is-invalid @enderror" id="guest_count" name="guest_count" value="{{ old('guest_count', session('restaurant_guest_count', 1)) }}" min="1" required>@error('guest_count')<div class="invalid-feedback">{{ $message }}</div>@enderror</div>
+                            <button class="btn btn-outline-primary w-100">Check table availability</button>
+                        </form>
+                        @auth
+                            @if (auth()->user()->role === 'tourist')
+                                <form method="POST" action="{{ route('tourist.restaurant-reservations.store', $tourismService) }}">
+                                    @csrf
+                                    <input type="hidden" name="reservation_date" value="{{ session('restaurant_reservation_date', old('reservation_date')) }}"><input type="hidden" name="start_time" value="{{ session('restaurant_start_time', old('start_time')) }}"><input type="hidden" name="end_time" value="{{ session('restaurant_end_time', old('end_time')) }}"><input type="hidden" name="guest_count" value="{{ session('restaurant_guest_count', old('guest_count', 1)) }}">
+                                    @if (session('restaurant_available_count'))<div class="p-3 bg-success-subtle border border-success rounded mb-3"><p class="small text-success mb-1 fw-bold">Table availability confirmed</p><p class="small mb-0">{{ session('restaurant_available_count') }} table(s) match your request.</p></div><button class="btn btn-success w-100">Request reservation</button>@else<p class="small text-muted text-center mb-0">Check availability above to enable a reservation request.</p>@endif
+                                </form>
+                            @else
+                                <div class="alert alert-info small mb-0">Only tourists can make restaurant reservations.</div>
+                            @endif
+                        @else
+                            <div class="alert alert-secondary small mb-0 text-center">Please <a href="{{ route('login') }}" class="alert-link">log in as a tourist</a> to reserve a table.</div>
                         @endauth
                     </div>
                 </div>

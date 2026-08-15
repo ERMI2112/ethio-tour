@@ -1,0 +1,3 @@
+@extends('layouts.app')
+@section('title', 'Edit Restaurant Table')
+@section('content')<div class="container py-4 py-lg-5"><div class="row justify-content-center"><div class="col-lg-7"><nav aria-label="breadcrumb"><ol class="breadcrumb small"><li class="breadcrumb-item"><a href="{{ route('restaurant.dashboard') }}">Restaurant Dashboard</a></li><li class="breadcrumb-item"><a href="{{ route('restaurant.tables.index') }}">Tables</a></li><li class="breadcrumb-item active">Edit</li></ol></nav><div class="card border-0 shadow-sm"><div class="card-body p-4"><h1 class="h3">Edit physical table</h1>@include('restaurant.tables._form', ['formAction' => route('restaurant.tables.update', $table), 'submitLabel' => 'Save changes'])</div></div></div></div></div>@endsection

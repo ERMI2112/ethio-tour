@@ -29,4 +29,9 @@ class ServiceProvider extends Model
     {
         return $this->hasMany(CulturalEvent::class, 'provider_id', 'provider_id');
     }
+
+    public function restaurantTables()
+    {
+        return $this->hasMany(RestaurantTable::class, 'provider_id', 'provider_id');
+    }
 }

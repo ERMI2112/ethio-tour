@@ -36,8 +36,10 @@ class PublicTourismServiceController extends Controller
 
     public function show(TourismService $tourismService): View
     {
-        $tourismService->load(['category', 'destination', 'serviceProvider']);
+        $tourismService->load(['category', 'destination', 'serviceProvider', 'hotelRoomType']);
+        $isRestaurant = $tourismService->serviceProvider?->provider_type === 'restaurant';
+        $isRestaurantReservationOffering = $isRestaurant && $tourismService->isRestaurantReservationOffering();
 
-        return view('public.tourism-services.show', compact('tourismService'));
+        return view('public.tourism-services.show', compact('tourismService', 'isRestaurant', 'isRestaurantReservationOffering'));
     }
 }

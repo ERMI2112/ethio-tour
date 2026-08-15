@@ -16,6 +16,11 @@ use App\Http\Controllers\PublicDestinationController;
 use App\Http\Controllers\PublicHeritageSiteController;
 use App\Http\Controllers\PublicTourGuideController;
 use App\Http\Controllers\PublicTourismServiceController;
+use App\Http\Controllers\RestaurantProviderController;
+use App\Http\Controllers\RestaurantReservationController;
+use App\Http\Controllers\RestaurantServiceController;
+use App\Http\Controllers\RestaurantTableController;
+use App\Http\Controllers\RestaurantTouristReservationController;
 use App\Http\Controllers\TourGuideBookingController;
 use App\Http\Controllers\TourGuideBookingRequestController;
 use App\Http\Controllers\TourGuidePortalController;
@@ -32,6 +37,7 @@ Route::get('/heritage-sites', [PublicHeritageSiteController::class, 'index'])->n
 Route::get('/heritage-sites/{heritageSite}', [PublicHeritageSiteController::class, 'show'])->name('heritage-sites.show');
 Route::get('/tourism-services', [PublicTourismServiceController::class, 'index'])->name('tourism-services.index');
 Route::get('/tourism-services/{tourismService}', [PublicTourismServiceController::class, 'show'])->name('tourism-services.show');
+Route::post('/restaurants/{tourismService}/availability', [RestaurantTouristReservationController::class, 'checkAvailability'])->name('restaurants.availability');
 Route::post('/tourism-services/{tourismService}/check-availability', [HotelReservationController::class, 'checkAvailability'])->name('tourism-services.check-availability');
 Route::get('/categories', [PublicCategoryController::class, 'index'])->name('categories.index');
 Route::get('/tour-guides', [PublicTourGuideController::class, 'index'])->name('tour-guides.index');
@@ -77,6 +83,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/reservations', [TouristReservationController::class, 'index'])->name('reservations.index');
         Route::get('/reservations/{booking}', [TouristReservationController::class, 'show'])->name('reservations.show');
         Route::patch('/reservations/{booking}/cancel', [TouristReservationController::class, 'cancel'])->name('reservations.cancel');
+        Route::post('/services/{tourismService}/restaurant-reservations', [RestaurantTouristReservationController::class, 'store'])->name('restaurant-reservations.store');
     });
 
     Route::middleware('role:tourist')->prefix('tour-guides/{guide}')->name('tour-guides.')->group(function () {
@@ -97,5 +104,18 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/reservations/{booking}', [HotelProviderReservationController::class, 'show'])->name('reservations.show');
         Route::patch('/reservations/{booking}/accept', [HotelProviderReservationController::class, 'accept'])->name('reservations.accept');
         Route::patch('/reservations/{booking}/reject', [HotelProviderReservationController::class, 'reject'])->name('reservations.reject');
+    });
+
+    Route::prefix('restaurant')->name('restaurant.')->middleware(['role:service_provider', 'restaurant-provider'])->group(function () {
+        Route::get('/', [RestaurantProviderController::class, 'dashboard'])->name('dashboard');
+        Route::get('/profile', [RestaurantProviderController::class, 'show'])->name('profile');
+        Route::get('/profile/edit', [RestaurantProviderController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [RestaurantProviderController::class, 'update'])->name('profile.update');
+        Route::resource('services', RestaurantServiceController::class)->except(['show'])->parameters(['services' => 'tourismService']);
+        Route::resource('tables', RestaurantTableController::class)->except(['show'])->parameters(['tables' => 'restaurantTable']);
+        Route::get('/reservations', [RestaurantReservationController::class, 'index'])->name('reservations.index');
+        Route::get('/reservations/{booking}', [RestaurantReservationController::class, 'show'])->name('reservations.show');
+        Route::patch('/reservations/{booking}/accept', [RestaurantReservationController::class, 'accept'])->name('reservations.accept');
+        Route::patch('/reservations/{booking}/reject', [RestaurantReservationController::class, 'reject'])->name('reservations.reject');
     });
 });

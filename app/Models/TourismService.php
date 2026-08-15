@@ -34,4 +34,17 @@ class TourismService extends Model
     {
         return $this->hasOne(HotelRoomType::class, 'service_id', 'service_id');
     }
+
+    public function isRestaurantReservationOffering(): bool
+    {
+        $categoryName = strtolower((string) $this->category?->category_name);
+        $serviceName = strtolower((string) $this->service_name);
+
+        return str_contains($categoryName, 'reservation')
+            || str_contains($categoryName, 'dining')
+            || str_contains($categoryName, 'table')
+            || str_contains($serviceName, 'reservation')
+            || str_contains($serviceName, 'dining')
+            || str_contains($serviceName, 'table');
+    }
 }

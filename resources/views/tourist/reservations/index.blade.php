@@ -67,6 +67,7 @@
                             @foreach ($bookings as $booking)
                                 @php($isGuideBooking = $booking->guide_id !== null && $booking->tourGuideReservation)
                                 @php($res = $booking->hotelRoomReservation)
+                                @php($restaurantRes = $booking->restaurantReservation)
                                 <tr>
                                     <td>
                                         <a href="{{ route('tourist.reservations.show', $booking) }}" class="fw-bold text-decoration-none">
@@ -77,6 +78,11 @@
                                         <td><div class="fw-bold">Tour Guide</div><div class="small text-muted">License {{ $booking->tourGuide->license_number }}</div></td>
                                         <td><div class="small fw-semibold">{{ $booking->tourGuideReservation->start_date->format('M d, Y') }}</div><div class="small text-muted">to {{ $booking->tourGuideReservation->end_date->format('M d, Y') }}</div></td>
                                         <td>{{ $booking->tourGuideReservation->number_of_tourists }}</td>
+                                        <td><span class="text-muted">Not priced</span></td>
+                                    @elseif ($restaurantRes)
+                                        <td><div class="fw-bold">{{ $booking->tourismService->service_name ?? 'Restaurant reservation' }}</div><div class="small text-muted">{{ $booking->tourismService->serviceProvider->business_name ?? '' }}</div></td>
+                                        <td><div class="small fw-semibold">{{ $restaurantRes->reservation_date->format('M d, Y') }}</div><div class="small text-muted">{{ substr($restaurantRes->start_time, 0, 5) }}–{{ substr($restaurantRes->end_time, 0, 5) }}</div></td>
+                                        <td>{{ $restaurantRes->guest_count }}</td>
                                         <td><span class="text-muted">Not priced</span></td>
                                     @else
                                         @php($nights = $res ? max(1, (int) $res->check_in_date->diffInDays($res->check_out_date)) : 1)

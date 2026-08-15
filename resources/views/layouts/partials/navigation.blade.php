@@ -37,6 +37,13 @@
                             <li class="nav-item"><a class="nav-link" href="{{ route('hotel.rooms.index') }}">Rooms</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('hotel.reservations.index') }}">Reservations</a></li>
                             <li class="nav-item"><x-ui.nav-placeholder label="Reports" /></li>
+                        @elseif (auth()->user()->serviceProvider?->provider_type === 'restaurant')
+                            <li class="nav-item"><x-ui.nav-placeholder label="Service Provider Portal" /></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('restaurant.dashboard') }}">Restaurant Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('restaurant.services.index') }}">Menu &amp; Services</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('restaurant.tables.index') }}">Tables</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('restaurant.reservations.index') }}">Reservations</a></li>
+                            <li class="nav-item"><x-ui.nav-placeholder label="Reports" /></li>
                         @else
                             <li class="nav-item"><x-ui.nav-placeholder label="Service Provider Portal" /></li>
                         @endif
