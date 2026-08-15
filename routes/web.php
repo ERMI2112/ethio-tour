@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\BureauMuseumController;
 use App\Http\Controllers\HotelProviderController;
 use App\Http\Controllers\HotelProviderReservationController;
 use App\Http\Controllers\HotelReservationController;
@@ -14,6 +15,7 @@ use App\Http\Controllers\HotelServiceController;
 use App\Http\Controllers\PublicCategoryController;
 use App\Http\Controllers\PublicDestinationController;
 use App\Http\Controllers\PublicHeritageSiteController;
+use App\Http\Controllers\PublicMuseumController;
 use App\Http\Controllers\PublicTourGuideController;
 use App\Http\Controllers\PublicTourismServiceController;
 use App\Http\Controllers\RestaurantProviderController;
@@ -37,6 +39,8 @@ Route::get('/heritage-sites', [PublicHeritageSiteController::class, 'index'])->n
 Route::get('/heritage-sites/{heritageSite}', [PublicHeritageSiteController::class, 'show'])->name('heritage-sites.show');
 Route::get('/tourism-services', [PublicTourismServiceController::class, 'index'])->name('tourism-services.index');
 Route::get('/tourism-services/{tourismService}', [PublicTourismServiceController::class, 'show'])->name('tourism-services.show');
+Route::get('/museums', [PublicMuseumController::class, 'index'])->name('museums.index');
+Route::get('/museums/{museumInformation}', [PublicMuseumController::class, 'show'])->name('museums.show');
 Route::post('/restaurants/{tourismService}/availability', [RestaurantTouristReservationController::class, 'checkAvailability'])->name('restaurants.availability');
 Route::post('/tourism-services/{tourismService}/check-availability', [HotelReservationController::class, 'checkAvailability'])->name('tourism-services.check-availability');
 Route::get('/categories', [PublicCategoryController::class, 'index'])->name('categories.index');
@@ -117,5 +121,9 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/reservations/{booking}', [RestaurantReservationController::class, 'show'])->name('reservations.show');
         Route::patch('/reservations/{booking}/accept', [RestaurantReservationController::class, 'accept'])->name('reservations.accept');
         Route::patch('/reservations/{booking}/reject', [RestaurantReservationController::class, 'reject'])->name('reservations.reject');
+    });
+
+    Route::prefix('bureau')->name('bureau.')->middleware('role:tourism_bureau_officer')->group(function () {
+        Route::resource('museums', BureauMuseumController::class)->except(['show'])->parameters(['museums' => 'museumInformation']);
     });
 });
