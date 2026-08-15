@@ -62,6 +62,9 @@
                         @endif
                     @elseif (auth()->user()->role === 'tourism_bureau_officer')
                         <li class="nav-item"><x-ui.nav-placeholder label="Tourism Bureau Portal" /></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('bureau.dashboard') }}">Bureau Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('bureau.guides.index') }}">Guide Verification</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('bureau.providers.index') }}">Provider Verification</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.museums.index') }}">Museum Information</a></li>
                     @elseif (auth()->user()->role === 'administrator')
                         <li class="nav-item"><x-ui.nav-placeholder label="Administrator Portal" /></li>

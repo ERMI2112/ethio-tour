@@ -6,7 +6,10 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\BureauDashboardController;
+use App\Http\Controllers\BureauGuideVerificationController;
 use App\Http\Controllers\BureauMuseumController;
+use App\Http\Controllers\BureauProviderVerificationController;
 use App\Http\Controllers\CulturalEventController;
 use App\Http\Controllers\EventOrganizerController;
 use App\Http\Controllers\EventReservationController;
@@ -167,6 +170,13 @@ Route::middleware(['auth', 'active'])->group(function () {
     });
 
     Route::prefix('bureau')->name('bureau.')->middleware('role:tourism_bureau_officer')->group(function () {
+        Route::get('/', BureauDashboardController::class)->name('dashboard');
+        Route::get('/guides', [BureauGuideVerificationController::class, 'index'])->name('guides.index');
+        Route::get('/guides/{tourGuide}', [BureauGuideVerificationController::class, 'show'])->name('guides.show');
+        Route::patch('/guides/{tourGuide}/decision', [BureauGuideVerificationController::class, 'decide'])->name('guides.decide');
+        Route::get('/providers', [BureauProviderVerificationController::class, 'index'])->name('providers.index');
+        Route::get('/providers/{serviceProvider}', [BureauProviderVerificationController::class, 'show'])->name('providers.show');
+        Route::patch('/providers/{serviceProvider}/decision', [BureauProviderVerificationController::class, 'decide'])->name('providers.decide');
         Route::resource('museums', BureauMuseumController::class)->except(['show'])->parameters(['museums' => 'museumInformation']);
     });
 });

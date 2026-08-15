@@ -8,7 +8,7 @@ class ServiceProvider extends Model
 {
     protected $primaryKey = 'provider_id';
 
-    protected $fillable = ['user_id', 'business_name', 'provider_type', 'status'];
+    protected $fillable = ['user_id', 'business_name', 'provider_type', 'status', 'verification_notes'];
 
     public function user()
     {

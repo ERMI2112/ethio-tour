@@ -12,7 +12,7 @@ class TourGuide extends Model
         'verification_status' => 'pending',
     ];
 
-    protected $fillable = ['user_id', 'license_number', 'expertise', 'availability_status', 'daily_rate'];
+    protected $fillable = ['user_id', 'license_number', 'expertise', 'availability_status', 'daily_rate', 'verification_notes'];
 
     protected function casts(): array
     {

@@ -1,0 +1,6 @@
+@extends('layouts.app')
+@section('title', 'Guide Verification')
+@section('content')
+<div class="container py-4"><div class="d-flex justify-content-between align-items-center mb-3"><h1 class="h3">Guide Verification</h1><form class="d-flex gap-2"><select class="form-select" name="status"><option value="">All statuses</option>@foreach(['pending','verified','rejected'] as $option)<option value="{{ $option }}" @selected($status === $option)>{{ ucfirst($option) }}</option>@endforeach</select><button class="btn btn-outline-primary">Filter</button></form></div>
+@if($guides->isEmpty())<x-ui.empty-state title="No guide submissions" message="There are no guide records for this filter." />@else<div class="table-responsive"><table class="table align-middle"><thead><tr><th>Guide</th><th>License</th><th>Expertise</th><th>Status</th><th></th></tr></thead><tbody>@foreach($guides as $guide)<tr><td>{{ $guide->user?->email }}</td><td>{{ $guide->license_number }}</td><td>{{ Str::limit($guide->expertise, 70) }}</td><td><x-ui.status-badge :status="$guide->verification_status" /></td><td><a class="btn btn-sm btn-outline-primary" href="{{ route('bureau.guides.show', $guide) }}">Review</a></td></tr>@endforeach</tbody></table></div>@endif</div>
+@endsection
