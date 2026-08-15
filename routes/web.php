@@ -1,6 +1,11 @@
 <?php
 
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\AdminAuditController;
+use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminProviderController;
+use App\Http\Controllers\AdminSubscriptionController;
+use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -90,6 +95,19 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::view('/access-check/service-provider', 'account.access-check')->middleware('role:service_provider')->defaults('role', 'Service Provider');
     Route::view('/access-check/bureau', 'account.access-check')->middleware('role:tourism_bureau_officer')->defaults('role', 'Tourism Bureau Officer');
     Route::view('/access-check/administrator', 'account.access-check')->middleware('role:administrator')->defaults('role', 'Administrator');
+
+    Route::prefix('admin')->name('admin.')->middleware('role:administrator')->group(function () {
+        Route::get('/', AdminDashboardController::class)->name('dashboard');
+        Route::get('/providers', [AdminProviderController::class, 'index'])->name('providers.index');
+        Route::get('/providers/{serviceProvider}', [AdminProviderController::class, 'show'])->name('providers.show');
+        Route::patch('/providers/{serviceProvider}/status', [AdminProviderController::class, 'updateStatus'])->name('providers.status');
+        Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::patch('/users/{user}/toggle', [AdminUserController::class, 'toggle'])->name('users.toggle');
+        Route::get('/subscriptions', [AdminSubscriptionController::class, 'index'])->name('subscriptions.index');
+        Route::post('/subscriptions', [AdminSubscriptionController::class, 'store'])->name('subscriptions.store');
+        Route::put('/subscriptions/{subscriptionPlan}', [AdminSubscriptionController::class, 'update'])->name('subscriptions.update');
+        Route::get('/audit', [AdminAuditController::class, 'index'])->name('audit.index');
+    });
 
     Route::prefix('tour-guide')->name('tour-guide.')->middleware('role:tour_guide')->group(function () {
         Route::get('/', [TourGuidePortalController::class, 'dashboard'])->name('dashboard');

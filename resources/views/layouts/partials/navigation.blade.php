@@ -69,6 +69,11 @@
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.museums.index') }}">Museum Information</a></li>
                     @elseif (auth()->user()->role === 'administrator')
                         <li class="nav-item"><x-ui.nav-placeholder label="Administrator Portal" /></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Admin Dashboard</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('admin.providers.index') }}">Providers</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('admin.users.index') }}">Users</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('admin.subscriptions.index') }}">Subscriptions</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('admin.audit.index') }}">Audit</a></li>
                     @endif
                 @endauth
             </ul>
