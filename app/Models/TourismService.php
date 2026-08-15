@@ -35,6 +35,11 @@ class TourismService extends Model
         return $this->hasOne(HotelRoomType::class, 'service_id', 'service_id');
     }
 
+    public function transportationVehicles()
+    {
+        return $this->hasMany(TransportationVehicle::class, 'service_id', 'service_id');
+    }
+
     public function isRestaurantReservationOffering(): bool
     {
         $categoryName = strtolower((string) $this->category?->category_name);

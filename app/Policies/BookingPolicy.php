@@ -44,4 +44,13 @@ class BookingPolicy
             && $booking->restaurantReservation !== null
             && (int) $booking->tourismService->provider_id === (int) $user->serviceProvider->provider_id;
     }
+
+    public function manageTransportationProvider(User $user, Booking $booking): bool
+    {
+        return $user->role === 'service_provider'
+            && $user->serviceProvider?->provider_type === 'transportation_car_rental'
+            && $booking->tourismService !== null
+            && $booking->transportationReservation !== null
+            && (int) $booking->tourismService->provider_id === (int) $user->serviceProvider->provider_id;
+    }
 }

@@ -13,6 +13,7 @@
                 <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Categories</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('tour-guides.index') }}">Tour Guides</a></li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('museums.index') }}">Museums</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('transportation.index') }}">Transportation</a></li>
                 <li class="nav-item"><x-ui.nav-placeholder label="Map" /></li>
                 @auth
                     @if (auth()->user()->role === 'tourist')
@@ -45,6 +46,12 @@
                             <li class="nav-item"><a class="nav-link" href="{{ route('restaurant.tables.index') }}">Tables</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('restaurant.reservations.index') }}">Reservations</a></li>
                             <li class="nav-item"><x-ui.nav-placeholder label="Reports" /></li>
+                        @elseif (auth()->user()->serviceProvider?->provider_type === 'transportation_car_rental')
+                            <li class="nav-item"><a class="nav-link" href="{{ route('transportation.dashboard') }}">Transportation Dashboard</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('transportation.profile') }}">Profile</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('transportation.services.index') }}">Services</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('transportation.vehicles.index') }}">Vehicles</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('transportation.reservations.index') }}">Reservations</a></li>
                         @else
                             <li class="nav-item"><x-ui.nav-placeholder label="Service Provider Portal" /></li>
                         @endif

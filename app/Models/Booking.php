@@ -57,4 +57,9 @@ class Booking extends Model
     {
         return $this->hasOne(RestaurantReservation::class, 'booking_id', 'booking_id');
     }
+
+    public function transportationReservation()
+    {
+        return $this->hasOne(TransportationReservation::class, 'booking_id', 'booking_id');
+    }
 }

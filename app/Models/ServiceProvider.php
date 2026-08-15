@@ -34,4 +34,9 @@ class ServiceProvider extends Model
     {
         return $this->hasMany(RestaurantTable::class, 'provider_id', 'provider_id');
     }
+
+    public function transportationVehicles()
+    {
+        return $this->hasMany(TransportationVehicle::class, 'provider_id', 'provider_id');
+    }
 }

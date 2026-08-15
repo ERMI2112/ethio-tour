@@ -18,6 +18,7 @@ use App\Http\Controllers\PublicHeritageSiteController;
 use App\Http\Controllers\PublicMuseumController;
 use App\Http\Controllers\PublicTourGuideController;
 use App\Http\Controllers\PublicTourismServiceController;
+use App\Http\Controllers\PublicTransportationController;
 use App\Http\Controllers\RestaurantProviderController;
 use App\Http\Controllers\RestaurantReservationController;
 use App\Http\Controllers\RestaurantServiceController;
@@ -27,6 +28,11 @@ use App\Http\Controllers\TourGuideBookingController;
 use App\Http\Controllers\TourGuideBookingRequestController;
 use App\Http\Controllers\TourGuidePortalController;
 use App\Http\Controllers\TouristReservationController;
+use App\Http\Controllers\TransportationProviderController;
+use App\Http\Controllers\TransportationReservationController;
+use App\Http\Controllers\TransportationServiceController;
+use App\Http\Controllers\TransportationTouristReservationController;
+use App\Http\Controllers\TransportationVehicleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -41,6 +47,9 @@ Route::get('/tourism-services', [PublicTourismServiceController::class, 'index']
 Route::get('/tourism-services/{tourismService}', [PublicTourismServiceController::class, 'show'])->name('tourism-services.show');
 Route::get('/museums', [PublicMuseumController::class, 'index'])->name('museums.index');
 Route::get('/museums/{museumInformation}', [PublicMuseumController::class, 'show'])->name('museums.show');
+Route::get('/transportation', [PublicTransportationController::class, 'index'])->name('transportation.index');
+Route::get('/transportation/{tourismService}', [PublicTransportationController::class, 'show'])->name('transportation.show');
+Route::post('/transportation/{tourismService}/availability', [TransportationTouristReservationController::class, 'checkAvailability'])->name('transportation.availability');
 Route::post('/restaurants/{tourismService}/availability', [RestaurantTouristReservationController::class, 'checkAvailability'])->name('restaurants.availability');
 Route::post('/tourism-services/{tourismService}/check-availability', [HotelReservationController::class, 'checkAvailability'])->name('tourism-services.check-availability');
 Route::get('/categories', [PublicCategoryController::class, 'index'])->name('categories.index');
@@ -88,6 +97,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/reservations/{booking}', [TouristReservationController::class, 'show'])->name('reservations.show');
         Route::patch('/reservations/{booking}/cancel', [TouristReservationController::class, 'cancel'])->name('reservations.cancel');
         Route::post('/services/{tourismService}/restaurant-reservations', [RestaurantTouristReservationController::class, 'store'])->name('restaurant-reservations.store');
+        Route::post('/services/{tourismService}/transportation-reservations', [TransportationTouristReservationController::class, 'store'])->name('transportation-reservations.store');
     });
 
     Route::middleware('role:tourist')->prefix('tour-guides/{guide}')->name('tour-guides.')->group(function () {
@@ -121,6 +131,19 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/reservations/{booking}', [RestaurantReservationController::class, 'show'])->name('reservations.show');
         Route::patch('/reservations/{booking}/accept', [RestaurantReservationController::class, 'accept'])->name('reservations.accept');
         Route::patch('/reservations/{booking}/reject', [RestaurantReservationController::class, 'reject'])->name('reservations.reject');
+    });
+
+    Route::prefix('transportation-portal')->name('transportation.')->middleware(['role:service_provider', 'transportation-provider'])->group(function () {
+        Route::get('/', [TransportationProviderController::class, 'dashboard'])->name('dashboard');
+        Route::get('/profile', [TransportationProviderController::class, 'show'])->name('profile');
+        Route::get('/profile/edit', [TransportationProviderController::class, 'edit'])->name('profile.edit');
+        Route::put('/profile', [TransportationProviderController::class, 'update'])->name('profile.update');
+        Route::resource('services', TransportationServiceController::class)->except(['show'])->parameters(['services' => 'tourismService']);
+        Route::resource('vehicles', TransportationVehicleController::class)->except(['show'])->parameters(['vehicles' => 'transportationVehicle']);
+        Route::get('/reservations', [TransportationReservationController::class, 'index'])->name('reservations.index');
+        Route::get('/reservations/{booking}', [TransportationReservationController::class, 'show'])->name('reservations.show');
+        Route::patch('/reservations/{booking}/accept', [TransportationReservationController::class, 'accept'])->name('reservations.accept');
+        Route::patch('/reservations/{booking}/reject', [TransportationReservationController::class, 'reject'])->name('reservations.reject');
     });
 
     Route::prefix('bureau')->name('bureau.')->middleware('role:tourism_bureau_officer')->group(function () {

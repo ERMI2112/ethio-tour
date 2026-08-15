@@ -1,0 +1,3 @@
+@extends('layouts.app')
+@section('title', 'Transportation Profile')
+@section('content')<div class="container py-4"><div class="card border-0 shadow-sm"><div class="card-body p-4"><h1 class="h3">Transportation provider profile</h1><dl class="row mt-4"><dt class="col-sm-3">Business name</dt><dd class="col-sm-9">{{ $provider->business_name }}</dd><dt class="col-sm-3">Provider type</dt><dd class="col-sm-9">{{ $provider->provider_type }}</dd><dt class="col-sm-3">Status</dt><dd class="col-sm-9">{{ $provider->status }}</dd></dl><a class="btn btn-primary" href="{{ route('transportation.profile.edit') }}">Edit profile</a></div></div></div>@endsection

@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\EnsureHotelProvider;
 use App\Http\Middleware\EnsureRestaurantProvider;
+use App\Http\Middleware\EnsureTransportationProvider;
 use App\Http\Middleware\EnsureUserHasRole;
 use App\Http\Middleware\EnsureUserIsActive;
 use Illuminate\Foundation\Application;
@@ -20,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => EnsureUserHasRole::class,
             'hotel-provider' => EnsureHotelProvider::class,
             'restaurant-provider' => EnsureRestaurantProvider::class,
+            'transportation-provider' => EnsureTransportationProvider::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

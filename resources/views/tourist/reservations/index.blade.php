@@ -79,6 +79,12 @@
                                         <td><div class="small fw-semibold">{{ $booking->tourGuideReservation->start_date->format('M d, Y') }}</div><div class="small text-muted">to {{ $booking->tourGuideReservation->end_date->format('M d, Y') }}</div></td>
                                         <td>{{ $booking->tourGuideReservation->number_of_tourists }}</td>
                                         <td><span class="text-muted">Not priced</span></td>
+                                    @elseif ($booking->transportationReservation)
+                                        @php($transportRes = $booking->transportationReservation)
+                                        <td><div class="fw-bold">{{ $booking->tourismService->service_name ?? 'Transportation reservation' }}</div><div class="small text-muted">{{ $booking->tourismService->serviceProvider->business_name ?? '' }}</div></td>
+                                        <td><div class="small fw-semibold">{{ $transportRes->pickup_at->format('M d, Y H:i') }}</div><div class="small text-muted">to {{ $transportRes->dropoff_at->format('M d, Y H:i') }}</div></td>
+                                        <td>{{ $transportRes->passenger_count }}</td>
+                                        <td><span class="text-muted">See service price</span></td>
                                     @elseif ($restaurantRes)
                                         <td><div class="fw-bold">{{ $booking->tourismService->service_name ?? 'Restaurant reservation' }}</div><div class="small text-muted">{{ $booking->tourismService->serviceProvider->business_name ?? '' }}</div></td>
                                         <td><div class="small fw-semibold">{{ $restaurantRes->reservation_date->format('M d, Y') }}</div><div class="small text-muted">{{ substr($restaurantRes->start_time, 0, 5) }}–{{ substr($restaurantRes->end_time, 0, 5) }}</div></td>
