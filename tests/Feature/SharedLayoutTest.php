@@ -27,7 +27,7 @@ class SharedLayoutTest extends TestCase
             ->assertDontSee('Bookings');
     }
 
-    public function test_authenticated_navigation_shows_shared_and_role_placeholder_actions(): void
+    public function test_authenticated_tourist_navigation_shows_only_functional_tourist_actions(): void
     {
         $tourist = User::factory()->create(['role' => 'tourist']);
 
@@ -36,20 +36,21 @@ class SharedLayoutTest extends TestCase
         $response->assertOk()
             ->assertSee('Account')
             ->assertSee('Log out')
-            ->assertSee('Bookings')
-            ->assertSee('Reports')
-            ->assertSee('Tourist Portal')
-            ->assertSee('data-nav-placeholder="true"', false)
+            ->assertSee('My Bookings')
+            ->assertSee('Smart Trip')
+            ->assertDontSee('Tourist Portal')
+            ->assertDontSee('>Bookings<', false)
+            ->assertDontSee('>Reports<', false)
             ->assertDontSee('Administrator Portal');
     }
 
-    public function test_role_specific_navigation_placeholder_matches_the_authenticated_role(): void
+    public function test_role_specific_navigation_exposes_functional_portal_links_only(): void
     {
         $roles = [
             'tour_guide' => 'Tour Guide Portal',
-            'service_provider' => 'Service Provider Portal',
-            'tourism_bureau_officer' => 'Tourism Bureau Portal',
-            'administrator' => 'Administrator Portal',
+            'service_provider' => 'Application Status',
+            'tourism_bureau_officer' => 'Bureau Dashboard',
+            'administrator' => 'Admin Dashboard',
         ];
 
         foreach ($roles as $role => $label) {

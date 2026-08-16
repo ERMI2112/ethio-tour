@@ -45,7 +45,11 @@ class ProviderGovernanceCorrectionTest extends TestCase
         $user = User::factory()->create(['role' => 'service_provider']);
         $provider = ServiceProvider::create(['user_id' => $user->user_id, 'business_name' => 'Pending Hotel', 'provider_type' => 'hotel', 'status' => 'pending']);
 
-        $this->actingAs($user)->get(route('provider.status'))->assertOk()->assertSee('Pending Hotel');
+        $this->actingAs($user)->get(route('provider.status'))
+            ->assertOk()
+            ->assertSee('Pending Hotel')
+            ->assertSee('Application Status')
+            ->assertDontSee('Hotel Dashboard');
         $this->actingAs($user)->get(route('hotel.dashboard'))->assertForbidden();
         $this->assertSame('pending', $provider->fresh()->verification_status);
     }

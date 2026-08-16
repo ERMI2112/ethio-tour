@@ -69,20 +69,16 @@
                 @auth
                     @if (auth()->user()->role === 'tourist')
                         <li class="nav-item"><a class="nav-link" href="{{ route('tourist.reservations.index') }}">My Bookings</a></li>
-                    @else
-                        <li class="nav-item"><x-ui.nav-placeholder label="Bookings" /></li>
-                    @endif
-                    @if (in_array(auth()->user()->role, ['tourist', 'tour_guide', 'service_provider', 'tourism_bureau_officer', 'administrator'], true))
-                        <li class="nav-item"><x-ui.nav-placeholder label="Reports" /></li>
                     @endif
                     @if (auth()->user()->role === 'tourist')
-                        <li class="nav-item"><x-ui.nav-placeholder label="Tourist Portal" /></li>
+                        {{-- Tourist actions are exposed through My Bookings and Smart Trip. --}}
                     @elseif (auth()->user()->role === 'tour_guide')
                         <li class="nav-item"><a class="nav-link" href="{{ route('tour-guide.dashboard') }}">Tour Guide Portal</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('tour-guide.profile') }}">My Profile</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('tour-guide.availability') }}">Availability</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('tour-guide.requests.index') }}">Booking Requests</a></li>
                     @elseif (auth()->user()->role === 'service_provider')
+                        @if (auth()->user()->serviceProvider?->isOperational())
                         @if (auth()->user()->serviceProvider?->provider_type === 'hotel')
                             <li class="nav-item"><a class="nav-link" href="{{ route('hotel.dashboard') }}">Hotel Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('hotel.profile') }}">Profile</a></li>
@@ -91,35 +87,33 @@
                             <li class="nav-item"><a class="nav-link" href="{{ route('hotel.reservations.index') }}">Reservations</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('provider.reports') }}">Reports</a></li>
                         @elseif (auth()->user()->serviceProvider?->provider_type === 'restaurant')
-                            <li class="nav-item"><x-ui.nav-placeholder label="Service Provider Portal" /></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('restaurant.dashboard') }}">Restaurant Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('restaurant.services.index') }}">Menu &amp; Services</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('restaurant.tables.index') }}">Tables</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('restaurant.reservations.index') }}">Reservations</a></li>
-                            <li class="nav-item"><x-ui.nav-placeholder label="Reports" /></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('provider.reports') }}">Reports</a></li>
                         @elseif (auth()->user()->serviceProvider?->provider_type === 'transportation_car_rental')
                             <li class="nav-item"><a class="nav-link" href="{{ route('transportation.dashboard') }}">Transportation Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('transportation.profile') }}">Profile</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('transportation.services.index') }}">Services</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('transportation.vehicles.index') }}">Vehicles</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('transportation.reservations.index') }}">Reservations</a></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('provider.reports') }}">Reports</a></li>
                         @elseif (auth()->user()->serviceProvider?->provider_type === 'event_organizer')
                             <li class="nav-item"><a class="nav-link" href="{{ route('event-organizer.dashboard') }}">Event Dashboard</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('event-organizer.events.index') }}">My Events</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('event-organizer.events.bookings') }}">Bookings</a></li>
-                        @else
-                            <li class="nav-item"><x-ui.nav-placeholder label="Service Provider Portal" /></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('provider.reports') }}">Reports</a></li>
+                        @endif
                         @endif
                         <li class="nav-item"><a class="nav-link" href="{{ route('provider.status') }}">Application Status</a></li>
                     @elseif (auth()->user()->role === 'tourism_bureau_officer')
-                        <li class="nav-item"><x-ui.nav-placeholder label="Tourism Bureau Portal" /></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.dashboard') }}">Bureau Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.guides.index') }}">Guide Verification</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.providers.index') }}">Provider Verification</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.museums.index') }}">Museum Information</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.reports.index') }}">Reports</a></li>
                     @elseif (auth()->user()->role === 'administrator')
-                        <li class="nav-item"><x-ui.nav-placeholder label="Administrator Portal" /></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Admin Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.providers.index') }}">Providers</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.users.index') }}">Users</a></li>

@@ -225,7 +225,8 @@ class HotelProviderManagementTest extends TestCase
         ServiceProvider::create(['user_id' => $restaurant->user_id, 'business_name' => 'Restaurant', 'provider_type' => 'restaurant', 'status' => 'approved']);
         $this->actingAs($restaurant)->get('/')
             ->assertDontSee('Hotel Dashboard')
-            ->assertSee('Service Provider Portal');
+            ->assertSee('Restaurant Dashboard')
+            ->assertDontSee('Service Provider Portal');
     }
 
     private function hotelContext(string $email = 'hotel@example.com'): array
