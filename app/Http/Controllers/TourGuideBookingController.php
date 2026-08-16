@@ -7,6 +7,7 @@ use App\Models\Booking;
 use App\Models\Review;
 use App\Models\TourGuide;
 use App\Services\BookingAmountService;
+use App\Services\NotificationService;
 use App\Services\TourGuideAvailabilityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,7 @@ class TourGuideBookingController extends Controller
         TourGuide $guide,
         TourGuideAvailabilityService $availabilityService,
         BookingAmountService $amountService,
+        NotificationService $notifications,
     ): RedirectResponse {
         $this->ensureBookable($guide);
         $validated = $request->validated();
@@ -62,6 +64,8 @@ class TourGuideBookingController extends Controller
 
             return $booking;
         });
+
+        $notifications->createForUser($guide->user, 'booking_request', 'New tour guide booking request', 'A tourist requested your guide services for the selected dates.');
 
         return to_route('tourist.reservations.show', $booking)->with('success', 'Guide booking request submitted successfully.');
     }

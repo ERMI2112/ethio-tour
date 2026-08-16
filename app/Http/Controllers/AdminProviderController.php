@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AdminProviderStatusRequest;
 use App\Models\ServiceProvider;
 use App\Services\AuditService;
+use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -29,7 +30,7 @@ class AdminProviderController extends Controller
         return view('admin.providers.show', ['provider' => $serviceProvider]);
     }
 
-    public function updateStatus(AdminProviderStatusRequest $request, ServiceProvider $serviceProvider, AuditService $audit): RedirectResponse
+    public function updateStatus(AdminProviderStatusRequest $request, ServiceProvider $serviceProvider, AuditService $audit, NotificationService $notifications): RedirectResponse
     {
         $target = $request->validated()['status'];
         $previous = $serviceProvider->status;
@@ -43,6 +44,7 @@ class AdminProviderController extends Controller
 
         $serviceProvider->forceFill(['status' => $target])->save();
         $audit->record($request->user(), 'provider_status_changed', ServiceProvider::class, $serviceProvider->provider_id, ['from' => $previous, 'to' => $target]);
+        $notifications->createForUser($serviceProvider->user, 'provider_'.($target === 'approved' ? 'approved' : $target), 'Provider platform status updated', 'Your provider platform status is now '.str_replace('_', ' ', $target).'.');
 
         return to_route('admin.providers.show', $serviceProvider)->with('success', 'Provider operational status updated.');
     }

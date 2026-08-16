@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BureauVerificationDecisionRequest;
 use App\Models\ServiceProvider;
+use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -27,7 +28,7 @@ class BureauProviderVerificationController extends Controller
         return view('bureau.providers.show', ['provider' => $serviceProvider]);
     }
 
-    public function decide(BureauVerificationDecisionRequest $request, ServiceProvider $serviceProvider): RedirectResponse
+    public function decide(BureauVerificationDecisionRequest $request, ServiceProvider $serviceProvider, NotificationService $notifications): RedirectResponse
     {
         abort_unless($serviceProvider->verification_status === 'pending', 422, 'Only pending providers can be reviewed.');
         $data = $request->validated();
@@ -35,6 +36,8 @@ class BureauProviderVerificationController extends Controller
             'verification_status' => $data['decision'] === 'approve' ? 'verified' : 'rejected',
             'verification_notes' => $data['verification_notes'] ?? null,
         ])->save();
+
+        $notifications->createForUser($serviceProvider->user, 'provider_verification', 'Provider verification decision', $data['decision'] === 'approve' ? 'Your provider profile has been verified by the Tourism Bureau and is awaiting administrator activation.' : 'Your provider profile was rejected by the Tourism Bureau.');
 
         return to_route('bureau.providers.show', $serviceProvider)->with('success', 'Provider verification decision saved.');
     }

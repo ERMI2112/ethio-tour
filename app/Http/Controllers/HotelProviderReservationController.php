@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\HotelAvailabilityException;
 use App\Models\Booking;
 use App\Services\HotelAvailabilityService;
+use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -53,7 +54,7 @@ class HotelProviderReservationController extends Controller
         return view('hotel.reservations.show', compact('booking'));
     }
 
-    public function accept(Request $request, Booking $booking, HotelAvailabilityService $availabilityService): RedirectResponse
+    public function accept(Request $request, Booking $booking, HotelAvailabilityService $availabilityService, NotificationService $notifications): RedirectResponse
     {
         Gate::authorize('manageHotelProvider', $booking);
 
@@ -77,10 +78,12 @@ class HotelProviderReservationController extends Controller
             return back()->with('error', 'Acceptance failed: '.$e->getMessage());
         }
 
+        $notifications->createForUser($booking->fresh('tourist')->tourist?->user, 'booking_accepted', 'Hotel reservation accepted', 'Your hotel reservation was accepted and a room was allocated. It is awaiting payment.');
+
         return back()->with('success', 'Reservation accepted successfully. Physical room allocated and status updated to payment_pending.');
     }
 
-    public function reject(Request $request, Booking $booking): RedirectResponse
+    public function reject(Request $request, Booking $booking, NotificationService $notifications): RedirectResponse
     {
         Gate::authorize('manageHotelProvider', $booking);
 
@@ -91,6 +94,8 @@ class HotelProviderReservationController extends Controller
         DB::transaction(function () use ($booking): void {
             $booking->update(['status' => 'rejected']);
         });
+
+        $notifications->createForUser($booking->fresh('tourist')->tourist?->user, 'booking_rejected', 'Hotel reservation rejected', 'Your hotel reservation request was rejected by the provider.');
 
         return back()->with('success', 'Reservation request rejected.');
     }

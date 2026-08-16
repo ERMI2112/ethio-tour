@@ -6,6 +6,7 @@ use App\Exceptions\TourGuideAvailabilityException;
 use App\Models\Booking;
 use App\Models\TourGuide;
 use App\Models\TourGuideReservation;
+use App\Services\NotificationService;
 use App\Services\TourGuideAvailabilityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -65,7 +66,7 @@ class TourGuideBookingRequestController extends Controller
         return view('tour-guide.requests.show', compact('booking'));
     }
 
-    public function accept(Booking $booking, TourGuideAvailabilityService $availabilityService, Request $request): RedirectResponse
+    public function accept(Booking $booking, TourGuideAvailabilityService $availabilityService, Request $request, NotificationService $notifications): RedirectResponse
     {
         Gate::authorize('manageTourGuide', $booking);
 
@@ -102,10 +103,12 @@ class TourGuideBookingRequestController extends Controller
             return back()->with('error', $exception->getMessage());
         }
 
+        $notifications->createForUser($booking->fresh('tourist')->tourist?->user, 'booking_accepted', 'Tour guide request accepted', 'Your tour guide booking request was accepted.');
+
         return back()->with('success', 'Booking request accepted.');
     }
 
-    public function reject(Booking $booking, Request $request): RedirectResponse
+    public function reject(Booking $booking, Request $request, NotificationService $notifications): RedirectResponse
     {
         Gate::authorize('manageTourGuide', $booking);
 
@@ -126,6 +129,8 @@ class TourGuideBookingRequestController extends Controller
         } catch (TourGuideAvailabilityException $exception) {
             return back()->with('error', $exception->getMessage());
         }
+
+        $notifications->createForUser($booking->fresh('tourist')->tourist?->user, 'booking_rejected', 'Tour guide request rejected', 'Your tour guide booking request was rejected.');
 
         return back()->with('success', 'Booking request rejected.');
     }

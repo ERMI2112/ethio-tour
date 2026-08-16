@@ -7,6 +7,7 @@ use App\Http\Requests\CheckTransportationAvailabilityRequest;
 use App\Http\Requests\StoreTransportationReservationRequest;
 use App\Models\Booking;
 use App\Models\TourismService;
+use App\Services\NotificationService;
 use App\Services\TransportationAvailabilityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -33,7 +34,7 @@ class TransportationTouristReservationController extends Controller
         return back()->with('success', "Availability confirmed! {$vehicles->count()} vehicle(s) match your request.")->withInput();
     }
 
-    public function store(StoreTransportationReservationRequest $request, TourismService $tourismService, TransportationAvailabilityService $availabilityService): RedirectResponse
+    public function store(StoreTransportationReservationRequest $request, TourismService $tourismService, TransportationAvailabilityService $availabilityService, NotificationService $notifications): RedirectResponse
     {
         $this->ensureTransportationService($tourismService);
         $data = $request->validated();
@@ -57,6 +58,8 @@ class TransportationTouristReservationController extends Controller
 
             return $booking;
         });
+
+        $notifications->createForUser($tourismService->serviceProvider?->user, 'reservation_request', 'New transportation request', 'A tourist submitted a transportation request for '.$tourismService->service_name.'.');
 
         return to_route('tourist.reservations.show', $booking)->with('success', 'Transportation request submitted successfully. Pending provider review.');
     }

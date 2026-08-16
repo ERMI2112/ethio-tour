@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\BureauVerificationDecisionRequest;
 use App\Models\TourGuide;
+use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -27,7 +28,7 @@ class BureauGuideVerificationController extends Controller
         return view('bureau.guides.show', ['guide' => $tourGuide]);
     }
 
-    public function decide(BureauVerificationDecisionRequest $request, TourGuide $tourGuide): RedirectResponse
+    public function decide(BureauVerificationDecisionRequest $request, TourGuide $tourGuide, NotificationService $notifications): RedirectResponse
     {
         if ($tourGuide->verification_status !== 'pending') {
             return back()->withErrors(['decision' => 'Only pending guides can be reviewed.']);
@@ -37,6 +38,8 @@ class BureauGuideVerificationController extends Controller
             'verification_status' => $data['decision'] === 'approve' ? 'verified' : 'rejected',
             'verification_notes' => $data['verification_notes'] ?? null,
         ])->save();
+
+        $notifications->createForUser($tourGuide->user, $data['decision'] === 'approve' ? 'guide_verification' : 'guide_verification', 'Tour guide verification decision', $data['decision'] === 'approve' ? 'Your tour guide profile has been verified by the Tourism Bureau.' : 'Your tour guide profile was rejected by the Tourism Bureau.');
 
         return to_route('bureau.guides.show', $tourGuide)->with('success', 'Guide verification decision saved.');
     }

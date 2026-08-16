@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\TransportationAvailabilityException;
 use App\Models\Booking;
+use App\Services\NotificationService;
 use App\Services\TransportationAvailabilityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -31,7 +32,7 @@ class TransportationReservationController extends Controller
         return view('transportation.reservations.show', compact('booking'));
     }
 
-    public function accept(Booking $booking, TransportationAvailabilityService $availabilityService): RedirectResponse
+    public function accept(Booking $booking, TransportationAvailabilityService $availabilityService, NotificationService $notifications): RedirectResponse
     {
         Gate::authorize('manageTransportationProvider', $booking);
         if ($booking->status !== 'pending' || ! $booking->transportationReservation) {
@@ -47,16 +48,19 @@ class TransportationReservationController extends Controller
             return back()->with('error', 'Acceptance failed: '.$exception->getMessage());
         }
 
+        $notifications->createForUser($booking->fresh('tourist')->tourist?->user, 'reservation_accepted', 'Transportation request accepted', 'Your transportation request was accepted and a vehicle was allocated.');
+
         return back()->with('success', 'Transportation request accepted and a vehicle was allocated.');
     }
 
-    public function reject(Booking $booking): RedirectResponse
+    public function reject(Booking $booking, NotificationService $notifications): RedirectResponse
     {
         Gate::authorize('manageTransportationProvider', $booking);
         if ($booking->status !== 'pending') {
             return back()->with('error', 'Only pending transportation requests can be rejected.');
         }
         $booking->update(['status' => 'rejected']);
+        $notifications->createForUser($booking->fresh('tourist')->tourist?->user, 'reservation_rejected', 'Transportation request rejected', 'Your transportation request was rejected by the provider.');
 
         return back()->with('success', 'Transportation request rejected.');
     }

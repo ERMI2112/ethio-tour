@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -60,11 +61,14 @@ class TouristReservationController extends Controller
         return view('tourist.reservations.show', compact('booking'));
     }
 
-    public function cancel(Request $request, Booking $booking): RedirectResponse
+    public function cancel(Request $request, Booking $booking, NotificationService $notifications): RedirectResponse
     {
         Gate::authorize('cancelTourist', $booking);
 
+        $booking->load(['tourismService.serviceProvider.user', 'tourGuide.user']);
         $booking->update(['status' => 'cancelled']);
+        $recipient = $booking->tourismService?->serviceProvider?->user ?? $booking->tourGuide?->user;
+        $notifications->createForUser($recipient, 'booking_cancelled', 'Booking cancelled', 'A tourist cancelled booking #'.$booking->booking_id.'.');
 
         return back()->with('success', 'Reservation request cancelled.');
     }

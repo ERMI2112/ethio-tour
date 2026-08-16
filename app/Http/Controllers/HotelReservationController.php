@@ -7,8 +7,8 @@ use App\Http\Requests\StoreHotelReservationRequest;
 use App\Models\Booking;
 use App\Models\TourismService;
 use App\Services\HotelAvailabilityService;
+use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 
@@ -49,7 +49,7 @@ class HotelReservationController extends Controller
         ])->withInput();
     }
 
-    public function store(StoreHotelReservationRequest $request, TourismService $tourismService, HotelAvailabilityService $availabilityService): RedirectResponse
+    public function store(StoreHotelReservationRequest $request, TourismService $tourismService, HotelAvailabilityService $availabilityService, NotificationService $notifications): RedirectResponse
     {
         $tourismService->loadMissing(['serviceProvider', 'hotelRoomType']);
 
@@ -97,6 +97,8 @@ class HotelReservationController extends Controller
 
             return $booking;
         });
+
+        $notifications->createForUser($tourismService->serviceProvider?->user, 'booking_request', 'New hotel reservation request', 'A tourist submitted a reservation request for '.$tourismService->service_name.'.');
 
         return to_route('tourist.reservations.show', $booking)->with('success', 'Reservation request submitted successfully! Pending hotel review.');
     }

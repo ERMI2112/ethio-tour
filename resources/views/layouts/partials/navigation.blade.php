@@ -132,6 +132,8 @@
                 <x-ui.nav-placeholder label="Smart Trip (coming soon)" />
                 <a class="btn btn-outline-secondary btn-sm" href="{{ route('tourism-services.index') }}">Search</a>
                 @auth
+                    @php($unreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
+                    <a class="btn btn-outline-primary btn-sm" href="{{ route('notifications.index') }}" aria-label="Notifications{{ $unreadNotifications ? ', '.$unreadNotifications.' unread' : '' }}">Notifications @if($unreadNotifications)<span class="badge text-bg-primary">{{ $unreadNotifications }}</span>@endif</a>
                     <a class="btn btn-outline-secondary btn-sm" href="{{ route('account') }}">Account</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf

@@ -7,6 +7,7 @@ use App\Http\Requests\CheckRestaurantAvailabilityRequest;
 use App\Http\Requests\StoreRestaurantReservationRequest;
 use App\Models\Booking;
 use App\Models\TourismService;
+use App\Services\NotificationService;
 use App\Services\RestaurantAvailabilityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
@@ -53,6 +54,7 @@ class RestaurantTouristReservationController extends Controller
         StoreRestaurantReservationRequest $request,
         TourismService $tourismService,
         RestaurantAvailabilityService $availabilityService,
+        NotificationService $notifications,
     ): RedirectResponse {
         $this->ensureRestaurantService($tourismService);
         $validated = $request->validated();
@@ -91,6 +93,8 @@ class RestaurantTouristReservationController extends Controller
 
             return $booking;
         });
+
+        $notifications->createForUser($tourismService->serviceProvider?->user, 'reservation_request', 'New restaurant reservation request', 'A tourist requested a table at '.$tourismService->service_name.'.');
 
         return to_route('tourist.reservations.show', $booking)->with('success', 'Restaurant reservation request submitted successfully.');
     }

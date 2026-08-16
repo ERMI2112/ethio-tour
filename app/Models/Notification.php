@@ -8,7 +8,7 @@ class Notification extends Model
 {
     protected $primaryKey = 'notification_id';
 
-    protected $fillable = ['user_id', 'title', 'message', 'channel', 'sent_date', 'read_status'];
+    protected $fillable = ['user_id', 'type', 'title', 'message', 'channel', 'sent_date', 'read_status'];
 
     protected function casts(): array
     {
