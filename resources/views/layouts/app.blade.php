@@ -12,6 +12,21 @@
 
     <main class="flex-grow-1">
         @include('layouts.partials.flash-messages')
+        @if (request()->routeIs('destinations.*'))
+            <div class="container pt-4"><x-ui.public-breadcrumbs group="Explore Ethiopia" section="Destinations" section-route="{{ route('destinations.index') }}" :current="request()->routeIs('destinations.show') ? ($destination->name ?? null) : null" /></div>
+        @elseif (request()->routeIs('heritage-sites.*'))
+            <div class="container pt-4"><x-ui.public-breadcrumbs group="Explore Ethiopia" section="Heritage Sites" section-route="{{ route('heritage-sites.index') }}" :current="request()->routeIs('heritage-sites.show') ? ($heritageSite->heritage_type ?? null) : null" /></div>
+        @elseif (request()->routeIs('museums.*'))
+            <div class="container pt-4"><x-ui.public-breadcrumbs group="Explore Ethiopia" section="Museums" section-route="{{ route('museums.index') }}" :current="request()->routeIs('museums.show') ? ($museum->name ?? null) : null" /></div>
+        @elseif (request()->routeIs('tour-guides.*'))
+            <div class="container pt-4"><x-ui.public-breadcrumbs group="Things to Do" section="Tour Guides" section-route="{{ route('tour-guides.index') }}" :current="request()->routeIs('tour-guides.show') ? ($guide->full_name ?? null) : null" /></div>
+        @elseif (request()->routeIs('tourism-services.*'))
+            <div class="container pt-4"><x-ui.public-breadcrumbs group="Stay &amp; Eat" section="Tourism Services" section-route="{{ route('tourism-services.index') }}" :current="request()->routeIs('tourism-services.show') ? ($tourismService->service_name ?? null) : null" /></div>
+        @elseif (request()->routeIs('transportation.*'))
+            <div class="container pt-4"><x-ui.public-breadcrumbs group="Travel &amp; Transport" section="Transportation" section-route="{{ route('transportation.index') }}" :current="request()->routeIs('transportation.show') ? ($tourismService->service_name ?? null) : null" /></div>
+        @elseif (request()->routeIs('events.*'))
+            <div class="container pt-4"><x-ui.public-breadcrumbs group="Events" section="Events &amp; Festivals" section-route="{{ route('events.index') }}" :current="request()->routeIs('events.show') ? ($culturalEvent->title ?? null) : null" /></div>
+        @endif
         @yield('content')
     </main>
 

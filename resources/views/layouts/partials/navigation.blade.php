@@ -7,14 +7,64 @@
 
         <div class="collapse navbar-collapse" id="primary-navigation">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                <li class="nav-item"><a class="nav-link" href="{{ route('destinations.index') }}">Destinations</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('heritage-sites.index') }}">Heritage Sites</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('tourism-services.index') }}">Tourism Services</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('categories.index') }}">Categories</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('tour-guides.index') }}">Tour Guides</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('museums.index') }}">Museums</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('transportation.index') }}">Transportation</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('events.index') }}">Events</a></li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Explore Ethiopia</a>
+                    <ul class="dropdown-menu">
+                        <li><h6 class="dropdown-header">Places and heritage</h6></li>
+                        <li><a class="dropdown-item" href="{{ route('destinations.index') }}">Destinations</a></li>
+                        <li><a class="dropdown-item" href="{{ route('heritage-sites.index') }}">Heritage Sites</a></li>
+                        <li><a class="dropdown-item" href="{{ route('museums.index') }}">Museums</a></li>
+                        <li><a class="dropdown-item" href="{{ route('categories.index') }}">Categories</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><x-ui.nav-placeholder label="National Parks (coming soon)" /></li>
+                        <li><x-ui.nav-placeholder label="World Heritage (coming soon)" /></li>
+                        <li><x-ui.nav-placeholder label="Explore on Map (coming soon)" /></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Things to Do</a>
+                    <ul class="dropdown-menu">
+                        <li><h6 class="dropdown-header">Experiences</h6></li>
+                        <li><a class="dropdown-item" href="{{ route('tour-guides.index') }}">Tour Guides</a></li>
+                        <li><a class="dropdown-item" href="{{ route('events.index') }}">Cultural Experiences</a></li>
+                        <li><a class="dropdown-item" href="{{ route('tourism-services.index') }}">Tours &amp; Activities</a></li>
+                        <li><x-ui.nav-placeholder label="Nature &amp; Wildlife (coming soon)" /></li>
+                        <li><x-ui.nav-placeholder label="Adventure &amp; Outdoors (coming soon)" /></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Stay &amp; Eat</a>
+                    <ul class="dropdown-menu">
+                        <li><h6 class="dropdown-header">Accommodation and dining</h6></li>
+                        <li><a class="dropdown-item" href="{{ route('tourism-services.index') }}">Hotels &amp; Restaurants</a></li>
+                        <li><a class="dropdown-item" href="{{ route('tourism-services.index') }}">Tourism Services</a></li>
+                        <li><x-ui.nav-placeholder label="Food &amp; Coffee (coming soon)" /></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Travel &amp; Transport</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('transportation.index') }}">Transportation</a></li>
+                        <li><a class="dropdown-item" href="{{ route('transportation.index') }}">Car Rental</a></li>
+                        <li><x-ui.nav-placeholder label="Travel Information (coming soon)" /></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Events</a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ route('events.index') }}">Events &amp; Festivals</a></li>
+                        <li><a class="dropdown-item" href="{{ route('events.index') }}">Cultural Events</a></li>
+                        <li><a class="dropdown-item" href="{{ route('events.index') }}">Upcoming Events</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Plan Your Trip</a>
+                    <ul class="dropdown-menu">
+                        <li><x-ui.nav-placeholder label="Trip Planner (coming soon)" /></li>
+                        <li><x-ui.nav-placeholder label="Travel Tips (coming soon)" /></li>
+                        <li><x-ui.nav-placeholder label="Practical Information (coming soon)" /></li>
+                    </ul>
+                </li>
                 <li class="nav-item"><x-ui.nav-placeholder label="Map" /></li>
                 @auth
                     @if (auth()->user()->role === 'tourist')
@@ -79,7 +129,8 @@
             </ul>
 
             <div class="d-flex align-items-center gap-2">
-                <span class="navbar-text text-muted d-none d-xl-inline">Smart Tourism Services</span>
+                <x-ui.nav-placeholder label="Smart Trip (coming soon)" />
+                <a class="btn btn-outline-secondary btn-sm" href="{{ route('tourism-services.index') }}">Search</a>
                 @auth
                     <a class="btn btn-outline-secondary btn-sm" href="{{ route('account') }}">Account</a>
                     <form method="POST" action="{{ route('logout') }}">
