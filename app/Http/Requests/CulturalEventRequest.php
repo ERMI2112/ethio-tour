@@ -28,6 +28,8 @@ class CulturalEventRequest extends FormRequest
             'destination_id' => ['required', 'integer', Rule::exists('destinations', 'destination_id')],
             'category_id' => ['required', 'integer', Rule::exists('categories', 'category_id')],
             'status' => ['required', Rule::in(CulturalEvent::STATUSES)],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90', 'required_with:longitude'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180', 'required_with:latitude'],
         ];
     }
 }

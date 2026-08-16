@@ -44,6 +44,8 @@ class HotelServiceRequest extends FormRequest
             'capacity' => ['required', 'integer', 'min:1'],
             'amenities' => ['array'],
             'amenities.*' => ['string', 'max:100'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90', 'required_with:longitude'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180', 'required_with:latitude'],
         ];
     }
 }

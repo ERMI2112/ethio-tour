@@ -2,13 +2,21 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasCoordinates;
 use Illuminate\Database\Eloquent\Model;
 
 class Destination extends Model
 {
+    use HasCoordinates;
+
     protected $primaryKey = 'destination_id';
 
-    protected $fillable = ['officer_id', 'name', 'location', 'description'];
+    protected $fillable = ['officer_id', 'name', 'location', 'description', 'latitude', 'longitude'];
+
+    protected function casts(): array
+    {
+        return ['latitude' => 'decimal:7', 'longitude' => 'decimal:7'];
+    }
 
     public function officer()
     {

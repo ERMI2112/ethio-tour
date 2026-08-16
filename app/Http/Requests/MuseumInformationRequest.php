@@ -26,6 +26,8 @@ class MuseumInformationRequest extends FormRequest
             'entrance_fee' => ['nullable', 'numeric', 'min:0'],
             'contact_information' => ['nullable', 'string', 'max:255'],
             'media_path' => ['nullable', 'string', 'max:255', 'regex:/^(https?:\/\/|\/)/i'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90', 'required_with:longitude'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180', 'required_with:latitude'],
         ];
     }
 }

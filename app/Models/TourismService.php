@@ -2,13 +2,21 @@
 
 namespace App\Models;
 
+use App\Models\Concerns\HasCoordinates;
 use Illuminate\Database\Eloquent\Model;
 
 class TourismService extends Model
 {
+    use HasCoordinates;
+
     protected $primaryKey = 'service_id';
 
-    protected $fillable = ['provider_id', 'category_id', 'destination_id', 'service_name', 'price', 'description'];
+    protected $fillable = ['provider_id', 'category_id', 'destination_id', 'service_name', 'price', 'description', 'latitude', 'longitude'];
+
+    protected function casts(): array
+    {
+        return ['price' => 'decimal:2', 'latitude' => 'decimal:7', 'longitude' => 'decimal:7'];
+    }
 
     public function serviceProvider()
     {

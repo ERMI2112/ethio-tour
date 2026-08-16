@@ -35,6 +35,7 @@ use App\Http\Controllers\PublicCategoryController;
 use App\Http\Controllers\PublicCulturalEventController;
 use App\Http\Controllers\PublicDestinationController;
 use App\Http\Controllers\PublicHeritageSiteController;
+use App\Http\Controllers\PublicMapDataController;
 use App\Http\Controllers\PublicMuseumController;
 use App\Http\Controllers\PublicTourGuideController;
 use App\Http\Controllers\PublicTourismServiceController;
@@ -72,6 +73,7 @@ Route::get('/transportation', [PublicTransportationController::class, 'index'])-
 Route::get('/transportation/{tourismService}', [PublicTransportationController::class, 'show'])->name('transportation.show');
 Route::get('/events', [PublicCulturalEventController::class, 'index'])->name('events.index');
 Route::get('/events/{culturalEvent}', [PublicCulturalEventController::class, 'show'])->name('events.show');
+Route::get('/map/data', PublicMapDataController::class)->name('map.data');
 Route::post('/transportation/{tourismService}/availability', [TransportationTouristReservationController::class, 'checkAvailability'])->name('transportation.availability');
 Route::post('/restaurants/{tourismService}/availability', [RestaurantTouristReservationController::class, 'checkAvailability'])->name('restaurants.availability');
 Route::post('/tourism-services/{tourismService}/check-availability', [HotelReservationController::class, 'checkAvailability'])->name('tourism-services.check-availability');
