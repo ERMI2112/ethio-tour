@@ -1,0 +1,16 @@
+@extends('layouts.app')
+@section('title', 'Explore on Map')
+@section('content')
+<div class="container-fluid py-4 py-lg-5">
+    <div class="container">
+        <div class="mb-4"><p class="text-uppercase text-success small fw-semibold mb-1">Explore Ethiopia</p><h1 class="display-6 fw-semibold mb-2">Discover places on the map</h1><p class="text-muted mb-0">Explore destinations, heritage, museums, events, and tourism services with verified public locations.</p></div>
+        <form id="map-filters" class="card border-0 shadow-sm mb-3" aria-label="Map filters"><div class="card-body"><div class="row g-3 align-items-end"><div class="col-md-3"><label class="form-label" for="map-category">What are you looking for?</label><select class="form-select" id="map-category" name="category"><option value="">All mapped places</option><option value="destinations" @selected($selectedCategory === 'destinations')>Destinations</option><option value="heritage_sites" @selected($selectedCategory === 'heritage_sites')>Heritage Sites</option><option value="museums" @selected($selectedCategory === 'museums')>Museums</option><option value="hotels" @selected($selectedCategory === 'hotels')>Hotels</option><option value="restaurants" @selected($selectedCategory === 'restaurants')>Restaurants</option><option value="transportation" @selected($selectedCategory === 'transportation')>Transportation</option><option value="events" @selected($selectedCategory === 'events')>Events</option><option value="services" @selected($selectedCategory === 'services')>Tourism Services</option></select></div><div class="col-md-3"><label class="form-label" for="map-destination">Destination</label><select class="form-select" id="map-destination" name="destination"><option value="">All destinations</option>@foreach($destinations as $destination)<option value="{{ $destination->destination_id }}" @selected($selectedDestination === $destination->destination_id)>{{ $destination->name }}</option>@endforeach</select></div><div class="col-md-4"><label class="form-label" for="map-search">Search</label><input class="form-control" id="map-search" name="q" value="{{ $search }}" placeholder="Search places, services, or events"></div><div class="col-md-2 d-flex gap-2"><button class="btn btn-success flex-grow-1" type="submit">Search</button><button class="btn btn-outline-primary" type="button" id="map-near-me">Near me</button></div></div></div></form>
+        <div id="map-status" class="alert alert-info d-none" role="status">No mapped places are available yet.</div>
+        <div class="map-shell position-relative"><div id="tourism-map" class="rounded-3 shadow-sm" data-endpoint="{{ route('map.data') }}" data-initial-category="{{ $selectedCategory }}" data-initial-destination="{{ $selectedDestination }}" data-initial-search="{{ $search }}" aria-label="Interactive tourism map"></div><div id="map-loading" class="map-overlay badge rounded-pill text-bg-light shadow-sm">Loading mapped places…</div></div>
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mt-3"><p id="map-result-count" class="text-muted small mb-0" aria-live="polite"></p><p class="text-muted small mb-0">Map data includes only locations with verified coordinates.</p></div>
+    </div>
+</div>
+@endsection
+@push('scripts')
+    @vite('resources/js/map.js')
+@endpush

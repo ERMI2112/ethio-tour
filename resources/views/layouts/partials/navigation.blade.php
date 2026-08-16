@@ -65,7 +65,7 @@
                         <li><x-ui.nav-placeholder label="Practical Information (coming soon)" /></li>
                     </ul>
                 </li>
-                <li class="nav-item"><x-ui.nav-placeholder label="Map" /></li>
+                <li class="nav-item"><a class="nav-link" href="{{ route('map') }}">Map</a></li>
                 @auth
                     @if (auth()->user()->role === 'tourist')
                         <li class="nav-item"><a class="nav-link" href="{{ route('tourist.reservations.index') }}">My Bookings</a></li>

@@ -26,6 +26,8 @@
             <div class="container pt-4"><x-ui.public-breadcrumbs group="Travel &amp; Transport" section="Transportation" section-route="{{ route('transportation.index') }}" :current="request()->routeIs('transportation.show') ? ($tourismService->service_name ?? null) : null" /></div>
         @elseif (request()->routeIs('events.*'))
             <div class="container pt-4"><x-ui.public-breadcrumbs group="Events" section="Events &amp; Festivals" section-route="{{ route('events.index') }}" :current="request()->routeIs('events.show') ? ($culturalEvent->title ?? null) : null" /></div>
+        @elseif (request()->routeIs('map'))
+            <div class="container pt-4"><x-ui.public-breadcrumbs group="Explore Ethiopia" section="Map" section-route="{{ route('map') }}" /></div>
         @endif
         @yield('content')
     </main>

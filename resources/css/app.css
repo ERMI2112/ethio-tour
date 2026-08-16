@@ -14,3 +14,30 @@ body {
     color: var(--ethio-tour-green) !important;
     font-weight: 700;
 }
+
+.map-shell {
+    overflow: hidden;
+}
+
+#tourism-map {
+    min-height: 520px;
+    width: 100%;
+    z-index: 1;
+}
+
+.map-overlay {
+    left: 1rem;
+    position: absolute;
+    top: 1rem;
+    z-index: 2;
+}
+
+.map-popup {
+    min-width: 170px;
+}
+
+@media (max-width: 576px) {
+    #tourism-map {
+        min-height: 430px;
+    }
+}

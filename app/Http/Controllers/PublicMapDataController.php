@@ -17,8 +17,14 @@ class PublicMapDataController extends Controller
         $category = $request->string('category')->trim()->value();
         $search = $request->string('q')->trim()->value();
         $destinationId = $request->integer('destination');
-        $allowed = ['destinations', 'heritage_sites', 'museums', 'services', 'events'];
-        $categories = $category && in_array($category, $allowed, true) ? [$category] : $allowed;
+        $allowed = ['destinations', 'heritage_sites', 'museums', 'services', 'hotels', 'restaurants', 'transportation', 'events'];
+        $serviceType = match ($category) {
+            'hotels' => 'hotel',
+            'restaurants' => 'restaurant',
+            'transportation' => 'transportation_car_rental',
+            default => null,
+        };
+        $categories = $category && in_array($category, $allowed, true) ? [$serviceType ? 'services' : $category] : $allowed;
         $markers = collect();
 
         if (in_array('destinations', $categories, true)) {
@@ -38,7 +44,7 @@ class PublicMapDataController extends Controller
         }
 
         if (in_array('services', $categories, true)) {
-            $markers = $markers->merge(TourismService::query()->with('serviceProvider')->whereNotNull('latitude')->whereNotNull('longitude')->whereHas('serviceProvider', fn ($query) => $query->publiclyOperational())->when($destinationId, fn ($query) => $query->where('destination_id', $destinationId))->when($search, fn ($query) => $query->where(function ($query) use ($search): void {
+            $markers = $markers->merge(TourismService::query()->with('serviceProvider')->whereNotNull('latitude')->whereNotNull('longitude')->whereHas('serviceProvider', fn ($query) => $query->publiclyOperational())->when($serviceType, fn ($query) => $query->whereHas('serviceProvider', fn ($provider) => $provider->where('provider_type', $serviceType)))->when($destinationId, fn ($query) => $query->where('destination_id', $destinationId))->when($search, fn ($query) => $query->where(function ($query) use ($search): void {
                 $query->where('service_name', 'like', "%{$search}%")->orWhereHas('serviceProvider', fn ($provider) => $provider->where('business_name', 'like', "%{$search}%"));
             }))->get()->map(fn (TourismService $service): array => $this->marker($this->serviceCategory($service), $service->service_name, $service->serviceProvider?->business_name, $service->latitude, $service->longitude, route('tourism-services.show', $service))));
         }
