@@ -15,6 +15,10 @@ class EventInventoryService
 
     public function availableQuantity(EventTicketType $ticket): int
     {
+        if ($ticket->status !== 'active') {
+            return 0;
+        }
+
         $claimed = (int) $ticket->reservations()->whereHas('booking', fn ($query) => $query->whereIn('status', self::RESERVING_STATUSES))->sum('quantity');
 
         return max(0, (int) $ticket->quantity - $claimed);
@@ -27,9 +31,14 @@ class EventInventoryService
         }
 
         return DB::transaction(function () use ($tourist, $event, $ticketTypeId, $quantity): Booking {
-            $event = CulturalEvent::query()->whereKey($event->event_id)->lockForUpdate()->with('service')->firstOrFail();
+            $event = CulturalEvent::query()->whereKey($event->event_id)->lockForUpdate()->with('service.serviceProvider')->firstOrFail();
             $ticket = EventTicketType::query()->whereKey($ticketTypeId)->lockForUpdate()->first();
-            if (! $ticket || (int) $ticket->event_id !== (int) $event->event_id || $event->status !== 'published' || $event->event_date->isPast()) {
+            if (! $ticket
+                || (int) $ticket->event_id !== (int) $event->event_id
+                || $ticket->status !== 'active'
+                || $event->status !== 'published'
+                || $event->event_date->isPast()
+                || ! $event->service?->serviceProvider?->isOperational()) {
                 throw new EventInventoryException('This event or ticket type is not bookable.');
             }
             if ($this->availableQuantity($ticket) < $quantity) {

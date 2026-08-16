@@ -14,7 +14,8 @@ class ReviewPolicy
         return $user->is_active
             && $user->role === 'tourist'
             && $user->tourist?->tourist_id === $booking->tourist_id
-            && ($booking->review || app(ReviewEligibilityService::class)->isEligible($booking));
+            && ! $booking->review
+            && app(ReviewEligibilityService::class)->isEligible($booking);
     }
 
     public function delete(User $user, Review $review): bool

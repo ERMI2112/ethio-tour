@@ -12,11 +12,12 @@ class TouristReviewController extends Controller
     public function store(StoreReviewRequest $request, Booking $booking): RedirectResponse
     {
         $booking->loadMissing(['review', 'tourGuideReservation', 'hotelRoomReservation', 'restaurantReservation', 'transportationReservation', 'eventReservation.ticketType.event']);
-        abort_unless(app(ReviewPolicy::class)->create($request->user(), $booking), 403);
 
         if ($booking->review) {
             return back()->with('error', 'This booking already has a review.');
         }
+
+        abort_unless(app(ReviewPolicy::class)->create($request->user(), $booking), 403);
 
         $booking->review()->create([
             'tourist_id' => $request->user()->tourist->tourist_id,

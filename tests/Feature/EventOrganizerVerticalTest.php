@@ -78,6 +78,41 @@ class EventOrganizerVerticalTest extends TestCase
         $this->actingAs($tourist['user'])->post(route('tourist.event-reservations.store', $context['event']), ['ticket_type_id' => $context['ticket']->ticket_type_id, 'quantity' => 1])->assertRedirect()->assertSessionHas('error');
     }
 
+    public function test_event_booking_rechecks_provider_governance_on_direct_requests(): void
+    {
+        $context = $this->context();
+        $context['provider']->update(['status' => 'suspended']);
+        $tourist = $this->tourist();
+
+        $this->actingAs($tourist['user'])
+            ->post(route('tourist.event-reservations.store', $context['event']), [
+                'ticket_type_id' => $context['ticket']->ticket_type_id,
+                'quantity' => 1,
+            ])
+            ->assertRedirect()
+            ->assertSessionHas('error');
+
+        $this->assertDatabaseCount('bookings', 0);
+    }
+
+    public function test_inactive_ticket_type_cannot_be_booked(): void
+    {
+        $context = $this->context();
+        $context['ticket']->update(['status' => 'inactive']);
+        $tourist = $this->tourist();
+
+        $this->actingAs($tourist['user'])
+            ->post(route('tourist.event-reservations.store', $context['event']), [
+                'ticket_type_id' => $context['ticket']->ticket_type_id,
+                'quantity' => 1,
+            ])
+            ->assertRedirect()
+            ->assertSessionHas('error');
+
+        $this->assertDatabaseCount('bookings', 0);
+        $this->assertSame(0, app(EventInventoryService::class)->availableQuantity($context['ticket']->fresh()));
+    }
+
     public function test_competing_ticket_claims_cannot_oversell_inventory(): void
     {
         $context = $this->context();

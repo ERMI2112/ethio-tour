@@ -36,6 +36,25 @@ class PublicTourGuideDiscoveryTest extends TestCase
         $this->get(route('tour-guides.show', $pending['guide']))->assertNotFound();
     }
 
+    public function test_unavailable_verified_guide_cannot_open_or_submit_a_booking_request(): void
+    {
+        $guide = $this->guide('unavailable@example.com', 'verified');
+        $guide['guide']->update(['availability_status' => 'unavailable']);
+        $tourist = $this->tourist();
+
+        $this->actingAs($tourist['user'])
+            ->get(route('tour-guides.book', $guide['guide']))
+            ->assertNotFound();
+
+        $this->actingAs($tourist['user'])
+            ->post(route('tour-guides.book.store', $guide['guide']), [
+                'start_date' => '2026-09-10',
+                'end_date' => '2026-09-12',
+                'number_of_tourists' => 1,
+            ])
+            ->assertNotFound();
+    }
+
     public function test_tourist_can_submit_one_pending_guide_request_and_history_displays_it(): void
     {
         $guide = $this->guide('bookable@example.com', 'verified');

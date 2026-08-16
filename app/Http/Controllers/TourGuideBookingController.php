@@ -74,6 +74,12 @@ class TourGuideBookingController extends Controller
     {
         $guide->loadMissing('user');
 
-        abort_unless($guide->verification_status === 'verified' && $guide->user?->is_active && $guide->daily_rate !== null, 404);
+        abort_unless(
+            $guide->verification_status === 'verified'
+            && $guide->user?->is_active
+            && $guide->availability_status === 'available'
+            && $guide->daily_rate !== null,
+            404,
+        );
     }
 }
