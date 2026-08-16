@@ -47,6 +47,7 @@ use App\Http\Controllers\RestaurantReservationController;
 use App\Http\Controllers\RestaurantServiceController;
 use App\Http\Controllers\RestaurantTableController;
 use App\Http\Controllers\RestaurantTouristReservationController;
+use App\Http\Controllers\SmartTripAIController;
 use App\Http\Controllers\SmartTripController;
 use App\Http\Controllers\SmartTripItemController;
 use App\Http\Controllers\SmartTripMapController;
@@ -166,6 +167,8 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::patch('/{trip}/items/{tripItem}/position', [SmartTripItemController::class, 'position'])->name('items.position');
         Route::get('/{trip}/map', [SmartTripMapController::class, 'index'])->name('map');
         Route::get('/{trip}/map-data', [SmartTripMapController::class, 'data'])->name('map.data');
+        Route::get('/{trip}/ai', [SmartTripAIController::class, 'create'])->name('ai.create');
+        Route::post('/{trip}/ai', [SmartTripAIController::class, 'generate'])->name('ai.generate');
         Route::post('/{trip}/suggestions', [SmartTripController::class, 'suggest'])->name('suggest');
         Route::get('/{trip}/edit', [SmartTripController::class, 'edit'])->name('edit');
         Route::put('/{trip}', [SmartTripController::class, 'update'])->name('update');
