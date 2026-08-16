@@ -13,7 +13,9 @@ class ProviderOnboardingController extends Controller
     {
         abort_unless($request->user()?->role === 'service_provider' && $request->user()->serviceProvider, 403);
 
-        return view('provider.onboarding-status', ['provider' => $request->user()->serviceProvider]);
+        $provider = $request->user()->serviceProvider->load(['providerSubscriptions.subscriptionPlan']);
+
+        return view('provider.onboarding-status', compact('provider'));
     }
 
     public function edit(Request $request): View

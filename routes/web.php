@@ -115,6 +115,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/subscriptions', [AdminSubscriptionController::class, 'index'])->name('subscriptions.index');
         Route::post('/subscriptions', [AdminSubscriptionController::class, 'store'])->name('subscriptions.store');
         Route::put('/subscriptions/{subscriptionPlan}', [AdminSubscriptionController::class, 'update'])->name('subscriptions.update');
+        Route::patch('/subscriptions/{subscriptionPlan}/status', [AdminSubscriptionController::class, 'toggle'])->name('subscriptions.status');
         Route::get('/audit', [AdminAuditController::class, 'index'])->name('audit.index');
         Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
         Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])->name('reviews.destroy');

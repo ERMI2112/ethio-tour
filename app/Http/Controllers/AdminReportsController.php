@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\AuditLog;
 use App\Models\Booking;
+use App\Models\ProviderSubscription;
 use App\Models\Review;
 use App\Models\ServiceProvider;
+use App\Models\SubscriptionPlan;
 use App\Models\TourGuide;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -31,6 +33,7 @@ class AdminReportsController extends Controller
             'from' => $from?->toDateString(), 'to' => $to?->toDateString(), 'status' => $status, 'providerType' => $providerType,
             'totalUsers' => User::count(), 'activeUsers' => User::where('is_active', true)->count(), 'roleBreakdown' => $roleBreakdown,
             'providerBreakdown' => $providerBreakdown, 'providerStatuses' => ServiceProvider::selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status'),
+            'planTotal' => SubscriptionPlan::count(), 'activePlans' => SubscriptionPlan::where('active', true)->count(), 'inactivePlans' => SubscriptionPlan::where('active', false)->count(), 'activeSubscriptions' => ProviderSubscription::where('status', 'active')->count(),
             'totalGuides' => TourGuide::count(), 'verifiedGuides' => TourGuide::where('verification_status', 'verified')->count(), 'pendingGuides' => TourGuide::where('verification_status', 'pending')->count(),
             'bookingTotal' => (clone $bookings)->count(), 'statusBreakdown' => $statusBreakdown, 'domainBookings' => ['hotel' => (clone $domainBookings)->whereHas('tourismService.serviceProvider', fn ($q) => $q->where('provider_type', 'hotel'))->count(), 'restaurant' => (clone $domainBookings)->whereHas('tourismService.serviceProvider', fn ($q) => $q->where('provider_type', 'restaurant'))->count(), 'transportation' => (clone $domainBookings)->whereHas('tourismService.serviceProvider', fn ($q) => $q->where('provider_type', 'transportation_car_rental'))->count(), 'event' => (clone $domainBookings)->whereHas('tourismService.serviceProvider', fn ($q) => $q->where('provider_type', 'event_organizer'))->count(), 'guide' => (clone $bookings)->whereNotNull('guide_id')->count()],
             'reviewCount' => (clone $reviewQuery)->count(), 'reviewAverage' => (clone $reviewQuery)->avg('rating'), 'ratingDistribution' => (clone $reviewQuery)->selectRaw('rating, count(*) as total')->groupBy('rating')->orderBy('rating')->pluck('total', 'rating'),
