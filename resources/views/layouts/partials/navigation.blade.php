@@ -89,7 +89,7 @@
                             <li class="nav-item"><a class="nav-link" href="{{ route('hotel.services.index') }}">Room Types</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('hotel.rooms.index') }}">Rooms</a></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('hotel.reservations.index') }}">Reservations</a></li>
-                            <li class="nav-item"><x-ui.nav-placeholder label="Reports" /></li>
+                            <li class="nav-item"><a class="nav-link" href="{{ route('provider.reports') }}">Reports</a></li>
                         @elseif (auth()->user()->serviceProvider?->provider_type === 'restaurant')
                             <li class="nav-item"><x-ui.nav-placeholder label="Service Provider Portal" /></li>
                             <li class="nav-item"><a class="nav-link" href="{{ route('restaurant.dashboard') }}">Restaurant Dashboard</a></li>
@@ -117,6 +117,7 @@
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.guides.index') }}">Guide Verification</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.providers.index') }}">Provider Verification</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.museums.index') }}">Museum Information</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('bureau.reports.index') }}">Reports</a></li>
                     @elseif (auth()->user()->role === 'administrator')
                         <li class="nav-item"><x-ui.nav-placeholder label="Administrator Portal" /></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.dashboard') }}">Admin Dashboard</a></li>
@@ -125,6 +126,7 @@
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.subscriptions.index') }}">Subscriptions</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.audit.index') }}">Audit</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.reviews.index') }}">Reviews</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('admin.reports.index') }}">Reports</a></li>
                     @endif
                 @endauth
             </ul>

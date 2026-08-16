@@ -4,9 +4,10 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminAuditController;
 use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminProviderController;
+use App\Http\Controllers\AdminReportsController;
+use App\Http\Controllers\AdminReviewController;
 use App\Http\Controllers\AdminSubscriptionController;
 use App\Http\Controllers\AdminUserController;
-use App\Http\Controllers\AdminReviewController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -16,6 +17,7 @@ use App\Http\Controllers\BureauDashboardController;
 use App\Http\Controllers\BureauGuideVerificationController;
 use App\Http\Controllers\BureauMuseumController;
 use App\Http\Controllers\BureauProviderVerificationController;
+use App\Http\Controllers\BureauReportsController;
 use App\Http\Controllers\CulturalEventController;
 use App\Http\Controllers\EventOrganizerController;
 use App\Http\Controllers\EventReservationController;
@@ -28,6 +30,7 @@ use App\Http\Controllers\HotelRoomController;
 use App\Http\Controllers\HotelServiceController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProviderOnboardingController;
+use App\Http\Controllers\ProviderReportsController;
 use App\Http\Controllers\PublicCategoryController;
 use App\Http\Controllers\PublicCulturalEventController;
 use App\Http\Controllers\PublicDestinationController;
@@ -115,6 +118,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/audit', [AdminAuditController::class, 'index'])->name('audit.index');
         Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
         Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])->name('reviews.destroy');
+        Route::get('/reports', [AdminReportsController::class, 'index'])->name('reports.index');
     });
 
     Route::prefix('tour-guide')->name('tour-guide.')->middleware('role:tour_guide')->group(function () {
@@ -144,6 +148,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/status', [ProviderOnboardingController::class, 'show'])->name('status');
         Route::get('/profile', [ProviderOnboardingController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [ProviderOnboardingController::class, 'update'])->name('profile.update');
+        Route::get('/reports', [ProviderReportsController::class, 'index'])->name('reports');
     });
 
     Route::middleware('role:tourist')->prefix('tour-guides/{guide}')->name('tour-guides.')->group(function () {
@@ -205,6 +210,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::prefix('bureau')->name('bureau.')->middleware('role:tourism_bureau_officer')->group(function () {
         Route::get('/', BureauDashboardController::class)->name('dashboard');
+        Route::get('/reports', [BureauReportsController::class, 'index'])->name('reports.index');
         Route::get('/guides', [BureauGuideVerificationController::class, 'index'])->name('guides.index');
         Route::get('/guides/{tourGuide}', [BureauGuideVerificationController::class, 'show'])->name('guides.show');
         Route::patch('/guides/{tourGuide}/decision', [BureauGuideVerificationController::class, 'decide'])->name('guides.decide');
