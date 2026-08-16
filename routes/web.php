@@ -23,6 +23,7 @@ use App\Http\Controllers\EventOrganizerController;
 use App\Http\Controllers\EventReservationController;
 use App\Http\Controllers\EventTicketController;
 use App\Http\Controllers\EventTouristBookingController;
+use App\Http\Controllers\GlobalSearchController;
 use App\Http\Controllers\HotelProviderController;
 use App\Http\Controllers\HotelProviderReservationController;
 use App\Http\Controllers\HotelReservationController;
@@ -76,6 +77,7 @@ Route::get('/events', [PublicCulturalEventController::class, 'index'])->name('ev
 Route::get('/events/{culturalEvent}', [PublicCulturalEventController::class, 'show'])->name('events.show');
 Route::get('/map', [PublicMapController::class, 'index'])->name('map');
 Route::get('/map/data', PublicMapDataController::class)->name('map.data');
+Route::get('/search', [GlobalSearchController::class, 'index'])->name('search');
 Route::post('/transportation/{tourismService}/availability', [TransportationTouristReservationController::class, 'checkAvailability'])->name('transportation.availability');
 Route::post('/restaurants/{tourismService}/availability', [RestaurantTouristReservationController::class, 'checkAvailability'])->name('restaurants.availability');
 Route::post('/tourism-services/{tourismService}/check-availability', [HotelReservationController::class, 'checkAvailability'])->name('tourism-services.check-availability');
