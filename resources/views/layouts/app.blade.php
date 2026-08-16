@@ -28,6 +28,8 @@
             <div class="container pt-4"><x-ui.public-breadcrumbs group="Events" section="Events &amp; Festivals" section-route="{{ route('events.index') }}" :current="request()->routeIs('events.show') ? ($culturalEvent->title ?? null) : null" /></div>
         @elseif (request()->routeIs('map'))
             <div class="container pt-4"><x-ui.public-breadcrumbs group="Explore Ethiopia" section="Map" section-route="{{ route('map') }}" /></div>
+        @elseif (request()->routeIs('smart-trip.*'))
+            <div class="container pt-4"><x-ui.public-breadcrumbs group="Plan Your Trip" section="Smart Trip" section-route="{{ route('smart-trip.index') }}" :current="request()->routeIs('smart-trip.show') || request()->routeIs('smart-trip.edit') ? ($trip->title ?? null) : null" /></div>
         @endif
         @yield('content')
     </main>

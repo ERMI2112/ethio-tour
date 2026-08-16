@@ -47,6 +47,9 @@ use App\Http\Controllers\RestaurantReservationController;
 use App\Http\Controllers\RestaurantServiceController;
 use App\Http\Controllers\RestaurantTableController;
 use App\Http\Controllers\RestaurantTouristReservationController;
+use App\Http\Controllers\SmartTripController;
+use App\Http\Controllers\SmartTripItemController;
+use App\Http\Controllers\SmartTripMapController;
 use App\Http\Controllers\TourGuideBookingController;
 use App\Http\Controllers\TourGuideBookingRequestController;
 use App\Http\Controllers\TourGuidePortalController;
@@ -78,6 +81,7 @@ Route::get('/events/{culturalEvent}', [PublicCulturalEventController::class, 'sh
 Route::get('/map', [PublicMapController::class, 'index'])->name('map');
 Route::get('/map/data', PublicMapDataController::class)->name('map.data');
 Route::get('/search', [GlobalSearchController::class, 'index'])->name('search');
+Route::get('/smart-trip', [SmartTripController::class, 'index'])->name('smart-trip.index');
 Route::post('/transportation/{tourismService}/availability', [TransportationTouristReservationController::class, 'checkAvailability'])->name('transportation.availability');
 Route::post('/restaurants/{tourismService}/availability', [RestaurantTouristReservationController::class, 'checkAvailability'])->name('restaurants.availability');
 Route::post('/tourism-services/{tourismService}/check-availability', [HotelReservationController::class, 'checkAvailability'])->name('tourism-services.check-availability');
@@ -149,6 +153,24 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('/services/{tourismService}/restaurant-reservations', [RestaurantTouristReservationController::class, 'store'])->name('restaurant-reservations.store');
         Route::post('/services/{tourismService}/transportation-reservations', [TransportationTouristReservationController::class, 'store'])->name('transportation-reservations.store');
         Route::post('/events/{culturalEvent}/reservations', [EventTouristBookingController::class, 'store'])->name('event-reservations.store');
+    });
+
+    Route::middleware('role:tourist')->prefix('smart-trip')->name('smart-trip.')->group(function () {
+        Route::get('/create', [SmartTripController::class, 'create'])->name('create');
+        Route::post('/', [SmartTripController::class, 'store'])->name('store');
+        Route::get('/{trip}/items/create', [SmartTripItemController::class, 'create'])->name('items.create');
+        Route::post('/{trip}/items', [SmartTripItemController::class, 'store'])->name('items.store');
+        Route::delete('/{trip}/items/{tripItem}', [SmartTripItemController::class, 'destroy'])->name('items.destroy');
+        Route::patch('/{trip}/items/{tripItem}/move', [SmartTripItemController::class, 'move'])->name('items.move');
+        Route::patch('/{trip}/items/{tripItem}/notes', [SmartTripItemController::class, 'notes'])->name('items.notes');
+        Route::patch('/{trip}/items/{tripItem}/position', [SmartTripItemController::class, 'position'])->name('items.position');
+        Route::get('/{trip}/map', [SmartTripMapController::class, 'index'])->name('map');
+        Route::get('/{trip}/map-data', [SmartTripMapController::class, 'data'])->name('map.data');
+        Route::post('/{trip}/suggestions', [SmartTripController::class, 'suggest'])->name('suggest');
+        Route::get('/{trip}/edit', [SmartTripController::class, 'edit'])->name('edit');
+        Route::put('/{trip}', [SmartTripController::class, 'update'])->name('update');
+        Route::delete('/{trip}', [SmartTripController::class, 'destroy'])->name('destroy');
+        Route::get('/{trip}', [SmartTripController::class, 'show'])->name('show');
     });
 
     Route::middleware('role:service_provider')->prefix('provider')->name('provider.')->group(function () {

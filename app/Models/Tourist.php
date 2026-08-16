@@ -24,4 +24,9 @@ class Tourist extends Model
     {
         return $this->hasMany(Review::class, 'tourist_id', 'tourist_id');
     }
+
+    public function trips()
+    {
+        return $this->hasMany(Trip::class, 'user_id', 'user_id');
+    }
 }

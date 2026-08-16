@@ -49,6 +49,8 @@ class GlobalSearchService
                 $this->score($term, $item->name, $item->description, $item->location),
                 null,
                 $this->mapUrl('destinations', $item->latitude, $item->longitude, $item->name),
+                'destination',
+                $item->destination_id,
             )));
         }
 
@@ -73,6 +75,8 @@ class GlobalSearchService
                 $this->score($term, $item->heritage_type, $item->destination?->name),
                 null,
                 $this->mapUrl('heritage_sites', $item->latitude, $item->longitude, $item->heritage_type),
+                'heritage_site',
+                $item->heritage_id,
             )));
         }
 
@@ -96,6 +100,8 @@ class GlobalSearchService
                 $this->score($term, $item->museum_name, $item->description, $item->location),
                 null,
                 $this->mapUrl('museums', $item->latitude, $item->longitude, $item->museum_name),
+                'museum',
+                $item->museum_id,
             )));
         }
 
@@ -143,6 +149,9 @@ class GlobalSearchService
                 route('tour-guides.show', $item),
                 $this->score($term, $item->expertise, $item->license_number),
                 $this->rating($ratings, $item->guide_id),
+                null,
+                'guide',
+                $item->guide_id,
             )));
         }
 
@@ -174,6 +183,8 @@ class GlobalSearchService
                 $this->score($term, $item->event_name, $item->description, $item->venue, $item->destination?->name),
                 $this->rating($ratings, $item->service_id),
                 $this->mapUrl('events', $item->latitude, $item->longitude, $item->event_name),
+                'event',
+                $item->event_id,
             )));
         }
 
@@ -201,9 +212,9 @@ class GlobalSearchService
         }
     }
 
-    private function result(string $type, string $label, string $title, ?string $summary, ?string $destination, string $url, int $score, ?float $rating = null, ?string $mapUrl = null): array
+    private function result(string $type, string $label, string $title, ?string $summary, ?string $destination, string $url, int $score, ?float $rating = null, ?string $mapUrl = null, ?string $tripItemType = null, ?int $tripItemId = null): array
     {
-        return ['type' => $type, 'type_label' => $label, 'title' => $title, 'summary' => $summary, 'destination' => $destination, 'rating' => $rating, 'url' => $url, 'map_url' => $mapUrl, 'score' => $score];
+        return ['type' => $type, 'type_label' => $label, 'title' => $title, 'summary' => $summary, 'destination' => $destination, 'rating' => $rating, 'url' => $url, 'map_url' => $mapUrl, 'score' => $score, 'trip_item_type' => $tripItemType, 'trip_item_id' => $tripItemId];
     }
 
     private function serviceResult(TourismService $service, string $term, ?float $rating): array
@@ -231,6 +242,8 @@ class GlobalSearchService
             $this->score($term, $service->service_name, $service->description, $service->destination?->name, $service->category?->category_name, $service->serviceProvider?->business_name),
             $rating,
             $this->mapUrl($mapCategory, $service->latitude, $service->longitude, $service->service_name),
+            'service',
+            $service->service_id,
         );
     }
 
