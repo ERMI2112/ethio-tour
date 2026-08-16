@@ -58,6 +58,8 @@
         </div>
     </div>
 
+    <div class="card border-0 shadow-sm mb-4"><div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3"><div><h2 class="h6 mb-1">Guest feedback</h2><p class="text-muted small mb-0">Reviews received across your hotel services.</p></div><x-reviews.rating-summary :average="$stats['reviewAverage']" :count="$stats['reviewCount']" /></div></div>
+
     <div class="row g-4">
         <div class="col-lg-7">
             <div class="card border-0 shadow-sm h-100">

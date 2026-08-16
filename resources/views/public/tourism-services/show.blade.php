@@ -143,5 +143,6 @@
             </div>
         @endif
     </div>
+    <section class="card border-0 shadow-sm mt-4"><div class="card-body p-4"><div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h5 mb-0">Guest reviews</h2><x-reviews.rating-summary :average="$reviewAverage" :count="$reviewCount" /></div><x-reviews.review-list :reviews="$reviews" /></div></section>
 </div>
 @endsection

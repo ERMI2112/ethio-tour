@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\CulturalEvent;
+use App\Models\Review;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -22,7 +23,11 @@ class PublicCulturalEventController extends Controller
     {
         $culturalEvent->load(['destination', 'serviceProvider', 'ticketTypes']);
         abort_unless($culturalEvent->status === 'published' && $culturalEvent->serviceProvider?->isOperational(), 404);
+        $reviewQuery = Review::with('tourist')->whereHas('booking', fn ($query) => $query->where('service_id', $culturalEvent->service_id));
+        $reviewAverage = (clone $reviewQuery)->avg('rating');
+        $reviewCount = (clone $reviewQuery)->count();
+        $reviews = $reviewQuery->latest('review_date')->limit(10)->get();
 
-        return view('public.events.show', ['event' => $culturalEvent]);
+        return view('public.events.show', compact('culturalEvent', 'reviewAverage', 'reviewCount', 'reviews') + ['event' => $culturalEvent]);
     }
 }

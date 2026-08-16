@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\HotelProfileRequest;
 use App\Models\Booking;
 use App\Models\HotelRoom;
+use App\Models\Review;
 use App\Services\HotelAvailabilityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ class HotelProviderController extends Controller
     {
         $provider = $request->user()->serviceProvider;
         $serviceIds = $provider->tourismServices()->pluck('service_id');
+        $reviewQuery = Review::whereHas('booking', fn ($query) => $query->whereIn('service_id', $serviceIds));
 
         $rooms = HotelRoom::query()
             ->withCount('hotelRoomReservations')
@@ -48,6 +50,8 @@ class HotelProviderController extends Controller
             'reservations' => $reservationCounts,
             'upcomingStays' => $upcomingStays,
             'pendingAttention' => $reservationCounts['pending'],
+            'reviewAverage' => (clone $reviewQuery)->avg('rating'),
+            'reviewCount' => (clone $reviewQuery)->count(),
         ];
 
         return view('hotel.dashboard', compact('provider', 'stats'));

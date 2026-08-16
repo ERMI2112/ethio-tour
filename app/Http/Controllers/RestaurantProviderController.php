@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\RestaurantProfileRequest;
 use App\Models\Booking;
+use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,6 +15,7 @@ class RestaurantProviderController extends Controller
     {
         $provider = $request->user()->serviceProvider;
         $serviceIds = $provider->tourismServices()->pluck('service_id');
+        $reviewQuery = Review::whereHas('booking', fn ($query) => $query->whereIn('service_id', $serviceIds));
 
         $stats = [
             'serviceCount' => $serviceIds->count(),
@@ -21,6 +23,8 @@ class RestaurantProviderController extends Controller
             'activeTables' => $provider->restaurantTables()->where('status', 'active')->count(),
             'pendingReservations' => Booking::whereIn('service_id', $serviceIds)->where('status', 'pending')->count(),
             'upcomingReservations' => Booking::whereIn('service_id', $serviceIds)->whereIn('status', ['accepted', 'payment_pending', 'confirmed'])->count(),
+            'reviewAverage' => (clone $reviewQuery)->avg('rating'),
+            'reviewCount' => (clone $reviewQuery)->count(),
         ];
 
         return view('restaurant.dashboard', compact('provider', 'stats'));

@@ -124,6 +124,7 @@
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.users.index') }}">Users</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.subscriptions.index') }}">Subscriptions</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('admin.audit.index') }}">Audit</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('admin.reviews.index') }}">Reviews</a></li>
                     @endif
                 @endauth
             </ul>

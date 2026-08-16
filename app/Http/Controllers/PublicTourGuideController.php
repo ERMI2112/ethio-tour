@@ -47,9 +47,11 @@ class PublicTourGuideController extends Controller
     private function attachRatings($guides): void
     {
         $guides->each(function (TourGuide $guide): void {
-            $guide->average_rating = Review::query()
-                ->whereHas('booking', fn ($query) => $query->where('guide_id', $guide->guide_id))
+            $query = Review::query()->whereHas('booking', fn ($query) => $query->where('guide_id', $guide->guide_id));
+            $guide->average_rating = (clone $query)
                 ->avg('rating');
+            $guide->review_count = (clone $query)->count();
+            $guide->reviews = $query->with('tourist')->latest('review_date')->limit(10)->get();
         });
     }
 }

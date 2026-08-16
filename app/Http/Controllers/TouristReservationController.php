@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Booking;
 use App\Services\NotificationService;
+use App\Services\ReviewEligibilityService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -41,7 +42,7 @@ class TouristReservationController extends Controller
         return view('tourist.reservations.index', compact('bookings', 'status'));
     }
 
-    public function show(Request $request, Booking $booking): View
+    public function show(Request $request, Booking $booking, ReviewEligibilityService $eligibility): View
     {
         Gate::authorize('viewTourist', $booking);
 
@@ -56,9 +57,11 @@ class TouristReservationController extends Controller
             'transportationReservation.vehicle',
             'eventReservation.ticketType.event',
             'payment',
+            'review',
         ]);
+        $reviewEligible = $eligibility->isEligible($booking);
 
-        return view('tourist.reservations.show', compact('booking'));
+        return view('tourist.reservations.show', compact('booking', 'reviewEligible'));
     }
 
     public function cancel(Request $request, Booking $booking, NotificationService $notifications): RedirectResponse

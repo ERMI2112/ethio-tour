@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminDashboardController;
 use App\Http\Controllers\AdminProviderController;
 use App\Http\Controllers\AdminSubscriptionController;
 use App\Http\Controllers\AdminUserController;
+use App\Http\Controllers\AdminReviewController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\NewPasswordController;
@@ -44,6 +45,7 @@ use App\Http\Controllers\TourGuideBookingController;
 use App\Http\Controllers\TourGuideBookingRequestController;
 use App\Http\Controllers\TourGuidePortalController;
 use App\Http\Controllers\TouristReservationController;
+use App\Http\Controllers\TouristReviewController;
 use App\Http\Controllers\TransportationProviderController;
 use App\Http\Controllers\TransportationReservationController;
 use App\Http\Controllers\TransportationServiceController;
@@ -111,6 +113,8 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('/subscriptions', [AdminSubscriptionController::class, 'store'])->name('subscriptions.store');
         Route::put('/subscriptions/{subscriptionPlan}', [AdminSubscriptionController::class, 'update'])->name('subscriptions.update');
         Route::get('/audit', [AdminAuditController::class, 'index'])->name('audit.index');
+        Route::get('/reviews', [AdminReviewController::class, 'index'])->name('reviews.index');
+        Route::delete('/reviews/{review}', [AdminReviewController::class, 'destroy'])->name('reviews.destroy');
     });
 
     Route::prefix('tour-guide')->name('tour-guide.')->middleware('role:tour_guide')->group(function () {
@@ -129,6 +133,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('/services/{tourismService}/reservations', [HotelReservationController::class, 'store'])->name('reservations.store');
         Route::get('/reservations', [TouristReservationController::class, 'index'])->name('reservations.index');
         Route::get('/reservations/{booking}', [TouristReservationController::class, 'show'])->name('reservations.show');
+        Route::post('/reservations/{booking}/reviews', [TouristReviewController::class, 'store'])->name('reservations.reviews.store');
         Route::patch('/reservations/{booking}/cancel', [TouristReservationController::class, 'cancel'])->name('reservations.cancel');
         Route::post('/services/{tourismService}/restaurant-reservations', [RestaurantTouristReservationController::class, 'store'])->name('restaurant-reservations.store');
         Route::post('/services/{tourismService}/transportation-reservations', [TransportationTouristReservationController::class, 'store'])->name('transportation-reservations.store');

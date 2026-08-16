@@ -32,7 +32,7 @@
                 <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm h-100"><div class="card-body"><p class="text-muted small mb-1">Pending guide requests</p><p class="display-6 fw-bold mb-0">{{ $stats['pendingRequests'] }}</p></div></div></div>
                 <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm h-100"><div class="card-body"><p class="text-muted small mb-1">Active guide bookings</p><p class="display-6 fw-bold mb-0">{{ $stats['activeBookings'] }}</p></div></div></div>
                 <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm h-100"><div class="card-body"><p class="text-muted small mb-1">Completed bookings</p><p class="display-6 fw-bold mb-0">{{ $stats['completedBookings'] }}</p></div></div></div>
-                <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm h-100"><div class="card-body"><p class="text-muted small mb-1">Average rating</p><p class="display-6 fw-bold mb-0">{{ $stats['averageRating'] === null ? '—' : number_format((float) $stats['averageRating'], 1) }}</p></div></div></div>
+                <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm h-100"><div class="card-body"><p class="text-muted small mb-1">Average rating</p><p class="display-6 fw-bold mb-0">{{ $stats['averageRating'] === null ? '—' : number_format((float) $stats['averageRating'], 1) }}</p><small class="text-muted">{{ $stats['reviewCount'] }} {{ $stats['reviewCount'] === 1 ? 'review' : 'reviews' }}</small></div></div></div>
             </div>
 
             <div class="row g-4">

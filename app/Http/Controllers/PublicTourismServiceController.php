@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Destination;
+use App\Models\Review;
 use App\Models\TourismService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -41,7 +42,11 @@ class PublicTourismServiceController extends Controller
         $tourismService->load(['category', 'destination', 'serviceProvider', 'hotelRoomType']);
         $isRestaurant = $tourismService->serviceProvider?->provider_type === 'restaurant';
         $isRestaurantReservationOffering = $isRestaurant && $tourismService->isRestaurantReservationOffering();
+        $reviewQuery = Review::with('tourist')->whereHas('booking', fn ($query) => $query->where('service_id', $tourismService->service_id));
+        $reviewAverage = (clone $reviewQuery)->avg('rating');
+        $reviewCount = (clone $reviewQuery)->count();
+        $reviews = $reviewQuery->latest('review_date')->limit(10)->get();
 
-        return view('public.tourism-services.show', compact('tourismService', 'isRestaurant', 'isRestaurantReservationOffering'));
+        return view('public.tourism-services.show', compact('tourismService', 'isRestaurant', 'isRestaurantReservationOffering', 'reviewAverage', 'reviewCount', 'reviews'));
     }
 }

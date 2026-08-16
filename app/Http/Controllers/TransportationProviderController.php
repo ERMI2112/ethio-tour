@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\TransportationProfileRequest;
 use App\Models\Booking;
+use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -14,11 +15,14 @@ class TransportationProviderController extends Controller
     {
         $provider = $request->user()->serviceProvider;
         $serviceIds = $provider->tourismServices()->pluck('service_id');
+        $reviewQuery = Review::whereHas('booking', fn ($query) => $query->whereIn('service_id', $serviceIds));
         $stats = [
             'serviceCount' => $serviceIds->count(),
             'vehicleCount' => $provider->transportationVehicles()->count(),
             'activeVehicles' => $provider->transportationVehicles()->where('status', 'active')->count(),
             'pendingReservations' => Booking::whereIn('service_id', $serviceIds)->whereHas('transportationReservation')->where('status', 'pending')->count(),
+            'reviewAverage' => (clone $reviewQuery)->avg('rating'),
+            'reviewCount' => (clone $reviewQuery)->count(),
         ];
 
         return view('transportation.dashboard', compact('provider', 'stats'));
