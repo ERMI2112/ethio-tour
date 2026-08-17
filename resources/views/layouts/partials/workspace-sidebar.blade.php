@@ -60,6 +60,8 @@
                     <a class="nav-link" href="{{ route('transportation.vehicles.index') }}" @class(['active' => request()->routeIs('transportation.vehicles.*')])>Vehicles</a>
                     <a class="nav-link" href="{{ route('transportation.reservations.index') }}" @class(['active' => request()->routeIs('transportation.reservations.*')])>Reservations</a>
                     <a class="nav-link" href="{{ route('provider.reports') }}" @class(['active' => request()->routeIs('provider.reports')])>Reports</a>
+                    @php($transportUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
+                    <a class="nav-link d-flex justify-content-between align-items-center" href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])><span>Notifications</span>@if($transportUnreadNotifications)<span class="badge text-bg-primary">{{ $transportUnreadNotifications }}</span>@endif</a>
                 @elseif ($operational && $providerType === 'event_organizer')
                     <a class="nav-link" href="{{ route('event-organizer.dashboard') }}" @class(['active' => request()->routeIs('event-organizer.dashboard')])>Dashboard</a>
                     <a class="nav-link" href="{{ route('event-organizer.profile') }}" @class(['active' => request()->routeIs('event-organizer.profile*')])>Profile</a>

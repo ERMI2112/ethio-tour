@@ -17,10 +17,11 @@ class TransportationReservationController extends Controller
     public function index(Request $request): View
     {
         $serviceIds = $request->user()->serviceProvider->tourismServices()->pluck('service_id');
+        $status = $request->string('status')->trim()->value();
         $bookings = Booking::with(['tourist', 'tourismService', 'transportationReservation.vehicle'])
-            ->whereIn('service_id', $serviceIds)->whereHas('transportationReservation')->orderByDesc('booking_id')->paginate(10);
+            ->whereIn('service_id', $serviceIds)->whereHas('transportationReservation')->when($status, fn ($query) => $query->where('status', $status))->orderByDesc('booking_id')->paginate(10)->withQueryString();
 
-        return view('transportation.reservations.index', compact('bookings'));
+        return view('transportation.reservations.index', compact('bookings', 'status'));
     }
 
     public function show(Booking $booking): View
