@@ -22,6 +22,8 @@
                 <a class="nav-link" href="{{ route('admin.audit.index') }}" @class(['active' => request()->routeIs('admin.audit.*')])>Audit log</a>
                 <a class="nav-link" href="{{ route('admin.reviews.index') }}" @class(['active' => request()->routeIs('admin.reviews.*')])>Review moderation</a>
                 <a class="nav-link" href="{{ route('admin.reports.index') }}" @class(['active' => request()->routeIs('admin.reports.*')])>Reports</a>
+                @php($adminUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
+                <a class="nav-link d-flex justify-content-between align-items-center" href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])><span>Notifications</span>@if($adminUnreadNotifications)<span class="badge text-bg-primary">{{ $adminUnreadNotifications }}</span>@endif</a>
             @elseif ($workspaceRole === 'bureau')
                 <a class="nav-link" href="{{ route('bureau.dashboard') }}" @class(['active' => request()->routeIs('bureau.dashboard')])>Dashboard</a>
                 <a class="nav-link" href="{{ route('bureau.guides.index') }}" @class(['active' => request()->routeIs('bureau.guides.*')])>Guide verification</a>
