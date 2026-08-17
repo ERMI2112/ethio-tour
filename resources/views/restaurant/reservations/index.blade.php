@@ -5,6 +5,7 @@
     <nav aria-label="breadcrumb"><ol class="breadcrumb small"><li class="breadcrumb-item"><a href="{{ route('restaurant.dashboard') }}">Restaurant Dashboard</a></li><li class="breadcrumb-item active">Reservations</li></ol></nav>
     <div class="d-flex justify-content-between align-items-center mb-4"><div><h1 class="h2 mb-1">Reservation requests</h1><p class="text-muted mb-0">Only reservations for your restaurant are shown.</p></div><a class="btn btn-outline-secondary" href="{{ route('restaurant.tables.index') }}">Table inventory</a></div>
     @include('layouts.partials.flash-messages')
+    <div class="card border-0 shadow-sm mb-4"><div class="card-body py-2"><ul class="nav nav-pills flex-wrap"><li class="nav-item"><a class="nav-link {{ empty($status) ? 'active' : '' }}" href="{{ route('restaurant.reservations.index') }}">All</a></li>@foreach(['pending'=>'Pending','accepted'=>'Accepted','payment_pending'=>'Awaiting Payment','confirmed'=>'Confirmed','cancelled'=>'Cancelled','completed'=>'Completed'] as $value => $label)<li class="nav-item"><a class="nav-link {{ $status === $value ? 'active' : '' }}" href="{{ route('restaurant.reservations.index', ['status'=>$value]) }}">{{ $label }}</a></li>@endforeach</ul></div></div>
     <div class="card border-0 shadow-sm"><div class="card-body p-0">
         @if($bookings->isEmpty())
             <x-ui.empty-state title="No restaurant reservations" message="Incoming reservation requests will appear here." />

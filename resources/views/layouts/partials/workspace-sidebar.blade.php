@@ -51,6 +51,8 @@
                     <a class="nav-link" href="{{ route('restaurant.tables.index') }}" @class(['active' => request()->routeIs('restaurant.tables.*')])>Tables</a>
                     <a class="nav-link" href="{{ route('restaurant.reservations.index') }}" @class(['active' => request()->routeIs('restaurant.reservations.*')])>Reservations</a>
                     <a class="nav-link" href="{{ route('provider.reports') }}" @class(['active' => request()->routeIs('provider.reports')])>Reports</a>
+                    @php($restaurantUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
+                    <a class="nav-link d-flex justify-content-between align-items-center" href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])><span>Notifications</span>@if($restaurantUnreadNotifications)<span class="badge text-bg-primary">{{ $restaurantUnreadNotifications }}</span>@endif</a>
                 @elseif ($operational && $providerType === 'transportation_car_rental')
                     <a class="nav-link" href="{{ route('transportation.dashboard') }}" @class(['active' => request()->routeIs('transportation.dashboard')])>Dashboard</a>
                     <a class="nav-link" href="{{ route('transportation.profile') }}" @class(['active' => request()->routeIs('transportation.profile*')])>Profile</a>
