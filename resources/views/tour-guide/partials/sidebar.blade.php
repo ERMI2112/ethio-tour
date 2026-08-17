@@ -6,12 +6,10 @@
             <a href="{{ route('tour-guide.profile') }}" @class(['list-group-item list-group-item-action', 'active' => request()->routeIs('tour-guide.profile*')])>My Profile</a>
             <a href="{{ route('tour-guide.availability') }}" @class(['list-group-item list-group-item-action', 'active' => request()->routeIs('tour-guide.availability')])>Availability</a>
             <a href="{{ route('tour-guide.requests.index') }}" @class(['list-group-item list-group-item-action', 'active' => request()->routeIs('tour-guide.requests.*')])>Booking Requests</a>
-
+            <a href="{{ route('provider.reports') }}" @class(['list-group-item list-group-item-action', 'active' => request()->routeIs('provider.reports')])>Reports</a>
+            <a href="{{ route('notifications.index') }}" @class(['list-group-item list-group-item-action', 'active' => request()->routeIs('notifications.*')])>Notifications</a>
             @foreach (['My Tours', 'Messages', 'Reviews', 'Earnings', 'Settings'] as $item)
-                <span class="list-group-item d-flex justify-content-between align-items-center text-muted" data-tour-guide-coming-soon="true">
-                    {{ $item }}
-                    <span class="badge text-bg-light border">Coming soon</span>
-                </span>
+                <span class="list-group-item d-flex justify-content-between align-items-center text-muted" data-tour-guide-coming-soon="true">{{ $item }} <span class="badge text-bg-light border">Coming soon</span></span>
             @endforeach
         </div>
     </div>
