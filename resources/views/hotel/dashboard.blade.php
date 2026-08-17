@@ -23,6 +23,8 @@
         <a class="btn btn-outline-primary" href="{{ route('hotel.profile') }}">View profile</a>
     </div>
 
+    <section aria-labelledby="attention-heading" class="mb-4"><h2 id="attention-heading" class="h5 mb-3">Needs attention</h2>@if ($stats['pendingAttention'] > 0)<div class="alert alert-warning d-flex flex-wrap justify-content-between align-items-center gap-3"><div><strong>{{ $stats['pendingAttention'] }} reservation request(s) waiting</strong><div class="small">Review availability and decide whether to accept or reject each request.</div></div><a class="btn btn-warning" href="{{ route('hotel.reservations.index', ['status' => 'pending']) }}">Review reservations</a></div>@else<div class="alert alert-success"><strong>No reservation requests are waiting.</strong> New guest requests will appear in Reservations.</div>@endif</section>
+
     <div class="row g-3 mb-4">
         <div class="col-6 col-xl-3">
             <div class="card border-0 shadow-sm h-100">
@@ -108,16 +110,7 @@
                         </div>
                     </div>
 
-                    @if ($stats['pendingAttention'] > 0)
-                        <div class="alert alert-warning mt-4 mb-0 small">
-                            <a href="{{ route('hotel.reservations.index', ['status' => 'pending']) }}" class="alert-link fw-semibold">{{ $stats['pendingAttention'] }} reservation request(s)</a>
-                            are awaiting your decision.
-                        </div>
-                    @else
-                        <div class="alert alert-success mt-4 mb-0 small">
-                            No reservation requests are currently awaiting your decision.
-                        </div>
-                    @endif
+                    <div class="small text-muted mt-4">Use the reservation filters to review each lifecycle state. “Awaiting Payment” does not mean paid.</div>
                 </div>
             </div>
         </div>

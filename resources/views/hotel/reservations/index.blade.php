@@ -34,6 +34,7 @@
                 <li class="nav-item"><a class="nav-link {{ $status === 'confirmed' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'confirmed']) }}">Confirmed</a></li>
                 <li class="nav-item"><a class="nav-link {{ $status === 'rejected' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'rejected']) }}">Rejected</a></li>
                 <li class="nav-item"><a class="nav-link {{ $status === 'cancelled' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'cancelled']) }}">Cancelled</a></li>
+                <li class="nav-item"><a class="nav-link {{ $status === 'completed' ? 'active' : '' }}" href="{{ route('hotel.reservations.index', ['status' => 'completed']) }}">Completed</a></li>
             </ul>
         </div>
         <div class="card-body p-0">
