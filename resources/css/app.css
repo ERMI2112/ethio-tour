@@ -84,6 +84,96 @@ body {
     text-decoration: none;
 }
 
+.landing-hero {
+    background: radial-gradient(circle at 85% 20%, rgba(212, 160, 23, .26), transparent 28%), linear-gradient(125deg, #0b3825 0%, #0f5132 52%, #176846 100%);
+    overflow: hidden;
+    position: relative;
+}
+
+.landing-hero::after {
+    border: 1px solid rgba(255, 255, 255, .13);
+    border-radius: 50%;
+    content: '';
+    height: 460px;
+    position: absolute;
+    right: -170px;
+    top: -230px;
+    width: 460px;
+}
+
+.landing-kicker,
+.landing-eyebrow {
+    color: var(--ethio-tour-gold);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.landing-hero-panel {
+    background: rgba(3, 31, 20, .42);
+    border: 1px solid rgba(255, 255, 255, .18);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+.landing-search .form-control { border: 0; }
+.landing-search .btn { font-weight: 700; }
+
+.landing-quick-link {
+    background: rgba(255, 255, 255, .1);
+    border-radius: .6rem;
+    color: #fff;
+    display: block;
+    font-size: .85rem;
+    padding: .7rem .6rem;
+    text-decoration: none;
+}
+.landing-quick-link:hover { background: rgba(255, 255, 255, .2); color: #fff; }
+.landing-quick-link span { color: var(--ethio-tour-gold); margin-right: .35rem; }
+
+.landing-card,
+.landing-outline-card,
+.landing-list-item {
+    background: #fff;
+    border: 1px solid #e6ebe8;
+    border-radius: .8rem;
+    color: inherit;
+    display: block;
+    padding: 1.15rem;
+    text-decoration: none;
+    transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease;
+}
+.landing-card:hover,
+.landing-outline-card:hover,
+.landing-list-item:hover { border-color: rgba(15, 81, 50, .35); box-shadow: 0 .5rem 1.2rem rgba(20, 52, 36, .08); color: inherit; transform: translateY(-2px); }
+.landing-destination-card { align-items: center; display: flex; gap: 1rem; }
+.landing-card-mark { align-items: center; background: #e8f1eb; border-radius: .7rem; color: var(--ethio-tour-green); display: inline-flex; flex: 0 0 42px; font-size: 1.1rem; font-weight: 700; height: 42px; justify-content: center; }
+.landing-outline-card { display: flex; flex-direction: column; gap: .2rem; }
+.landing-outline-card span { color: var(--ethio-tour-green); font-weight: 700; }
+.landing-outline-card small { color: #6c757d; }
+.landing-empty { background: #f8faf9; border: 1px dashed #cbd8d0; border-radius: .75rem; color: #6c757d; padding: 1.25rem; }
+.landing-gondar { background: #f0f7f2; border-radius: 1rem; padding: 2rem; }
+.landing-stat-card { background: #fff; border-radius: .75rem; box-shadow: 0 .25rem .8rem rgba(20, 52, 36, .05); display: flex; flex-direction: column; padding: 1rem; }
+.landing-stat-card strong { color: var(--ethio-tour-green); font-size: 1.7rem; }
+.landing-stat-card span { color: #6c757d; font-size: .8rem; }
+.landing-subsection { background: #f8faf9; border: 1px solid #e6ebe8; border-radius: .85rem; padding: 1.25rem; }
+.landing-list-item { align-items: center; border-width: 0 0 1px; border-radius: 0; display: flex; justify-content: space-between; padding: .8rem 0; }
+.landing-list-item:last-child { border-bottom: 0; }
+.landing-list-item span { font-weight: 600; }
+.landing-list-item small { color: #6c757d; }
+.landing-icon-circle { align-items: center; background: #e8f1eb; border-radius: 50%; color: var(--ethio-tour-green); display: inline-flex; height: 2rem; justify-content: center; width: 2rem; }
+.landing-section-link { color: var(--ethio-tour-green); font-size: .9rem; font-weight: 600; text-decoration: none; }
+.landing-section-link:hover { color: #08351f; text-decoration: underline; }
+.landing-trip-cta { background: #fff8e5; border: 1px solid #f1df9e; border-radius: 1rem; padding: 2rem; }
+.landing-map-cta { background: linear-gradient(110deg, #e9f4ed, #f7fbf8); border: 1px solid #cfe1d5; border-radius: 1rem; padding: 2rem; }
+.landing-review { background: #fff; border: 1px solid #e6ebe8; border-radius: .85rem; padding: 1.25rem; }
+.landing-final-cta { border-top: 1px solid #e6ebe8; padding: 3rem 1rem 1rem; }
+
+@media (min-width: 992px) { .py-lg-6 { padding-bottom: 6rem !important; padding-top: 6rem !important; } }
+
 @media (max-width: 991.98px) {
     .workspace-sidebar {
         border-right: 0;
