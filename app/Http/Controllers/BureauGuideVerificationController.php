@@ -15,11 +15,17 @@ class BureauGuideVerificationController extends Controller
     public function index(Request $request): View
     {
         $status = $request->string('status')->trim()->value();
+        $search = $request->string('q')->trim()->value();
         $guides = TourGuide::with('user')
             ->when(in_array($status, ['pending', 'verified', 'rejected'], true), fn ($q) => $q->where('verification_status', $status))
-            ->orderBy('verification_status')->orderBy('guide_id')->get();
+            ->when($search !== '', fn ($q) => $q->where(function ($query) use ($search) {
+                $query->where('license_number', 'like', "%{$search}%")
+                    ->orWhere('expertise', 'like', "%{$search}%")
+                    ->orWhereHas('user', fn ($user) => $user->where('email', 'like', "%{$search}%"));
+            }))
+            ->orderBy('verification_status')->orderBy('guide_id')->paginate(15)->withQueryString();
 
-        return view('bureau.guides.index', compact('guides', 'status'));
+        return view('bureau.guides.index', compact('guides', 'status', 'search'));
     }
 
     public function show(TourGuide $tourGuide): View

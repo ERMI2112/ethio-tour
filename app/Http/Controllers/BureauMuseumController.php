@@ -14,9 +14,15 @@ class BureauMuseumController extends Controller
     public function index(Request $request): View
     {
         $officer = $this->officerOrAbort($request);
-        $museums = $officer->museumInformation()->orderBy('museum_name')->get();
+        $search = $request->string('q')->trim()->value();
+        $museums = $officer->museumInformation()
+            ->when($search !== '', fn ($q) => $q->where(function ($query) use ($search) {
+                $query->where('museum_name', 'like', "%{$search}%")
+                    ->orWhere('location', 'like', "%{$search}%");
+            }))
+            ->orderBy('museum_name')->paginate(15)->withQueryString();
 
-        return view('bureau.museums.index', compact('museums'));
+        return view('bureau.museums.index', compact('museums', 'search'));
     }
 
     public function create(Request $request): View

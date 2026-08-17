@@ -15,11 +15,18 @@ class BureauProviderVerificationController extends Controller
     public function index(Request $request): View
     {
         $status = $request->string('status')->trim()->value();
+        $search = $request->string('q')->trim()->value();
+        $type = $request->string('type')->trim()->value();
         $providers = ServiceProvider::with('user')
             ->when(in_array($status, ['pending', 'verified', 'rejected'], true), fn ($q) => $q->where('verification_status', $status))
-            ->orderBy('verification_status')->orderBy('business_name')->get();
+            ->when($type !== '', fn ($q) => $q->where('provider_type', $type))
+            ->when($search !== '', fn ($q) => $q->where(function ($query) use ($search) {
+                $query->where('business_name', 'like', "%{$search}%")
+                    ->orWhereHas('user', fn ($user) => $user->where('email', 'like', "%{$search}%"));
+            }))
+            ->orderBy('verification_status')->orderBy('business_name')->paginate(15)->withQueryString();
 
-        return view('bureau.providers.index', compact('providers', 'status'));
+        return view('bureau.providers.index', compact('providers', 'status', 'search', 'type'));
     }
 
     public function show(ServiceProvider $serviceProvider): View

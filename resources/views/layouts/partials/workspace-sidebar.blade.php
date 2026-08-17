@@ -30,6 +30,8 @@
                 <a class="nav-link" href="{{ route('bureau.providers.index') }}" @class(['active' => request()->routeIs('bureau.providers.*')])>Provider verification</a>
                 <a class="nav-link" href="{{ route('bureau.museums.index') }}" @class(['active' => request()->routeIs('bureau.museums.*')])>Museum information</a>
                 <a class="nav-link" href="{{ route('bureau.reports.index') }}" @class(['active' => request()->routeIs('bureau.reports.*')])>Reports</a>
+                @php($bureauUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
+                <a class="nav-link d-flex justify-content-between align-items-center" href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])><span>Notifications</span>@if($bureauUnreadNotifications)<span class="badge text-bg-primary">{{ $bureauUnreadNotifications }}</span>@endif</a>
             @elseif ($workspaceRole === 'service_provider')
                 @php($providerType = auth()->user()->serviceProvider?->provider_type)
                 @php($operational = auth()->user()->serviceProvider?->isOperational())
