@@ -68,6 +68,8 @@
                     <a class="nav-link" href="{{ route('event-organizer.events.index') }}" @class(['active' => request()->routeIs('event-organizer.events.*')])>Events</a>
                     <a class="nav-link" href="{{ route('event-organizer.events.bookings') }}" @class(['active' => request()->routeIs('event-organizer.events.bookings')])>Bookings</a>
                     <a class="nav-link" href="{{ route('provider.reports') }}" @class(['active' => request()->routeIs('provider.reports')])>Reports</a>
+                    @php($eventUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
+                    <a class="nav-link d-flex justify-content-between align-items-center" href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])><span>Notifications</span>@if($eventUnreadNotifications)<span class="badge text-bg-primary">{{ $eventUnreadNotifications }}</span>@endif</a>
                 @else
                     <a class="nav-link" href="{{ route('provider.status') }}" @class(['active' => request()->routeIs('provider.status')])>Application status</a>
                     <a class="nav-link" href="{{ route('provider.profile.edit') }}" @class(['active' => request()->routeIs('provider.profile.*')])>Business profile</a>
