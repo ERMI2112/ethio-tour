@@ -7,6 +7,7 @@ use App\Http\Requests\CheckRestaurantAvailabilityRequest;
 use App\Http\Requests\StoreRestaurantReservationRequest;
 use App\Models\Booking;
 use App\Models\TourismService;
+use App\Services\BookingAmountService;
 use App\Services\NotificationService;
 use App\Services\RestaurantAvailabilityService;
 use Illuminate\Http\RedirectResponse;
@@ -54,6 +55,7 @@ class RestaurantTouristReservationController extends Controller
         StoreRestaurantReservationRequest $request,
         TourismService $tourismService,
         RestaurantAvailabilityService $availabilityService,
+        BookingAmountService $amountService,
         NotificationService $notifications,
     ): RedirectResponse {
         $this->ensureRestaurantService($tourismService);
@@ -61,6 +63,7 @@ class RestaurantTouristReservationController extends Controller
         $tourist = $request->user()->tourist;
 
         try {
+            $amountService->calculateRestaurant($tourismService);
             $availabilityService->findAvailableTables(
                 $tourismService,
                 $validated['reservation_date'],
@@ -74,25 +77,34 @@ class RestaurantTouristReservationController extends Controller
             return back()->with('error', $exception->getMessage())->withInput();
         }
 
-        $booking = DB::transaction(function () use ($tourist, $tourismService, $validated): Booking {
-            $booking = Booking::create([
-                'tourist_id' => $tourist->tourist_id,
-                'service_id' => $tourismService->service_id,
-                'guide_id' => null,
-                'status' => 'pending',
-                'booking_date' => now(),
-            ]);
+        try {
+            $booking = DB::transaction(function () use ($tourist, $tourismService, $validated, $amountService): Booking {
+                $lockedService = TourismService::query()->lockForUpdate()->findOrFail($tourismService->service_id);
+                $amount = $amountService->calculateRestaurant($lockedService);
 
-            $booking->restaurantReservation()->create([
-                'table_id' => null,
-                'reservation_date' => $validated['reservation_date'],
-                'start_time' => $validated['start_time'],
-                'end_time' => $validated['end_time'],
-                'guest_count' => $validated['guest_count'],
-            ]);
+                $booking = Booking::create([
+                    'tourist_id' => $tourist->tourist_id,
+                    'service_id' => $lockedService->service_id,
+                    'guide_id' => null,
+                    'status' => 'pending',
+                    'booking_date' => now(),
+                    'total_amount' => $amount['total_amount'],
+                    'currency' => $amount['currency'],
+                ]);
 
-            return $booking;
-        });
+                $booking->restaurantReservation()->create([
+                    'table_id' => null,
+                    'reservation_date' => $validated['reservation_date'],
+                    'start_time' => $validated['start_time'],
+                    'end_time' => $validated['end_time'],
+                    'guest_count' => $validated['guest_count'],
+                ]);
+
+                return $booking;
+            });
+        } catch (ValidationException $exception) {
+            return back()->withErrors($exception->errors())->withInput();
+        }
 
         $notifications->createForUser($tourismService->serviceProvider?->user, 'reservation_request', 'New restaurant reservation request', 'A tourist requested a table at '.$tourismService->service_name.'.');
 

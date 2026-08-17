@@ -7,6 +7,7 @@ use App\Http\Requests\CheckTransportationAvailabilityRequest;
 use App\Http\Requests\StoreTransportationReservationRequest;
 use App\Models\Booking;
 use App\Models\TourismService;
+use App\Services\BookingAmountService;
 use App\Services\NotificationService;
 use App\Services\TransportationAvailabilityService;
 use Illuminate\Http\RedirectResponse;
@@ -34,13 +35,14 @@ class TransportationTouristReservationController extends Controller
         return back()->with('success', "Availability confirmed! {$vehicles->count()} vehicle(s) match your request.")->withInput();
     }
 
-    public function store(StoreTransportationReservationRequest $request, TourismService $tourismService, TransportationAvailabilityService $availabilityService, NotificationService $notifications): RedirectResponse
+    public function store(StoreTransportationReservationRequest $request, TourismService $tourismService, TransportationAvailabilityService $availabilityService, BookingAmountService $amountService, NotificationService $notifications): RedirectResponse
     {
         $this->ensureTransportationService($tourismService);
         $data = $request->validated();
         $tourist = $request->user()->tourist;
 
         try {
+            $amountService->calculateTransportation($tourismService, $data['pickup_at'], $data['dropoff_at']);
             $vehicles = $availabilityService->findAvailableVehicles($tourismService, $data['pickup_at'], $data['dropoff_at'], (int) $data['passenger_count']);
         } catch (ValidationException $exception) {
             return back()->withErrors($exception->errors())->withInput();
@@ -49,15 +51,22 @@ class TransportationTouristReservationController extends Controller
             return back()->with('error', 'No vehicle is available for the selected rental window.')->withInput();
         }
 
-        $booking = DB::transaction(function () use ($tourist, $tourismService, $data): Booking {
-            $booking = Booking::create(['tourist_id' => $tourist->tourist_id, 'service_id' => $tourismService->service_id, 'guide_id' => null, 'status' => 'pending', 'booking_date' => now()]);
-            $booking->transportationReservation()->create([
-                'pickup_location' => $data['pickup_location'], 'dropoff_location' => $data['dropoff_location'],
-                'pickup_at' => $data['pickup_at'], 'dropoff_at' => $data['dropoff_at'], 'passenger_count' => $data['passenger_count'],
-            ]);
+        try {
+            $booking = DB::transaction(function () use ($tourist, $tourismService, $data, $amountService): Booking {
+                $lockedService = TourismService::query()->lockForUpdate()->findOrFail($tourismService->service_id);
+                $amount = $amountService->calculateTransportation($lockedService, $data['pickup_at'], $data['dropoff_at']);
 
-            return $booking;
-        });
+                $booking = Booking::create(['tourist_id' => $tourist->tourist_id, 'service_id' => $lockedService->service_id, 'guide_id' => null, 'status' => 'pending', 'booking_date' => now(), 'total_amount' => $amount['total_amount'], 'currency' => $amount['currency']]);
+                $booking->transportationReservation()->create([
+                    'pickup_location' => $data['pickup_location'], 'dropoff_location' => $data['dropoff_location'],
+                    'pickup_at' => $data['pickup_at'], 'dropoff_at' => $data['dropoff_at'], 'passenger_count' => $data['passenger_count'],
+                ]);
+
+                return $booking;
+            });
+        } catch (ValidationException $exception) {
+            return back()->withErrors($exception->errors())->withInput();
+        }
 
         $notifications->createForUser($tourismService->serviceProvider?->user, 'reservation_request', 'New transportation request', 'A tourist submitted a transportation request for '.$tourismService->service_name.'.');
 

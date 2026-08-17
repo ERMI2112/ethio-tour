@@ -38,7 +38,7 @@ class RestaurantVerticalTest extends TestCase
         $other = $this->restaurantContext('other-restaurant@example.com');
 
         $response = $this->actingAs($context['user'])->post(route('restaurant.services.store'), [
-            'service_name' => 'Dining Reservation', 'price' => 0, 'description' => 'Table reservation offering',
+            'service_name' => 'Dining Reservation', 'price' => 125, 'description' => 'Table reservation offering',
             'category_id' => $context['category']->category_id, 'destination_id' => $context['destination']->destination_id,
         ]);
         $response->assertRedirect(route('restaurant.services.index'));
@@ -147,7 +147,7 @@ class RestaurantVerticalTest extends TestCase
         $officer = TourismBureauOfficer::create(['user_id' => $bureauUser->user_id]);
         $destination = Destination::create(['officer_id' => $officer->officer_id, 'name' => 'Gondar', 'location' => 'Gondar', 'description' => 'City']);
         $category = Category::create(['category_name' => 'Restaurant Reservation '.$email]);
-        $service = TourismService::create(['provider_id' => $provider->provider_id, 'category_id' => $category->category_id, 'destination_id' => $destination->destination_id, 'service_name' => 'Dining Reservation', 'price' => 0, 'description' => 'Reservation offering']);
+        $service = TourismService::create(['provider_id' => $provider->provider_id, 'category_id' => $category->category_id, 'destination_id' => $destination->destination_id, 'service_name' => 'Dining Reservation', 'price' => 125, 'description' => 'Reservation offering']);
         $tourist = $this->touristContext('tourist-'.$email);
 
         return compact('user', 'provider', 'destination', 'category', 'service') + ['touristUser' => $tourist['user'], 'tourist' => $tourist['tourist']];

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Services\BookingAmountService;
 use App\Services\NotificationService;
 use App\Services\ReviewEligibilityService;
 use Illuminate\Http\RedirectResponse;
@@ -43,7 +44,7 @@ class TouristReservationController extends Controller
         return view('tourist.reservations.index', compact('bookings', 'status'));
     }
 
-    public function show(Request $request, Booking $booking, ReviewEligibilityService $eligibility): View
+    public function show(Request $request, Booking $booking, ReviewEligibilityService $eligibility, BookingAmountService $amountService): View
     {
         Gate::authorize('viewTourist', $booking);
 
@@ -61,8 +62,17 @@ class TouristReservationController extends Controller
             'review',
         ]);
         $reviewEligible = $eligibility->isEligible($booking);
+        $transportationRentalDays = $booking->transportationReservation
+            ? $amountService->transportationRentalDays(
+                $booking->transportationReservation->pickup_at,
+                $booking->transportationReservation->dropoff_at,
+            )
+            : null;
+        $transportationDailyRate = $transportationRentalDays && $booking->total_amount !== null
+            ? number_format((float) $booking->total_amount / $transportationRentalDays, 2, '.', '')
+            : null;
 
-        return view('tourist.reservations.show', compact('booking', 'reviewEligible'));
+        return view('tourist.reservations.show', compact('booking', 'reviewEligible', 'transportationRentalDays', 'transportationDailyRate'));
     }
 
     public function cancel(Request $request, Booking $booking, NotificationService $notifications): RedirectResponse

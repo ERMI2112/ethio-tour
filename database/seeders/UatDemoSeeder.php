@@ -106,8 +106,8 @@ class UatDemoSeeder extends Seeder
             HotelRoom::updateOrCreate(['room_type_id' => $deluxeType->room_type_id, 'room_number' => $roomNumber], ['status' => 'active']);
         }
 
-        $this->service($restaurant, $dining, $gondar, 'UAT Gondar Dining Reservation', 0, 'A dining reservation offering for restaurant availability and acceptance tests.');
-        $this->service($restaurant, $dining, $gondar, 'UAT Gondar Coffee & Breakfast', 0, 'A coffee and breakfast offering for restaurant discovery tests.');
+        $this->service($restaurant, $dining, $gondar, 'UAT Gondar Dining Reservation', 350, 'A dining reservation offering for restaurant availability and acceptance tests.');
+        $this->service($restaurant, $dining, $gondar, 'UAT Gondar Coffee & Breakfast', 150, 'A coffee and breakfast offering for restaurant discovery tests.');
         foreach ([['UAT-T1', 2], ['UAT-T2', 4], ['UAT-T3', 6]] as [$number, $capacity]) {
             RestaurantTable::updateOrCreate(
                 ['provider_id' => $restaurant->provider_id, 'table_number' => $number],

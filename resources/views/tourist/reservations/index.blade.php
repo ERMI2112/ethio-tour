@@ -89,12 +89,24 @@
                                         <td><div class="fw-bold">{{ $booking->tourismService->service_name ?? 'Transportation reservation' }}</div><div class="small text-muted">{{ $booking->tourismService->serviceProvider->business_name ?? '' }}</div></td>
                                         <td><div class="small fw-semibold">{{ $transportRes->pickup_at->format('M d, Y H:i') }}</div><div class="small text-muted">to {{ $transportRes->dropoff_at->format('M d, Y H:i') }}</div></td>
                                         <td>{{ $transportRes->passenger_count }}</td>
-                                        <td><span class="text-muted">See service price</span></td>
+                                        <td>
+                                            @if ($booking->total_amount !== null)
+                                                <span class="fw-bold">{{ number_format((float) $booking->total_amount, 2) }} {{ $booking->currency ?? 'ETB' }}</span>
+                                            @else
+                                                <span class="text-muted">Not priced</span>
+                                            @endif
+                                        </td>
                                     @elseif ($restaurantRes)
                                         <td><div class="fw-bold">{{ $booking->tourismService->service_name ?? 'Restaurant reservation' }}</div><div class="small text-muted">{{ $booking->tourismService->serviceProvider->business_name ?? '' }}</div></td>
                                         <td><div class="small fw-semibold">{{ $restaurantRes->reservation_date->format('M d, Y') }}</div><div class="small text-muted">{{ substr($restaurantRes->start_time, 0, 5) }}–{{ substr($restaurantRes->end_time, 0, 5) }}</div></td>
                                         <td>{{ $restaurantRes->guest_count }}</td>
-                                        <td><span class="text-muted">Not priced</span></td>
+                                        <td>
+                                            @if ($booking->total_amount !== null)
+                                                <span class="fw-bold">{{ number_format((float) $booking->total_amount, 2) }} {{ $booking->currency ?? 'ETB' }}</span>
+                                            @else
+                                                <span class="text-muted">Not priced</span>
+                                            @endif
+                                        </td>
                                     @else
                                         @php($nights = $res ? max(1, (int) $res->check_in_date->diffInDays($res->check_out_date)) : 1)
                                         @php($totalCost = $booking->tourismService ? $nights * $booking->tourismService->price : 0)

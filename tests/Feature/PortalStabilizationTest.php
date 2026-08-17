@@ -73,7 +73,7 @@ class PortalStabilizationTest extends TestCase
 
         $this->actingAs($restaurant)->post(route('restaurant.services.store'), [
             'service_name' => 'UAT Restaurant Stabilization Service',
-            'price' => 0,
+            'price' => 250,
             'description' => 'A restaurant service created by the stabilization regression test.',
             'category_id' => $category->category_id,
             'destination_id' => $destination->destination_id,
