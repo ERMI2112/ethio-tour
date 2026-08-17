@@ -20,6 +20,12 @@ class BookingPolicy
             && $booking->status === 'pending';
     }
 
+    public function payTourist(User $user, Booking $booking): bool
+    {
+        return $this->viewTourist($user, $booking)
+            && in_array($booking->status, ['accepted', 'payment_pending'], true);
+    }
+
     public function manageHotelProvider(User $user, Booking $booking): bool
     {
         return $user->role === 'service_provider'

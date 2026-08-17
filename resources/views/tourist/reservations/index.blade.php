@@ -109,6 +109,12 @@
                                     <td>
                                         <div class="d-flex gap-2">
                                             <a href="{{ route('tourist.reservations.show', $booking) }}" class="btn btn-outline-primary btn-sm">View</a>
+                                            @if (in_array($booking->status, ['accepted', 'payment_pending'], true) && $booking->total_amount !== null && (float) $booking->total_amount > 0)
+                                                <form method="POST" action="{{ route('payments.initialize', $booking) }}">
+                                                    @csrf
+                                                    <button type="submit" class="btn btn-success btn-sm">{{ $booking->status === 'payment_pending' ? 'Continue Payment' : 'Pay Now' }}</button>
+                                                </form>
+                                            @endif
                                             @if ($booking->status === 'pending')
                                                 <form method="POST" action="{{ route('tourist.reservations.cancel', $booking) }}" onsubmit="return confirm('Are you sure you want to cancel this reservation request?');">
                                                     @csrf

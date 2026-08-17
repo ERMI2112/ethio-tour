@@ -30,6 +30,7 @@ use App\Http\Controllers\HotelReservationController;
 use App\Http\Controllers\HotelRoomController;
 use App\Http\Controllers\HotelServiceController;
 use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProviderOnboardingController;
 use App\Http\Controllers\ProviderReportsController;
 use App\Http\Controllers\PublicCategoryController;
@@ -90,6 +91,8 @@ Route::get('/events/{culturalEvent}', [PublicCulturalEventController::class, 'sh
 Route::get('/map', [PublicMapController::class, 'index'])->name('map');
 Route::get('/map/data', PublicMapDataController::class)->name('map.data');
 Route::get('/search', [GlobalSearchController::class, 'index'])->name('search');
+Route::get('/payments/chapa/callback', [PaymentController::class, 'callback'])->name('payments.chapa.callback');
+Route::post('/payments/chapa/webhook', [PaymentController::class, 'webhook'])->name('payments.chapa.webhook');
 Route::get('/smart-trip', [SmartTripController::class, 'index'])->name('smart-trip.index');
 Route::post('/transportation/{tourismService}/availability', [TransportationTouristReservationController::class, 'checkAvailability'])->name('transportation.availability');
 Route::post('/restaurants/{tourismService}/availability', [RestaurantTouristReservationController::class, 'checkAvailability'])->name('restaurants.availability');
@@ -162,6 +165,10 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::post('/services/{tourismService}/restaurant-reservations', [RestaurantTouristReservationController::class, 'store'])->name('restaurant-reservations.store');
         Route::post('/services/{tourismService}/transportation-reservations', [TransportationTouristReservationController::class, 'store'])->name('transportation-reservations.store');
         Route::post('/events/{culturalEvent}/reservations', [EventTouristBookingController::class, 'store'])->name('event-reservations.store');
+    });
+
+    Route::middleware('role:tourist')->group(function () {
+        Route::post('/payments/{booking}/chapa', [PaymentController::class, 'initialize'])->name('payments.initialize');
     });
 
     Route::middleware('role:tourist')->prefix('smart-trip')->name('smart-trip.')->group(function () {

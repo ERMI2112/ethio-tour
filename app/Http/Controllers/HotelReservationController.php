@@ -80,12 +80,16 @@ class HotelReservationController extends Controller
         }
 
         $booking = DB::transaction(function () use ($tourist, $tourismService, $validated) {
+            $nights = (int) date_diff(date_create($validated['check_in_date']), date_create($validated['check_out_date']))->days;
+
             $booking = Booking::create([
                 'tourist_id' => $tourist->tourist_id,
                 'service_id' => $tourismService->service_id,
                 'guide_id' => null,
                 'status' => 'pending',
                 'booking_date' => now(),
+                'total_amount' => number_format($nights * (float) $tourismService->price, 2, '.', ''),
+                'currency' => 'ETB',
             ]);
 
             $booking->hotelRoomReservation()->create([

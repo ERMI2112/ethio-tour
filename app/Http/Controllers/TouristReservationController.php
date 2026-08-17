@@ -32,6 +32,7 @@ class TouristReservationController extends Controller
                 'tourGuideReservation',
                 'transportationReservation.vehicle',
                 'eventReservation.ticketType.event',
+                'payment',
             ])
             ->where('tourist_id', $tourist->tourist_id)
             ->when($status, fn ($query) => $query->where('status', $status))
