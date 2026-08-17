@@ -26,6 +26,7 @@ class PaymentIntegrationTest extends TestCase
         $gateway->shouldReceive('initializeTransaction')->once()->with(Mockery::on(function (array $payload): bool {
             return $payload['amount'] === '125.50'
                 && $payload['currency'] === 'ETB'
+                && $payload['email'] === 'owner@example.com'
                 && ! array_key_exists('total_amount', $payload);
         }))->andReturn(['status' => 'success', 'data' => ['checkout_url' => 'https://checkout.test/tx']]);
         $this->app->instance(PaymentGatewayInterface::class, $gateway);
@@ -102,6 +103,23 @@ class PaymentIntegrationTest extends TestCase
         $reference = $booking->fresh()->payment->gateway_reference;
 
         $this->actingAs($owner)->get(route('payments.chapa.callback', ['tx_ref' => $reference]))->assertRedirect(route('login'));
+        $this->assertSame('payment_pending', $booking->fresh()->status);
+        $this->assertSame('failed', $booking->fresh()->payment->status);
+    }
+
+    public function test_stale_payment_amount_cannot_override_the_booking_amount(): void
+    {
+        $owner = $this->touristUser();
+        $booking = $this->booking($owner, 'accepted', '200.00');
+        $gateway = Mockery::mock(PaymentGatewayInterface::class);
+        $gateway->shouldReceive('initializeTransaction')->andReturn(['status' => 'success', 'data' => ['checkout_url' => 'https://checkout.test/tx']]);
+        $gateway->shouldReceive('verifyTransaction')->never();
+        $this->app->instance(PaymentGatewayInterface::class, $gateway);
+        $this->actingAs($owner)->post(route('payments.initialize', $booking));
+        $payment = $booking->fresh()->payment;
+        $payment->update(['amount' => '999.00']);
+
+        $this->actingAs($owner)->get(route('payments.chapa.callback', ['tx_ref' => $payment->gateway_reference]))->assertRedirect(route('login'));
         $this->assertSame('payment_pending', $booking->fresh()->status);
         $this->assertSame('failed', $booking->fresh()->payment->status);
     }

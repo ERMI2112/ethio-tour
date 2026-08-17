@@ -72,8 +72,8 @@ class PaymentService
                     'callback_url' => route('payments.chapa.callback'),
                     'return_url' => route('payments.chapa.callback'),
                     'customization' => [
-                        'title' => 'Ethio Tour booking payment',
-                        'description' => 'Payment for booking #'.$lockedBooking->booking_id,
+                        'title' => 'Ethio Tour',
+                        'description' => 'Payment for booking '.$lockedBooking->booking_id,
                     ],
                 ]);
             } catch (Throwable $exception) {
@@ -119,6 +119,11 @@ class PaymentService
 
         $existingBooking = $payment->booking;
 
+        if (! $existingBooking || $payment->amount === null || $existingBooking->total_amount === null || number_format((float) $payment->amount, 2, '.', '') !== number_format((float) $existingBooking->total_amount, 2, '.', '')) {
+            $payment->update(['status' => 'failed']);
+            throw new PaymentException('Payment amount does not match the booking.');
+        }
+
         if ($payment->status === 'success' && $existingBooking?->status === 'confirmed') {
             return ['payment' => $payment, 'booking' => $existingBooking, 'confirmed' => false];
         }
@@ -137,7 +142,7 @@ class PaymentService
         $verifiedAmount = number_format((float) ($data['amount'] ?? -1), 2, '.', '');
 
         $matches = hash_equals($transactionReference, $verifiedReference)
-            && $verifiedAmount === number_format((float) $payment->amount, 2, '.', '')
+            && $verifiedAmount === number_format((float) $existingBooking->total_amount, 2, '.', '')
             && $verifiedCurrency === strtoupper((string) $payment->booking()->value('currency'))
             && in_array($verifiedStatus, ['success', 'successful', 'completed'], true);
 
