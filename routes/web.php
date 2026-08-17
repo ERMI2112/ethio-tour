@@ -61,10 +61,18 @@ use App\Http\Controllers\TransportationReservationController;
 use App\Http\Controllers\TransportationServiceController;
 use App\Http\Controllers\TransportationTouristReservationController;
 use App\Http\Controllers\TransportationVehicleController;
+use App\Models\CulturalEvent;
+use App\Models\Destination;
+use App\Models\TourismService;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Schema;
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcome', [
+        'destinations' => Schema::hasTable('destinations') ? Destination::query()->orderBy('name')->limit(6)->get() : collect(),
+        'experiences' => Schema::hasTable('tourism_services') && Schema::hasTable('service_providers') ? TourismService::query()->with(['destination', 'serviceProvider'])->whereHas('serviceProvider', fn ($query) => $query->publiclyOperational())->orderBy('service_name')->limit(6)->get() : collect(),
+        'events' => Schema::hasTable('cultural_events') && Schema::hasTable('service_providers') ? CulturalEvent::query()->with(['destination', 'serviceProvider'])->where('status', 'published')->whereDate('event_date', '>=', today())->whereHas('serviceProvider', fn ($query) => $query->publiclyOperational())->orderBy('event_date')->limit(6)->get() : collect(),
+    ]);
 })->name('home');
 
 Route::get('/destinations', [PublicDestinationController::class, 'index'])->name('destinations.index');
