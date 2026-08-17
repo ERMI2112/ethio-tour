@@ -74,6 +74,34 @@ class PaymentIntegrationTest extends TestCase
         $this->assertDatabaseCount('payments', 1);
     }
 
+    public function test_failed_payment_can_retry_without_creating_a_second_payment(): void
+    {
+        $owner = $this->touristUser();
+        $booking = $this->booking($owner, 'accepted', '100.00');
+        $attempt = 0;
+        $gateway = Mockery::mock(PaymentGatewayInterface::class);
+        $gateway->shouldReceive('initializeTransaction')->twice()->andReturnUsing(function () use (&$attempt): array {
+            $attempt++;
+
+            if ($attempt === 1) {
+                throw new \RuntimeException('temporary sandbox failure');
+            }
+
+            return ['status' => 'success', 'data' => ['checkout_url' => 'https://checkout.test/retry']];
+        });
+        $this->app->instance(PaymentGatewayInterface::class, $gateway);
+
+        $this->actingAs($owner)->post(route('payments.initialize', $booking))->assertSessionHas('error');
+        $firstReference = $booking->fresh()->payment->gateway_reference;
+        $this->actingAs($owner)->post(route('payments.initialize', $booking))->assertRedirect('https://checkout.test/retry');
+
+        $payment = $booking->fresh()->payment;
+        $this->assertSame('payment_pending', $booking->fresh()->status);
+        $this->assertSame('pending', $payment->status);
+        $this->assertNotSame($firstReference, $payment->gateway_reference);
+        $this->assertDatabaseCount('payments', 1);
+    }
+
     public function test_callback_verifies_amount_and_confirms_booking_once(): void
     {
         $owner = $this->touristUser();
@@ -144,6 +172,17 @@ class PaymentIntegrationTest extends TestCase
         $this->call('POST', route('payments.chapa.webhook'), [], [], [], ['HTTP_X_CHAPA_SIGNATURE' => $signature, 'CONTENT_TYPE' => 'application/json'], $payload)->assertOk();
         $this->assertSame('confirmed', $booking->fresh()->status);
         $this->assertDatabaseCount('payments', 1);
+    }
+
+    public function test_forged_webhook_is_rejected_without_mutating_booking(): void
+    {
+        config(['services.chapa.webhook_secret' => 'webhook-test-secret']);
+        $owner = $this->touristUser();
+        $booking = $this->booking($owner, 'accepted', '75.00');
+
+        $this->postJson(route('payments.chapa.webhook'), ['tx_ref' => 'forged'], ['X-Chapa-Signature' => 'invalid'])->assertUnauthorized();
+        $this->assertSame('accepted', $booking->fresh()->status);
+        $this->assertDatabaseCount('payments', 0);
     }
 
     public function test_chapa_gateway_uses_server_configuration_and_expected_endpoints(): void
