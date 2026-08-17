@@ -67,10 +67,14 @@
             </div>
         </div>
     @elseif ($booking->eventReservation)
-    @php($eventRes = $booking->eventReservation)
+    @php
+        $eventRes = $booking->eventReservation;
+    @endphp
     <div class="row g-4"><div class="col-lg-8"><div class="card border-0 shadow-sm"><div class="card-body p-4"><h2 class="h5">Event ticket reservation</h2><h3 class="h4 text-primary">{{ $eventRes->ticketType->event->event_name }}</h3><p class="text-muted">{{ $eventRes->ticketType->name }} · {{ $eventRes->ticketType->event->event_date->format('F d, Y') }}</p><p>Quantity: <strong>{{ $eventRes->quantity }}</strong></p></div></div></div><div class="col-lg-4"><div class="card border-0 shadow-sm"><div class="card-body p-4"><p>Total: <strong>{{ number_format($booking->total_amount ?? 0,2) }} {{ $booking->currency ?? 'ETB' }}</strong></p><p class="small text-muted mb-0">Payment processing is deferred.</p></div></div></div></div>
     @elseif ($booking->transportationReservation)
-    @php($transportRes = $booking->transportationReservation)
+    @php
+        $transportRes = $booking->transportationReservation;
+    @endphp
     <div class="row g-4"><div class="col-lg-8"><div class="card border-0 shadow-sm"><div class="card-header bg-white py-3"><h2 class="h5 mb-0">Transportation Reservation Details</h2></div><div class="card-body p-4"><h3 class="h4 text-primary">{{ $booking->tourismService->service_name ?? 'Transportation reservation' }}</h3><p class="text-muted mb-3">Provided by <strong>{{ $booking->tourismService->serviceProvider->business_name ?? 'N/A' }}</strong></p><div class="row g-3 p-3 bg-light rounded border"><div class="col-sm-6"><span class="text-muted small d-block">Pickup</span><strong>{{ $transportRes->pickup_location }} · {{ $transportRes->pickup_at->format('M d, Y H:i') }}</strong></div><div class="col-sm-6"><span class="text-muted small d-block">Drop-off</span><strong>{{ $transportRes->dropoff_location }} · {{ $transportRes->dropoff_at->format('M d, Y H:i') }}</strong></div><div class="col-sm-6"><span class="text-muted small d-block">Passengers</span><strong>{{ $transportRes->passenger_count }}</strong></div><div class="col-sm-6"><span class="text-muted small d-block">Vehicle</span><strong>{{ $transportRes->vehicle?->vehicle_identifier ?? 'Unassigned' }}</strong></div></div></div></div></div><div class="col-lg-4"><div class="card border-0 shadow-sm"><div class="card-body p-4">@if($booking->status==='pending')<form method="POST" action="{{ route('tourist.reservations.cancel',$booking) }}">@csrf @method('PATCH')<button class="btn btn-outline-danger w-100">Cancel Request</button></form>@elseif($booking->status==='accepted')<div class="alert alert-info small mb-0">Request accepted. Payment is handled in a later phase.</div>@elseif($booking->status==='payment_pending')<div class="alert alert-info small mb-0"><strong>Awaiting Payment</strong></div>@endif</div></div></div></div>
     @elseif ($booking->restaurantReservation)
     @php
