@@ -8,7 +8,9 @@
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb small mb-3">
         <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-        <li class="breadcrumb-item">{{ $group }}</li>
+        @if ($group)
+            <li class="breadcrumb-item">{{ $group }}</li>
+        @endif
         @if ($sectionRoute)
             <li class="breadcrumb-item"><a href="{{ $sectionRoute }}">{{ $section }}</a></li>
         @else

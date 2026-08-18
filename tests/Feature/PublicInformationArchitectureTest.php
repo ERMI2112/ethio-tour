@@ -51,12 +51,56 @@ class PublicInformationArchitectureTest extends TestCase
     {
         $this->get('/destinations')
             ->assertOk()
-            ->assertSee('Explore Ethiopia')
-            ->assertSee('Destinations');
+            ->assertSee('Home')
+            ->assertSee('Destinations')
+            ->assertDontSee('Explore Ethiopia');
 
         $this->get('/tour-guides')
             ->assertOk()
             ->assertSee('Things to Do')
             ->assertSee('Tour Guides');
+
+        $this->get('/tourism-services?provider_type=hotel')
+            ->assertOk()
+            ->assertSee('Plan Your Trip')
+            ->assertSee('Hotels')
+            ->assertDontSee('Stay &amp; Eat', false);
+
+        $this->get('/tourism-services?provider_type=restaurant')
+            ->assertOk()
+            ->assertSee('Plan Your Trip')
+            ->assertSee('Restaurants');
+
+        $this->get('/transportation')
+            ->assertOk()
+            ->assertSee('Plan Your Trip')
+            ->assertSee('Transportation &amp; Car Rental', false)
+            ->assertDontSee('Travel &amp; Transport', false);
+
+        $this->get('/museums')
+            ->assertOk()
+            ->assertSee('Plan Your Trip')
+            ->assertSee('Museums');
+
+        $this->get('/events')
+            ->assertOk()
+            ->assertSee('Events')
+            ->assertSee('Cultural Events')
+            ->assertDontSee('Events &amp; Festivals', false);
+
+        $this->get('/map')
+            ->assertOk()
+            ->assertSee('Plan Your Trip')
+            ->assertSee('Map');
+
+        $this->get('/search')
+            ->assertOk()
+            ->assertSee('Home')
+            ->assertSee('Search');
+
+        $this->get('/smart-trip')
+            ->assertOk()
+            ->assertSee('Home')
+            ->assertSee('Smart Trip');
     }
 }
