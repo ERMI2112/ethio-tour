@@ -68,4 +68,21 @@ class LandingPageTest extends TestCase
             ->assertDontSee('4.9 out of 5')
             ->assertDontSee('Trusted by thousands');
     }
+
+    public function test_landing_calls_to_action_use_specific_public_discovery_routes(): void
+    {
+        $response = $this->get(route('home'));
+
+        $response->assertOk()
+            ->assertSee(route('tourism-services.index', ['provider_type' => 'hotel']), false)
+            ->assertSee(route('tourism-services.index', ['provider_type' => 'restaurant']), false)
+            ->assertSee(route('transportation.index'), false)
+            ->assertSee(route('events.index'), false)
+            ->assertSee(route('tour-guides.index'), false)
+            ->assertSee(route('museums.index'), false)
+            ->assertSee(route('map'), false)
+            ->assertSee(route('smart-trip.index'), false)
+            ->assertDontSee('Ethio Tour foundation is ready.')
+            ->assertDontSee('Upcoming cultural events · Plan My Trip');
+    }
 }

@@ -15,6 +15,6 @@ class ExampleTest extends TestCase
         $response = $this->get('/');
 
         $response->assertOk();
-        $response->assertSee('Ethio Tour foundation is ready.');
+        $response->assertSee('Find your next story in Ethiopia.');
     }
 }

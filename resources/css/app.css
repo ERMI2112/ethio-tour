@@ -149,6 +149,11 @@ body {
 .landing-card:hover,
 .landing-outline-card:hover,
 .landing-list-item:hover { border-color: rgba(15, 81, 50, .35); box-shadow: 0 .5rem 1.2rem rgba(20, 52, 36, .08); color: inherit; transform: translateY(-2px); }
+.landing-card:focus-visible,
+.landing-outline-card:focus-visible,
+.landing-list-item:focus-visible,
+.landing-quick-link:focus-visible,
+.landing-section-link:focus-visible { outline: 3px solid var(--ethio-tour-gold); outline-offset: 3px; }
 .landing-destination-card { align-items: center; display: flex; gap: 1rem; }
 .landing-card-mark { align-items: center; background: #e8f1eb; border-radius: .7rem; color: var(--ethio-tour-green); display: inline-flex; flex: 0 0 42px; font-size: 1.1rem; font-weight: 700; height: 42px; justify-content: center; }
 .landing-outline-card { display: flex; flex-direction: column; gap: .2rem; }

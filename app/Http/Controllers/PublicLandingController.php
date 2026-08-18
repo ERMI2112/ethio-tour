@@ -54,7 +54,7 @@ class PublicLandingController extends Controller
             : collect();
 
         $gondarEvents = $gondar && Schema::hasTable('cultural_events') && Schema::hasTable('service_providers')
-            ? $events->where('destination_id', $gondar->destination_id)->values()
+            ? CulturalEvent::query()->where('destination_id', $gondar->destination_id)->where('status', 'published')->whereDate('event_date', '>=', today())->whereHas('serviceProvider', fn ($query) => $query->publiclyOperational())->orderBy('event_date')->limit(6)->get()
             : collect();
 
         $guides = Schema::hasTable('tour_guides') && Schema::hasTable('users')

@@ -19,7 +19,7 @@ class TouristPublicUxTest extends TestCase
 
     public function test_homepage_guides_guest_through_real_public_discovery(): void
     {
-        $this->get(route('home'))->assertOk()->assertSee('Discover Ethiopia')->assertSee('Explore Ethiopia')->assertSee('Things to Do')->assertSee('Stay &amp; Eat', false)->assertSee('Upcoming cultural events')->assertSee('Plan My Trip')->assertSee('Explore on Map');
+        $this->get(route('home'))->assertOk()->assertSee('Discover Ethiopia')->assertSee('Explore Ethiopia')->assertSee('Things to Do')->assertSee('Stay &amp; Eat', false)->assertSee('Events &amp; Festivals', false)->assertSee('Plan with Smart Trip')->assertSee('Explore on Map');
     }
 
     public function test_public_journey_routes_and_smart_trip_entry_are_reachable(): void

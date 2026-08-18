@@ -3,9 +3,6 @@
 @section('title', 'Discover Ethiopia')
 
 @section('content')
-    <span class="visually-hidden">Ethio Tour foundation is ready.</span>
-    <span class="visually-hidden">Upcoming cultural events · Plan My Trip</span>
-
     <section class="landing-hero">
         <div class="container py-5 py-lg-6">
             <div class="row align-items-center g-5">
@@ -16,7 +13,7 @@
                     <form action="{{ route('search') }}" method="GET" class="landing-search" role="search">
                         <label class="visually-hidden" for="landing-search">Search Ethiopia</label>
                         <div class="input-group input-group-lg">
-                            <input id="landing-search" name="q" type="search" class="form-control" placeholder="Search destinations, experiences, stays or events" autocomplete="off">
+                            <input id="landing-search" name="q" type="search" class="form-control" placeholder="Search destinations, stays, food, transport or events" autocomplete="off">
                             <button class="btn btn-warning px-4" type="submit">Search</button>
                         </div>
                     </form>
@@ -81,8 +78,8 @@
                             <div class="col-sm-6"><div class="landing-stat-card"><strong>{{ $museums->count() }}</strong><span>featured museum listings</span></div></div>
                         </div>
                         <div class="d-flex flex-wrap gap-2 mt-3">
-                            <a class="btn btn-sm btn-outline-success" href="{{ route('heritage-sites.index') }}">Heritage in Gondar</a>
-                            <a class="btn btn-sm btn-outline-success" href="{{ route('museums.index') }}">Museums</a>
+                            <a class="btn btn-sm btn-outline-success" href="{{ route('destinations.show', $gondar) }}">Explore Gondar heritage</a>
+                            <a class="btn btn-sm btn-outline-success" href="{{ route('museums.index', ['q' => 'Gondar']) }}">Gondar museums</a>
                             <a class="btn btn-sm btn-outline-success" href="{{ route('map', ['destination' => $gondar->destination_id]) }}">Map Gondar</a>
                         </div>
                     @else
@@ -111,8 +108,8 @@
         <section class="landing-section mb-5" aria-labelledby="stay-heading">
             <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4"><div><p class="landing-eyebrow mb-1">Stay &amp; Eat</p><h2 id="stay-heading" class="h2 mb-0">Settle in, then taste the place</h2></div><a class="landing-section-link" href="{{ route('tourism-services.index') }}">See all services <span aria-hidden="true">→</span></a></div>
             <div class="row g-4">
-                <div class="col-lg-6"><div class="landing-subsection"><div class="d-flex justify-content-between mb-3"><h3 class="h5 mb-0">Hotels</h3><a href="{{ route('tourism-services.index') }}" class="small">Browse stays</a></div>@if ($accommodations->isEmpty())<p class="text-muted small mb-0">No public accommodation is available yet.</p>@else @foreach ($accommodations->take(3) as $service)<a class="landing-list-item" href="{{ route('tourism-services.show', $service) }}"><span>{{ $service->service_name }}</span><small>{{ $service->destination?->name }}</small></a>@endforeach @endif</div></div>
-                <div class="col-lg-6"><div class="landing-subsection"><div class="d-flex justify-content-between mb-3"><h3 class="h5 mb-0">Restaurants</h3><a href="{{ route('tourism-services.index') }}" class="small">Find food</a></div>@if ($dining->isEmpty())<p class="text-muted small mb-0">No public dining services are available yet.</p>@else @foreach ($dining->take(3) as $service)<a class="landing-list-item" href="{{ route('tourism-services.show', $service) }}"><span>{{ $service->service_name }}</span><small>{{ $service->destination?->name }}</small></a>@endforeach @endif</div></div>
+                <div class="col-lg-6"><div class="landing-subsection"><div class="d-flex justify-content-between mb-3"><h3 class="h5 mb-0">Hotels</h3><a href="{{ route('tourism-services.index', ['provider_type' => 'hotel']) }}" class="small">Browse stays</a></div>@if ($accommodations->isEmpty())<p class="text-muted small mb-0">No public accommodation is available yet.</p>@else @foreach ($accommodations->take(3) as $service)<a class="landing-list-item" href="{{ route('tourism-services.show', $service) }}"><span>{{ $service->service_name }}</span><small>{{ $service->destination?->name }}</small></a>@endforeach @endif</div></div>
+                <div class="col-lg-6"><div class="landing-subsection"><div class="d-flex justify-content-between mb-3"><h3 class="h5 mb-0">Restaurants</h3><a href="{{ route('tourism-services.index', ['provider_type' => 'restaurant']) }}" class="small">Find food</a></div>@if ($dining->isEmpty())<p class="text-muted small mb-0">No public dining services are available yet.</p>@else @foreach ($dining->take(3) as $service)<a class="landing-list-item" href="{{ route('tourism-services.show', $service) }}"><span>{{ $service->service_name }}</span><small>{{ $service->destination?->name }}</small></a>@endforeach @endif</div></div>
             </div>
         </section>
 
