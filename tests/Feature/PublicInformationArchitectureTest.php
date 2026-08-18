@@ -16,8 +16,6 @@ class PublicInformationArchitectureTest extends TestCase
         $response->assertOk()
             ->assertSee('Explore Ethiopia')
             ->assertSee('Things to Do')
-            ->assertSee('Stay &amp; Eat', false)
-            ->assertSee('Travel &amp; Transport', false)
             ->assertSee('Events')
             ->assertSee('Plan Your Trip')
             ->assertSee('Smart Trip')
@@ -25,6 +23,8 @@ class PublicInformationArchitectureTest extends TestCase
             ->assertSee('Destinations')
             ->assertSee('Tour Guides')
             ->assertSee('Transportation')
+            ->assertDontSee('aria-expanded="false">Stay &amp; Eat', false)
+            ->assertDontSee('aria-expanded="false">Travel &amp; Transport', false)
             ->assertSee('data-bs-toggle="dropdown"', false)
             ->assertSee('data-bs-target="#primary-navigation"', false)
             ->assertSee('data-nav-placeholder="true"', false);

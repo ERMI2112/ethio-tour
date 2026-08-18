@@ -33,24 +33,6 @@
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Stay &amp; Eat</a>
-                    <ul class="dropdown-menu">
-                        <li><h6 class="dropdown-header">Accommodation and dining</h6></li>
-                        <li><a class="dropdown-item" href="{{ route('tourism-services.index', ['provider_type' => 'hotel']) }}">Hotels</a></li>
-                        <li><a class="dropdown-item" href="{{ route('tourism-services.index', ['provider_type' => 'restaurant']) }}">Restaurants</a></li>
-                        <li><a class="dropdown-item" href="{{ route('tourism-services.index') }}">Tourism Services</a></li>
-                        <li><x-ui.nav-placeholder label="Food &amp; Coffee (coming soon)" /></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Travel &amp; Transport</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ route('transportation.index') }}">Transportation</a></li>
-                        <li><a class="dropdown-item" href="{{ route('transportation.index') }}">Car Rental</a></li>
-                        <li><x-ui.nav-placeholder label="Travel Information (coming soon)" /></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Events</a>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{{ route('events.index') }}">Events &amp; Festivals</a></li>
