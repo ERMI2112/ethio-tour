@@ -51,7 +51,7 @@
                             <div class="col-sm-6"><span class="text-muted small d-block">Start Date</span><strong>{{ $booking->tourGuideReservation->start_date->format('F d, Y') }}</strong></div>
                             <div class="col-sm-6"><span class="text-muted small d-block">End Date</span><strong>{{ $booking->tourGuideReservation->end_date->format('F d, Y') }}</strong></div>
                             <div class="col-sm-6"><span class="text-muted small d-block">Party Size</span><strong>{{ $booking->tourGuideReservation->number_of_tourists }} tourist(s)</strong></div>
-                            <div class="col-sm-6"><span class="text-muted small d-block">Cost</span><strong class="text-muted">Not priced</strong></div>
+                            <div class="col-sm-6"><span class="text-muted small d-block">Booking total</span><strong>{{ $booking->total_amount !== null ? number_format((float) $booking->total_amount, 2).' '.($booking->currency ?? 'ETB') : 'Not available' }}</strong></div>
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                                 <button type="submit" class="btn btn-outline-danger w-100">Cancel Request</button>
                             </form>
                         @elseif ($booking->status === 'payment_pending')
-                            <div class="alert alert-info small mb-0"><strong>Awaiting Payment</strong> — Payment will be available in a later phase.</div>
+                            <div class="alert alert-info small mb-0"><strong>Awaiting Payment</strong> — Complete payment using the payment action above to confirm your booking.</div>
                         @endif
                     </div>
                 </div>
@@ -77,7 +77,7 @@
     @php
         $eventRes = $booking->eventReservation;
     @endphp
-    <div class="row g-4"><div class="col-lg-8"><div class="card border-0 shadow-sm"><div class="card-body p-4"><h2 class="h5">Event ticket reservation</h2><h3 class="h4 text-primary">{{ $eventRes->ticketType->event->event_name }}</h3><p class="text-muted">{{ $eventRes->ticketType->name }} · {{ $eventRes->ticketType->event->event_date->format('F d, Y') }}</p><p>Quantity: <strong>{{ $eventRes->quantity }}</strong></p></div></div></div><div class="col-lg-4"><div class="card border-0 shadow-sm"><div class="card-body p-4"><p>Total: <strong>{{ number_format($booking->total_amount ?? 0,2) }} {{ $booking->currency ?? 'ETB' }}</strong></p><p class="small text-muted mb-0">Payment processing is deferred.</p></div></div></div></div>
+    <div class="row g-4"><div class="col-lg-8"><div class="card border-0 shadow-sm"><div class="card-body p-4"><h2 class="h5">Event ticket reservation</h2><h3 class="h4 text-primary">{{ $eventRes->ticketType->event->event_name }}</h3><p class="text-muted">{{ $eventRes->ticketType->name }} · {{ $eventRes->ticketType->event->event_date->format('F d, Y') }}</p><p>Quantity: <strong>{{ $eventRes->quantity }}</strong></p></div></div></div><div class="col-lg-4"><div class="card border-0 shadow-sm"><div class="card-body p-4"><p>Total: <strong>{{ number_format($booking->total_amount ?? 0,2) }} {{ $booking->currency ?? 'ETB' }}</strong></p><p class="small text-muted mb-0">Use the payment action above when this booking is ready for payment.</p></div></div></div></div>
     @elseif ($booking->transportationReservation)
     @php
         $transportRes = $booking->transportationReservation;

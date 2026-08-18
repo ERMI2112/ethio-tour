@@ -16,10 +16,13 @@ class PublicTourismServiceController extends Controller
         $categoryId = $request->integer('category');
         $destinationId = $request->integer('destination');
         $search = $request->string('q')->trim()->value();
+        $providerType = $request->string('provider_type')->trim()->value();
+        $providerType = in_array($providerType, ['hotel', 'restaurant'], true) ? $providerType : null;
 
         $services = TourismService::query()
             ->with(['category', 'destination', 'serviceProvider'])
             ->whereHas('serviceProvider', fn ($query) => $query->publiclyOperational())
+            ->when($providerType, fn ($query) => $query->whereHas('serviceProvider', fn ($query) => $query->where('provider_type', $providerType)))
             ->when($categoryId, fn ($query) => $query->where('category_id', $categoryId))
             ->when($destinationId, fn ($query) => $query->where('destination_id', $destinationId))
             ->when($search, fn ($query) => $query->where(function ($query) use ($search) {
@@ -33,7 +36,7 @@ class PublicTourismServiceController extends Controller
         $categories = Category::orderBy('category_name')->get();
         $destinations = Destination::orderBy('name')->get();
 
-        return view('public.tourism-services.index', compact('services', 'categories', 'destinations', 'categoryId', 'destinationId', 'search'));
+        return view('public.tourism-services.index', compact('services', 'categories', 'destinations', 'categoryId', 'destinationId', 'search', 'providerType'));
     }
 
     public function show(TourismService $tourismService): View

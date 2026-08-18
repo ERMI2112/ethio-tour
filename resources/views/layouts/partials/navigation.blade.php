@@ -18,7 +18,7 @@
                         <li><hr class="dropdown-divider"></li>
                         <li><x-ui.nav-placeholder label="National Parks (coming soon)" /></li>
                         <li><x-ui.nav-placeholder label="World Heritage (coming soon)" /></li>
-                        <li><x-ui.nav-placeholder label="Explore on Map (coming soon)" /></li>
+                        <li><a class="dropdown-item" href="{{ route('map') }}">Explore on Map</a></li>
                     </ul>
                 </li>
                 <li class="nav-item dropdown">
@@ -36,7 +36,8 @@
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Stay &amp; Eat</a>
                     <ul class="dropdown-menu">
                         <li><h6 class="dropdown-header">Accommodation and dining</h6></li>
-                        <li><a class="dropdown-item" href="{{ route('tourism-services.index') }}">Hotels &amp; Restaurants</a></li>
+                        <li><a class="dropdown-item" href="{{ route('tourism-services.index', ['provider_type' => 'hotel']) }}">Hotels</a></li>
+                        <li><a class="dropdown-item" href="{{ route('tourism-services.index', ['provider_type' => 'restaurant']) }}">Restaurants</a></li>
                         <li><a class="dropdown-item" href="{{ route('tourism-services.index') }}">Tourism Services</a></li>
                         <li><x-ui.nav-placeholder label="Food &amp; Coffee (coming soon)" /></li>
                     </ul>
@@ -60,9 +61,16 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Plan Your Trip</a>
                     <ul class="dropdown-menu">
-                        <li><x-ui.nav-placeholder label="Trip Planner (coming soon)" /></li>
-                        <li><x-ui.nav-placeholder label="Travel Tips (coming soon)" /></li>
-                        <li><x-ui.nav-placeholder label="Practical Information (coming soon)" /></li>
+                        <li><h6 class="dropdown-header">Plan with real public services</h6></li>
+                        <li><a class="dropdown-item" href="{{ route('tourism-services.index', ['provider_type' => 'hotel']) }}">Hotels</a></li>
+                        <li><a class="dropdown-item" href="{{ route('tour-guides.index') }}">Tour Guides</a></li>
+                        <li><a class="dropdown-item" href="{{ route('tourism-services.index', ['provider_type' => 'restaurant']) }}">Restaurants</a></li>
+                        <li><a class="dropdown-item" href="{{ route('transportation.index') }}">Transportation &amp; Car Rental</a></li>
+                        <li><a class="dropdown-item" href="{{ route('events.index') }}">Cultural Events</a></li>
+                        <li><a class="dropdown-item" href="{{ route('museums.index') }}">Museums</a></li>
+                        <li><a class="dropdown-item" href="{{ route('tourism-services.index') }}">Tourism Services</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="{{ route('smart-trip.index') }}">Smart Trip</a></li>
                     </ul>
                 </li>
                 <li class="nav-item"><a class="nav-link" href="{{ route('map') }}">Map</a></li>
