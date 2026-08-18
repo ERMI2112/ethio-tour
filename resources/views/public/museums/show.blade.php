@@ -8,7 +8,7 @@
     <article class="card border-0 shadow-sm">
         <div class="card-body p-4 p-lg-5">
             <p class="text-uppercase small text-primary fw-semibold mb-1">Museum information</p>
-            <h1 class="h2">{{ $museum->museum_name }}</h1>
+            <div class="d-flex flex-wrap justify-content-between align-items-start gap-2"><h1 class="h2 mb-0">{{ $museum->museum_name }}</h1>@if($museum->latitude !== null && $museum->longitude !== null)<a class="btn btn-outline-success btn-sm" href="{{ route('map', ['category' => 'museums', 'q' => $museum->museum_name]) }}">View on Map</a>@endif</div>
             <p class="text-muted mb-4">{{ $museum->location }}</p>
             <div class="row g-4">
                 <div class="col-lg-8">

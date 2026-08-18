@@ -15,7 +15,7 @@
                         ·
                         <a href="{{ route('destinations.show', $tourismService->destination) }}" class="text-decoration-none">{{ $tourismService->destination->name }}</a>
                     </p>
-                    <h1 class="h2">{{ $tourismService->service_name }}</h1>
+                    <div class="d-flex flex-wrap justify-content-between align-items-start gap-2"><h1 class="h2 mb-0">{{ $tourismService->service_name }}</h1>@if($tourismService->latitude !== null && $tourismService->longitude !== null)@php($mapCategory = match($tourismService->serviceProvider?->provider_type) { 'hotel' => 'hotels', 'restaurant' => 'restaurants', 'transportation_car_rental' => 'transportation', default => 'services' })<a class="btn btn-outline-success btn-sm" href="{{ route('map', ['category' => $mapCategory, 'q' => $tourismService->service_name]) }}">View on Map</a>@endif</div>
                     <p class="text-muted">Provided by <strong>{{ $tourismService->serviceProvider->business_name }}</strong></p>
                     <p class="mt-3">{{ $tourismService->description }}</p>
 
