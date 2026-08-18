@@ -7,6 +7,7 @@ use App\Models\CulturalEvent;
 use App\Models\EventReservation;
 use App\Models\EventTicketType;
 use App\Models\HotelRoomReservation;
+use App\Models\Notification;
 use App\Models\RestaurantReservation;
 use App\Models\TourGuideReservation;
 use App\Models\TourismService;
@@ -106,7 +107,11 @@ class BookingCompletionTest extends TestCase
         $service = app(BookingCompletionService::class);
 
         $this->assertTrue($service->complete($booking));
+        $this->assertDatabaseHas('notifications', ['user_id' => $booking->tourist->user_id, 'type' => 'booking_completed']);
+        $this->assertDatabaseHas('notifications', ['user_id' => $booking->tourist->user_id, 'type' => 'review_available']);
+        $notificationCount = Notification::where('user_id', $booking->tourist->user_id)->count();
         $this->assertFalse($service->complete($booking));
+        $this->assertSame($notificationCount, Notification::where('user_id', $booking->tourist->user_id)->count());
         $this->assertSame('completed', $booking->fresh()->status);
         $this->assertTrue(app(ReviewEligibilityService::class)->isEligible($booking->fresh()));
     }
