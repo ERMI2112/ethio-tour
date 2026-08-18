@@ -32,7 +32,7 @@
     </div>
 
     @if ($reviewEligible)
-        <div class="card border-0 shadow-sm mb-4"><div class="card-body p-4"><h2 class="h5">Share your experience</h2><form method="POST" action="{{ route('tourist.reservations.reviews.store', $booking) }}">@csrf<div class="row g-3"><div class="col-md-3"><label class="form-label" for="rating">Rating</label><select class="form-select @error('rating') is-invalid @enderror" id="rating" name="rating" required><option value="">Choose</option>@for($rating = 1; $rating <= 5; $rating++)<option value="{{ $rating }}" @selected(old('rating') == $rating)>{{ $rating }} / 5</option>@endfor</select>@error('rating')<div class="invalid-feedback">{{ $message }}</div>@enderror</div><div class="col-md-9"><label class="form-label" for="comment">Review</label><textarea class="form-control @error('comment') is-invalid @enderror" id="comment" name="comment" rows="3" minlength="10" maxlength="2000" required>{{ old('comment') }}</textarea>@error('comment')<div class="invalid-feedback">{{ $message }}</div>@enderror</div></div><button class="btn btn-primary mt-3" type="submit">Submit review</button></form></div></div>
+        <div class="card border-0 shadow-sm mb-4"><div class="card-body p-4"><h2 class="h5">Write a review</h2><p class="small text-muted">This completed booking is eligible for one review. Your submission cannot be edited later.</p><form method="POST" action="{{ route('tourist.reservations.reviews.store', $booking) }}">@csrf<div class="row g-3"><div class="col-md-3"><label class="form-label" for="rating">Rating</label><select class="form-select @error('rating') is-invalid @enderror" id="rating" name="rating" required><option value="">Choose</option>@for($rating = 1; $rating <= 5; $rating++)<option value="{{ $rating }}" @selected(old('rating') == $rating)>{{ $rating }} / 5</option>@endfor</select>@error('rating')<div class="invalid-feedback">{{ $message }}</div>@enderror</div><div class="col-md-9"><label class="form-label" for="comment">Review</label><textarea class="form-control @error('comment') is-invalid @enderror" id="comment" name="comment" rows="3" minlength="10" maxlength="2000" required>{{ old('comment') }}</textarea>@error('comment')<div class="invalid-feedback">{{ $message }}</div>@enderror</div></div><button class="btn btn-primary mt-3" type="submit">Submit review</button></form></div></div>
     @elseif ($booking->review)
         <div class="card border-0 shadow-sm mb-4"><div class="card-body p-4"><h2 class="h5">Your review</h2><x-reviews.star-rating :rating="$booking->review->rating" /><p class="mt-2 mb-1">{{ $booking->review->comment }}</p><small class="text-muted">Submitted {{ $booking->review->review_date?->format('M j, Y') }}</small></div></div>
     @endif
@@ -107,8 +107,7 @@
                         $roomType = $booking->tourismService->hotelRoomType ?? null;
                         $res = $booking->hotelRoomReservation;
                         $nights = $res ? max(1, (int) $res->check_in_date->diffInDays($res->check_out_date)) : 1;
-                        $nightlyPrice = $booking->tourismService->price ?? 0;
-                        $totalCost = $nights * $nightlyPrice;
+                        $totalCost = $booking->total_amount ?? ($booking->tourismService ? $nights * (float) $booking->tourismService->price : null);
                     @endphp
 
                     @if ($roomType)
@@ -155,16 +154,20 @@
                 </div>
                 <div class="card-body p-4">
                     <div class="d-flex justify-content-between mb-2">
-                        <span>Nightly Rate</span>
-                        <span>{{ number_format($nightlyPrice, 2) }} ETB</span>
+                        <span>Listed nightly rate</span>
+                        <span>{{ $booking->tourismService?->price !== null ? number_format((float) $booking->tourismService->price, 2).' '.($booking->currency ?? 'ETB') : 'Not available' }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>{{ $booking->total_amount !== null ? 'Booking total' : 'Estimated total' }}</span>
+                        <span>{{ $totalCost !== null ? number_format((float) $totalCost, 2).' '.($booking->currency ?? 'ETB') : 'Not priced' }}</span>
                     </div>
                     <div class="d-flex justify-content-between mb-3 pb-2 border-bottom">
                         <span>Duration</span>
                         <span>{{ $nights }} night(s)</span>
                     </div>
                     <div class="d-flex justify-content-between fs-5 fw-bold text-primary mb-4">
-                        <span>Total Cost</span>
-                        <span>{{ number_format($totalCost, 2) }} ETB</span>
+                        <span>{{ $booking->total_amount !== null ? 'Total to pay' : 'Estimated stay cost' }}</span>
+                        <span>{{ $totalCost !== null ? number_format((float) $totalCost, 2).' '.($booking->currency ?? 'ETB') : 'Not priced' }}</span>
                     </div>
 
                     @if ($booking->status === 'pending')

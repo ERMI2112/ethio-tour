@@ -22,7 +22,7 @@
 
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-white py-3">
-            <ul class="nav nav-pills card-header-pills">
+            <div class="overflow-auto"><ul class="nav nav-pills card-header-pills flex-nowrap">
                 <li class="nav-item">
                     <a class="nav-link {{ empty($status) ? 'active' : '' }}" href="{{ route('tourist.reservations.index') }}">All</a>
                 </li>
@@ -36,18 +36,24 @@
                     <a class="nav-link {{ $status === 'payment_pending' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'payment_pending']) }}">Awaiting Payment</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link {{ $status === 'confirmed' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'confirmed']) }}">Confirmed</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link {{ $status === 'completed' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'completed']) }}">Completed</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link {{ $status === 'rejected' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'rejected']) }}">Rejected</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link {{ $status === 'cancelled' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'cancelled']) }}">Cancelled</a>
                 </li>
-            </ul>
+            </ul></div>
         </div>
         <div class="card-body p-0">
             @if ($bookings->isEmpty())
                 <div class="p-5 text-center text-muted">
                     <p class="mb-2 fs-5">No reservations found.</p>
-                    <p class="small mb-0">Browse our published tourism services to make your first hotel reservation.</p>
+                    <p class="small mb-0">Browse published tourism experiences to plan your next stay, meal, journey, tour, or event.</p>
                 </div>
             @else
                 <div class="table-responsive">
@@ -78,7 +84,13 @@
                                         <td><div class="fw-bold">Tour Guide</div><div class="small text-muted">License {{ $booking->tourGuide->license_number }}</div></td>
                                         <td><div class="small fw-semibold">{{ $booking->tourGuideReservation->start_date->format('M d, Y') }}</div><div class="small text-muted">to {{ $booking->tourGuideReservation->end_date->format('M d, Y') }}</div></td>
                                         <td>{{ $booking->tourGuideReservation->number_of_tourists }}</td>
-                                        <td><span class="text-muted">Not priced</span></td>
+                                        <td>
+                                            @if ($booking->total_amount !== null)
+                                                <span class="fw-bold">{{ number_format((float) $booking->total_amount, 2) }} {{ $booking->currency ?? 'ETB' }}</span>
+                                            @else
+                                                <span class="text-muted">Not priced</span>
+                                            @endif
+                                        </td>
                                     @elseif ($booking->eventReservation)
                                         <td><div class="fw-bold">{{ $booking->eventReservation->ticketType->event->event_name }}</div><div class="small text-muted">{{ $booking->eventReservation->ticketType->name }}</div></td>
                                         <td><div class="small fw-semibold">{{ $booking->eventReservation->ticketType->event->event_date->format('M d, Y') }}</div><div class="small text-muted">Event tickets</div></td>
@@ -109,11 +121,17 @@
                                         </td>
                                     @else
                                         @php($nights = $res ? max(1, (int) $res->check_in_date->diffInDays($res->check_out_date)) : 1)
-                                        @php($totalCost = $booking->tourismService ? $nights * $booking->tourismService->price : 0)
+                                        @php($totalCost = $booking->total_amount ?? ($booking->tourismService ? $nights * (float) $booking->tourismService->price : null))
                                         <td><div class="fw-bold">{{ $booking->tourismService->service_name ?? 'N/A' }}</div><div class="small text-muted">{{ $booking->tourismService->serviceProvider->business_name ?? '' }}</div></td>
                                         <td>@if ($res)<div class="small fw-semibold">{{ $res->check_in_date->format('M d, Y') }}</div><div class="small text-muted">to {{ $res->check_out_date->format('M d, Y') }} ({{ $nights }} night(s))</div>@else<span class="text-muted small">N/A</span>@endif</td>
                                         <td>{{ $res->guest_count ?? '-' }}</td>
-                                        <td><span class="fw-bold">{{ number_format($totalCost, 2) }} ETB</span></td>
+                                        <td>
+                                            @if ($totalCost !== null)
+                                                <span class="fw-bold">{{ number_format((float) $totalCost, 2) }} {{ $booking->currency ?? 'ETB' }}</span>
+                                            @else
+                                                <span class="text-muted">Not priced</span>
+                                            @endif
+                                        </td>
                                     @endif
                                     <td>
                                         <x-ui.status-badge :status="$booking->status" />

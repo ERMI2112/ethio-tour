@@ -20,4 +20,12 @@
             <p class="small text-muted mt-2 mb-0">You will continue to Chapa's secure test checkout.</p>
         </div>
     @endif
+@elseif ($booking->status === 'pending')
+    <div class="alert alert-warning small mb-0"><strong>Awaiting provider decision.</strong> Payment will become available after this request is accepted.</div>
+@elseif ($booking->status === 'rejected')
+    <div class="alert alert-danger small mb-0"><strong>Booking request rejected.</strong> No payment is due for this request.</div>
+@elseif ($booking->status === 'cancelled')
+    <div class="alert alert-secondary small mb-0"><strong>Booking cancelled.</strong> No payment is due for this booking.</div>
+@elseif ($booking->status === 'completed')
+    <div class="alert alert-success small mb-0"><strong>Experience completed.</strong> Thank you for travelling with Ethio Tour.</div>
 @endif

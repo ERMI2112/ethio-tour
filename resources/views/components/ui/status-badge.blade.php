@@ -16,4 +16,4 @@
     $class = $map[$status][1] ?? 'bg-light text-dark';
 @endphp
 
-<span class="badge {{ $class }}" title="{{ $label }}">{{ $label }}</span>
+<span class="badge {{ $class }}" title="{{ $label }}" role="status" aria-label="Status: {{ $label }}">{{ $label }}</span>
