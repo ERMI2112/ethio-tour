@@ -75,8 +75,13 @@
                     <a class="nav-link" href="{{ route('provider.profile.edit') }}" @class(['active' => request()->routeIs('provider.profile.*')])>Business profile</a>
                 @endif
             @elseif ($workspaceRole === 'tourist')
+                <a class="nav-link" href="{{ route('tourist.dashboard') }}" @class(['active' => request()->routeIs('tourist.dashboard')])>Dashboard</a>
                 <a class="nav-link" href="{{ route('tourist.reservations.index') }}" @class(['active' => request()->routeIs('tourist.reservations.*')])>My Bookings</a>
+                @php($touristUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
+                <a class="nav-link d-flex justify-content-between align-items-center" href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])><span>Notifications</span>@if($touristUnreadNotifications)<span class="badge text-bg-primary">{{ $touristUnreadNotifications }}</span>@endif</a>
+                <a class="nav-link" href="{{ route('tourist.reviews.index') }}" @class(['active' => request()->routeIs('tourist.reviews.*')])>My Reviews</a>
                 <a class="nav-link" href="{{ route('smart-trip.index') }}" @class(['active' => request()->routeIs('smart-trip.*')])>Smart Trip</a>
+                <a class="nav-link" href="{{ route('tourist.profile') }}" @class(['active' => request()->routeIs('tourist.profile*')])>My Profile</a>
             @elseif ($workspaceRole === 'tour_guide')
                 <a class="nav-link" href="{{ route('tour-guide.dashboard') }}" @class(['active' => request()->routeIs('tour-guide.dashboard')])>Dashboard</a>
                 <a class="nav-link" href="{{ route('tour-guide.profile') }}" @class(['active' => request()->routeIs('tour-guide.profile*')])>My Profile</a>
@@ -88,7 +93,9 @@
             @endif
         </nav>
         <div class="mt-auto pt-4">
-            <a class="nav-link px-0 text-muted" href="{{ route('account') }}">Account settings</a>
+            @if ($workspaceRole !== 'tourist')
+                <a class="nav-link px-0 text-muted" href="{{ route('account') }}">Account settings</a>
+            @endif
             <a class="nav-link px-0 text-muted" href="{{ route('home') }}">View public site</a>
         </div>
     </div>

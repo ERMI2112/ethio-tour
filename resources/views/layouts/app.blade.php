@@ -43,7 +43,7 @@
         } elseif ($userRole === 'tourist' && $workspaceRoute(['tourist.*', 'smart-trip.*', 'notifications.*', 'account', 'password.confirm'])) {
             $workspaceRole = 'tourist';
             $workspaceLabel = 'Traveler Workspace';
-            $workspaceDashboardRoute = 'tourist.reservations.index';
+            $workspaceDashboardRoute = 'tourist.dashboard';
         }
     }
 @endphp

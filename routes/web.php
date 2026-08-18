@@ -56,6 +56,7 @@ use App\Http\Controllers\SmartTripMapController;
 use App\Http\Controllers\TourGuideBookingController;
 use App\Http\Controllers\TourGuideBookingRequestController;
 use App\Http\Controllers\TourGuidePortalController;
+use App\Http\Controllers\TouristPortalController;
 use App\Http\Controllers\TouristReservationController;
 use App\Http\Controllers\TouristReviewController;
 use App\Http\Controllers\TransportationProviderController;
@@ -148,6 +149,11 @@ Route::middleware(['auth', 'active'])->group(function () {
     });
 
     Route::middleware('role:tourist')->prefix('tourist')->name('tourist.')->group(function () {
+        Route::get('/', [TouristPortalController::class, 'dashboard'])->name('dashboard');
+        Route::get('/reviews', [TouristPortalController::class, 'reviews'])->name('reviews.index');
+        Route::get('/profile', [AccountController::class, 'showTouristProfile'])->name('profile');
+        Route::get('/profile/edit', [AccountController::class, 'editTouristProfile'])->name('profile.edit');
+        Route::put('/profile', [AccountController::class, 'updateTouristProfile'])->name('profile.update');
         Route::post('/services/{tourismService}/reservations', [HotelReservationController::class, 'store'])->name('reservations.store');
         Route::get('/reservations', [TouristReservationController::class, 'index'])->name('reservations.index');
         Route::get('/reservations/{booking}', [TouristReservationController::class, 'show'])->name('reservations.show');
