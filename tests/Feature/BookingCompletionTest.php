@@ -17,6 +17,7 @@ use App\Services\BookingCompletionService;
 use App\Services\ReviewEligibilityService;
 use Carbon\Carbon;
 use Database\Seeders\UatDemoSeeder;
+use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -28,6 +29,15 @@ class BookingCompletionTest extends TestCase
     {
         parent::setUp();
         $this->seed(UatDemoSeeder::class);
+    }
+
+    public function test_booking_completion_command_is_registered_in_the_application_scheduler(): void
+    {
+        $scheduledCommands = collect(app(Schedule::class)->events())
+            ->map(fn ($event) => (string) $event->command)
+            ->all();
+
+        $this->assertTrue(collect($scheduledCommands)->contains(fn (string $command): bool => str_contains($command, 'bookings:complete')));
     }
 
     public function test_hotel_completion_waits_until_checkout_and_then_completes(): void
