@@ -66,4 +66,19 @@ class PublicTouristNavigationCorrectionTest extends TestCase
             ->assertDontSee('Bureau Dashboard')
             ->assertDontSee('Admin Dashboard');
     }
+
+    public function test_smart_trip_my_trips_is_visible_only_to_authenticated_tourists(): void
+    {
+        $this->get(route('home'))
+            ->assertOk()
+            ->assertSee('Plan a Trip')
+            ->assertDontSee('My Trips');
+
+        $tourist = User::where('email', 'tourist@test.com')->firstOrFail();
+
+        $this->actingAs($tourist)->get(route('home'))
+            ->assertOk()
+            ->assertSee('Plan a Trip')
+            ->assertSee('My Trips');
+    }
 }
