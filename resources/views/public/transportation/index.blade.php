@@ -5,7 +5,7 @@
 @section('content')
 <div class="container py-4">
     <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
-        <div><p class="text-uppercase small text-primary fw-semibold mb-1">Travel services</p><h1 class="h2 mb-1">Transportation &amp; Car Rental</h1><p class="text-muted mb-0">Compare vehicle rental and transport services from approved providers.</p></div>
+        <div><p class="text-uppercase small text-primary fw-semibold mb-1">Travel services</p><h1 class="h2 mb-1">Transportation &amp; Car Rental</h1><p class="text-muted mb-0">Compare vehicle rental and transport services for your journey.</p></div>
         <form class="d-flex gap-2" method="GET" action="{{ route('transportation.index') }}"><label class="visually-hidden" for="transport-search">Search transportation</label><input id="transport-search" name="q" value="{{ $search }}" class="form-control" placeholder="Search services..."><button class="btn btn-primary">Search</button></form>
     </div>
     @if ($services->isEmpty())

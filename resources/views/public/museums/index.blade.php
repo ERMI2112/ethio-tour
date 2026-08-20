@@ -8,7 +8,7 @@
         <div>
             <p class="text-uppercase small text-primary fw-semibold mb-1">Explore Ethiopia</p>
             <h1 class="h2 mb-1">Museums</h1>
-            <p class="text-muted mb-0">Discover museums and cultural information published by the Tourism Bureau.</p>
+            <p class="text-muted mb-0">Discover museums, collections, and cultural history from across Ethiopia.</p>
         </div>
         <form class="d-flex gap-2" method="GET" action="{{ route('museums.index') }}" role="search">
             <label class="visually-hidden" for="museum-search">Search museums</label>

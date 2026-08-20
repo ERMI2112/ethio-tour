@@ -100,3 +100,66 @@ $workspace-radius: 1rem;
 [data-bs-theme='dark'] .form-control {
     color: var(--bs-body-color);
 }
+
+/* Public destination cards: calm hierarchy, tactile hover, and a consistent
+   editorial rhythm across attractions, services, and sidebar actions. */
+.destination-detail-card,
+.destination-sidebar-card {
+    border: 1px solid rgba(15, 81, 50, .1) !important;
+    overflow: hidden;
+    transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+}
+
+.destination-detail-card:hover,
+.destination-detail-card:focus-within,
+.destination-sidebar-card:hover,
+.destination-sidebar-card:focus-within {
+    border-color: rgba(15, 81, 50, .28) !important;
+    box-shadow: 0 1rem 2.25rem rgba(15, 81, 50, .1) !important;
+    transform: translateY(-3px);
+}
+
+.destination-detail-card .card-body,
+.destination-sidebar-card .card-body {
+    padding: 1.35rem;
+}
+
+.destination-sidebar-card .badge,
+.destination-detail-card .badge {
+    letter-spacing: .04em;
+}
+
+.destination-sidebar-card .btn,
+.destination-detail-card .btn {
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.destination-sidebar-card .btn:hover,
+.destination-detail-card .btn:hover,
+.destination-sidebar-card .btn:focus-visible,
+.destination-detail-card .btn:focus-visible {
+    box-shadow: 0 .45rem 1rem rgba(15, 81, 50, .12);
+    transform: translateY(-1px);
+}
+
+[data-bs-theme='dark'] .destination-detail-card,
+[data-bs-theme='dark'] .destination-sidebar-card {
+    border-color: #294637 !important;
+}
+
+[data-bs-theme='dark'] .destination-detail-card:hover,
+[data-bs-theme='dark'] .destination-detail-card:focus-within,
+[data-bs-theme='dark'] .destination-sidebar-card:hover,
+[data-bs-theme='dark'] .destination-sidebar-card:focus-within {
+    border-color: #4c8062 !important;
+    box-shadow: 0 1rem 2.25rem rgba(0, 0, 0, .3) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .destination-detail-card,
+    .destination-sidebar-card,
+    .destination-sidebar-card .btn,
+    .destination-detail-card .btn {
+        transition: none;
+    }
+}

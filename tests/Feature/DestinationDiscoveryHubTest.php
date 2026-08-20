@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Attraction;
 use App\Models\Booking;
 use App\Models\Category;
 use App\Models\CulturalEvent;
@@ -87,8 +88,8 @@ class DestinationDiscoveryHubTest extends TestCase
             ->assertSee('Plan a Trip to Gondar City')
             ->assertSee('Explore on Map')
             ->assertSee('Quick Navigation')
-            ->assertSee('#heritage-sites')
-            ->assertSee('#accommodations');
+            ->assertDontSee('href="#heritage-sites"', false)
+            ->assertDontSee('href="#accommodations"', false);
     }
 
     public function test_heritage_and_museum_sections_are_properly_integrated(): void
@@ -421,8 +422,10 @@ class DestinationDiscoveryHubTest extends TestCase
 
         $response = $this->get(route('destinations.show', $destination));
         $response->assertOk()
-            ->assertSee('Bureau-Verified Tour Guides')
-            ->assertSee('Browse Verified Tour Guides')
+            ->assertSee('Local Tour Guides')
+            ->assertSee('Verified Guides')
+            ->assertSee('Browse Verified Guides')
+            ->assertDontSee('Bureau-Verified Tour Guides')
             ->assertSee(route('tour-guides.index'));
     }
 
@@ -484,5 +487,96 @@ class DestinationDiscoveryHubTest extends TestCase
             ->assertSee('Destinations')
             ->assertSee(route('destinations.index'))
             ->assertDontSee('Explore Ethiopia /');
+    }
+
+    public function test_attractions_display_with_category_badges_and_directions(): void
+    {
+        $bureauUser = User::factory()->create(['role' => 'tourism_bureau_officer']);
+        $officer = TourismBureauOfficer::create(['user_id' => $bureauUser->user_id]);
+
+        $destination = Destination::create([
+            'officer_id' => $officer->officer_id,
+            'name' => 'Gondar',
+            'location' => 'Amhara',
+            'description' => 'Historic city.',
+            'tagline' => 'The Camelot of Africa',
+        ]);
+
+        $featured = Attraction::create([
+            'destination_id' => $destination->destination_id,
+            'name' => 'Fasil Ghebbi (Royal Enclosure)',
+            'slug' => 'fasil-ghebbi-test',
+            'description' => '17th-century fortress city with imperial castles and stone walls.',
+            'category' => 'heritage_site',
+            'location_address' => 'Central Gondar',
+            'latitude' => 12.6087000,
+            'longitude' => 37.4683000,
+            'opening_hours' => '08:30 – 17:30 daily',
+            'entry_fee' => 200.00,
+            'is_featured' => true,
+        ]);
+
+        $church = Attraction::create([
+            'destination_id' => $destination->destination_id,
+            'name' => 'Debre Berhan Selassie Church',
+            'slug' => 'debre-berhan-selassie-test',
+            'description' => 'Iconic ceiling adorned with rows of painted angel faces.',
+            'category' => 'church',
+            'location_address' => 'Debre Berhan Selassie Road',
+            'latitude' => 12.6130000,
+            'longitude' => 37.4700000,
+            'opening_hours' => '08:00 – 17:00 daily',
+            'entry_fee' => 200.00,
+            'is_featured' => false,
+        ]);
+
+        $response = $this->get(route('destinations.show', $destination));
+        $response->assertOk()
+            ->assertSee('Iconic Attractions &amp; Landmarks', false)
+            ->assertSee('Fasil Ghebbi (Royal Enclosure)')
+            ->assertSee('17th-century fortress city with imperial castles and stone walls.')
+            ->assertSee('Heritage Site')
+            ->assertSee('Featured Highlight')
+            ->assertSee('Debre Berhan Selassie Church')
+            ->assertSee('Church &amp; Monastery', false)
+            ->assertSee('Get Directions')
+            ->assertSee('200.00 ETB');
+    }
+
+    public function test_attractions_count_renders_on_destinations_index(): void
+    {
+        $bureauUser = User::factory()->create(['role' => 'tourism_bureau_officer']);
+        $officer = TourismBureauOfficer::create(['user_id' => $bureauUser->user_id]);
+
+        $destination = Destination::create([
+            'officer_id' => $officer->officer_id,
+            'name' => 'Gondar',
+            'location' => 'Amhara',
+            'description' => 'Historic imperial city of castles.',
+            'tagline' => 'The Camelot of Africa',
+        ]);
+
+        Attraction::create([
+            'destination_id' => $destination->destination_id,
+            'name' => 'Fasil Ghebbi',
+            'slug' => 'fasil-ghebbi-count-test',
+            'description' => 'Castles and palaces.',
+            'category' => 'heritage_site',
+            'is_featured' => true,
+        ]);
+
+        Attraction::create([
+            'destination_id' => $destination->destination_id,
+            'name' => 'Fasilides Bath',
+            'slug' => 'fasilides-bath-count-test',
+            'description' => 'Epiphany pool pavilion.',
+            'category' => 'monument',
+            'is_featured' => false,
+        ]);
+
+        $response = $this->get(route('destinations.index'));
+        $response->assertOk()
+            ->assertSee('<strong>2</strong> attractions', false)
+            ->assertSee('The Camelot of Africa');
     }
 }
