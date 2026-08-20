@@ -3,13 +3,14 @@
 @section('title', $tourismService->service_name)
 
 @section('content')
-<div class="container py-5">
+<div class="container public-catalog-page py-4 py-lg-5">
     <a class="text-decoration-none small" href="{{ route('tourism-services.index') }}">&larr; All tourism services</a>
 
     <div class="row g-4 mt-1">
         <div class="{{ ($tourismService->hotelRoomType || $isRestaurantReservationOffering) ? 'col-lg-7' : 'col-12' }}">
-            <article class="card border-0 shadow-sm h-100">
-                <div class="card-body p-4 p-md-5">
+            <article class="public-catalog-card h-100" data-aos="fade-up">
+                <div class="public-catalog-card__media public-catalog-card__media--service" style="min-height: 12rem"><div><div class="public-catalog-card__media-kicker">{{ str($tourismService->serviceProvider?->provider_type ?? 'tourism service')->replace('_', ' ')->title() }}</div><div class="public-catalog-card__media-label">{{ $tourismService->destination->name }}</div></div></div>
+                <div class="public-catalog-card__body p-4 p-md-5">
                     <p class="text-uppercase text-muted small mb-2">
                         <a href="{{ route('categories.index') }}" class="text-decoration-none">{{ $tourismService->category->category_name }}</a>
                         ·
@@ -50,11 +51,11 @@
 
         @if ($tourismService->hotelRoomType)
             <div class="col-lg-5">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-primary text-white p-3">
+                <div class="public-catalog-card" data-aos="fade-up" data-aos-delay="80">
+                    <div class="card-header bg-transparent border-0 p-3 pb-0">
                         <h2 class="h5 mb-0">Check Availability & Book</h2>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="public-catalog-card__body p-4">
                         @include('layouts.partials.flash-messages')
 
                         <form method="POST" action="{{ route('tourism-services.check-availability', $tourismService) }}" class="mb-4">
@@ -114,9 +115,9 @@
             </div>
         @elseif ($isRestaurantReservationOffering)
             <div class="col-lg-5">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-header bg-primary text-white p-3"><h2 class="h5 mb-0">Reserve a table</h2></div>
-                    <div class="card-body p-4">
+                <div class="public-catalog-card" data-aos="fade-up" data-aos-delay="80">
+                    <div class="card-header bg-transparent border-0 p-3 pb-0"><h2 class="h5 mb-0">Reserve a table</h2></div>
+                    <div class="public-catalog-card__body p-4">
                         @include('layouts.partials.flash-messages')
                         <form method="POST" action="{{ route('restaurants.availability', $tourismService) }}" class="mb-4">
                             @csrf
@@ -143,6 +144,6 @@
             </div>
         @endif
     </div>
-    <section class="card border-0 shadow-sm mt-4"><div class="card-body p-4"><div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h5 mb-0">Guest reviews</h2><x-reviews.rating-summary :average="$reviewAverage" :count="$reviewCount" /></div><x-reviews.review-list :reviews="$reviews" /></div></section>
+    <section class="public-catalog-card mt-4" data-aos="fade-up"><div class="public-catalog-card__body p-4"><div class="d-flex justify-content-between align-items-center mb-3"><h2 class="h5 mb-0">Guest reviews</h2><x-reviews.rating-summary :average="$reviewAverage" :count="$reviewCount" /></div><x-reviews.review-list :reviews="$reviews" /></div></section>
 </div>
 @endsection
