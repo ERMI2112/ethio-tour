@@ -25,4 +25,9 @@ trait HasCoordinates
             }
         });
     }
+
+    public function hasCoordinates(): bool
+    {
+        return $this->latitude !== null && $this->longitude !== null;
+    }
 }
