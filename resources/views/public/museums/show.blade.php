@@ -3,11 +3,11 @@
 @section('title', $museum->museum_name)
 
 @section('content')
-<div class="container py-4">
+<div class="container public-catalog-page py-4 py-lg-5">
     <a class="link-secondary d-inline-block mb-3" href="{{ route('museums.index') }}">&larr; Back to museums</a>
-    <article class="card border-0 shadow-sm">
+    <article class="public-catalog-card" data-aos="fade-up">
         <div class="card-body p-4 p-lg-5">
-            <p class="text-uppercase small text-primary fw-semibold mb-1">Museum information</p>
+            <p class="text-uppercase small text-success fw-semibold mb-1">Museum collection</p>
             <div class="d-flex flex-wrap justify-content-between align-items-start gap-2"><h1 class="h2 mb-0">{{ $museum->museum_name }}</h1>@if($museum->latitude !== null && $museum->longitude !== null)<a class="btn btn-outline-success btn-sm" href="{{ route('map', ['category' => 'museums', 'q' => $museum->museum_name]) }}">View on Map</a>@endif</div>
             <p class="text-muted mb-4">{{ $museum->location }}</p>
             <div class="row g-4">
