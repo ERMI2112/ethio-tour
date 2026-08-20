@@ -1,0 +1,102 @@
+// The project keeps its Bootstrap overrides in resources/css/app.css for
+// backwards-compatible page styling. This small Vite entry owns the shared
+// workspace polish so new UI can use the same tokens without another framework.
+$ethio-green: #0f5132;
+$ethio-gold: #e5a919;
+$workspace-radius: 1rem;
+
+:root {
+    --ethio-workspace-radius: #{$workspace-radius};
+    --ethio-workspace-shadow: 0 14px 36px rgba(15, 81, 50, .11);
+}
+
+.workspace-header {
+    border-bottom-color: rgba(15, 81, 50, .12) !important;
+}
+
+.workspace-theme-toggle {
+    min-width: 2.5rem;
+    justify-content: center;
+}
+
+.workspace-theme-toggle svg,
+.nav-theme-toggle-btn svg {
+    flex: 0 0 auto;
+}
+
+.workspace-sidebar .nav-link {
+    border-radius: $workspace-radius;
+}
+
+.notification-list .list-group-item {
+    border-left-color: $ethio-green;
+}
+
+.btn-primary,
+.btn-success {
+    --bs-btn-hover-transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .btn,
+    .workspace-sidebar .nav-link {
+        transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+}
+
+[data-bs-theme='dark'] {
+    --ethio-workspace-shadow: 0 14px 36px rgba(0, 0, 0, .3);
+}
+
+[data-bs-theme='dark'] .workspace-body {
+    background: #0b1711;
+}
+
+[data-bs-theme='dark'] .workspace-sidebar {
+    background: #0e2117;
+    border-right-color: #294637;
+}
+
+[data-bs-theme='dark'] .workspace-sidebar .nav-link {
+    color: #c9dfd2;
+}
+
+[data-bs-theme='dark'] .workspace-sidebar .nav-link:hover,
+[data-bs-theme='dark'] .workspace-sidebar .nav-link:focus {
+    background: #183b2a;
+    color: #fff;
+}
+
+[data-bs-theme='dark'] .workspace-header-label,
+[data-bs-theme='dark'] .workspace-header .btn-outline-secondary {
+    color: #d3e7da;
+}
+
+[data-bs-theme='dark'] .workspace-header .btn-outline-secondary {
+    border-color: #6d8e7d;
+}
+
+[data-bs-theme='dark'] .workspace-header-divider {
+    border-color: #3a5a48;
+}
+
+[data-bs-theme='dark'] .workspace-breadcrumb .breadcrumb-item.active {
+    color: #aabdb2;
+}
+
+[data-bs-theme='dark'] .table-light,
+[data-bs-theme='dark'] .table-light > :not(caption) > * > * {
+    --bs-table-bg: #14291e;
+    --bs-table-color: #dcebe2;
+    border-color: #294637;
+}
+
+[data-bs-theme='dark'] .form-control::placeholder,
+[data-bs-theme='dark'] .form-select,
+[data-bs-theme='dark'] .form-control {
+    color: var(--bs-body-color);
+}

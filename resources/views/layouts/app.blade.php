@@ -5,7 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name')) | {{ config('app.name') }}</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @yield('meta')
+    <script>
+        (function() {
+            var theme = localStorage.getItem('ethio_tour_theme') || 'light';
+            document.documentElement.setAttribute('data-bs-theme', theme);
+        })();
+    </script>
+    @vite(['resources/css/app.css', 'resources/scss/app.scss', 'resources/js/app.js'])
 </head>
 @php
     $workspaceRole = null;
@@ -50,7 +57,7 @@
 
 <body class="d-flex flex-column {{ $workspaceRole ? 'workspace-body' : '' }}">
     @if ($workspaceRole)
-        @include('layouts.partials.workspace-header', ['workspaceLabel' => $workspaceLabel, 'workspaceUsesLegacyGuideSidebar' => $workspaceUsesLegacyGuideSidebar])
+        @include('layouts.partials.workspace-header', ['workspaceLabel' => $workspaceLabel, 'workspaceRole' => $workspaceRole, 'workspaceDashboardRoute' => $workspaceDashboardRoute, 'workspaceUsesLegacyGuideSidebar' => $workspaceUsesLegacyGuideSidebar])
         <div class="workspace-layout flex-grow-1">
             @unless ($workspaceUsesLegacyGuideSidebar)
                 @include('layouts.partials.workspace-sidebar', ['workspaceRole' => $workspaceRole])

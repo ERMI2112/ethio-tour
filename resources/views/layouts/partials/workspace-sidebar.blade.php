@@ -87,7 +87,6 @@
                 <a class="nav-link" href="{{ route('tour-guide.profile') }}" @class(['active' => request()->routeIs('tour-guide.profile*')])>My Profile</a>
                 <a class="nav-link" href="{{ route('tour-guide.availability') }}" @class(['active' => request()->routeIs('tour-guide.availability')])>Availability</a>
                 <a class="nav-link" href="{{ route('tour-guide.requests.index') }}" @class(['active' => request()->routeIs('tour-guide.requests.*')])>Booking Requests</a>
-                <a class="nav-link" href="{{ route('provider.reports') }}" @class(['active' => request()->routeIs('provider.reports')])>Reports</a>
                 @php($guideUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
                 <a class="nav-link d-flex justify-content-between align-items-center" href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])><span>Notifications</span>@if($guideUnreadNotifications)<span class="badge text-bg-primary">{{ $guideUnreadNotifications }}</span>@endif</a>
             @endif
@@ -96,7 +95,9 @@
             @if ($workspaceRole !== 'tourist')
                 <a class="nav-link px-0 text-muted" href="{{ route('account') }}">Account settings</a>
             @endif
-            <a class="nav-link px-0 text-muted" href="{{ route('home') }}">View public site</a>
+            @if ($workspaceRole === 'tourist')
+                <a class="nav-link px-0 text-muted" href="{{ route('home') }}">View public site</a>
+            @endif
         </div>
     </div>
 </aside>

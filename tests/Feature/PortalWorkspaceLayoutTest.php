@@ -34,9 +34,14 @@ class PortalWorkspaceLayoutTest extends TestCase
             $response->assertOk()
                 ->assertSee($case['label'])
                 ->assertSee($case['link'])
-                ->assertSee('View Public Site')
                 ->assertDontSee('Primary navigation', false)
                 ->assertDontSee('Explore Ethiopia');
+
+            if ($case['email'] === 'tourist@test.com') {
+                $response->assertSee('View Public Site');
+            } else {
+                $response->assertDontSee('View Public Site');
+            }
 
             if ($case['email'] === 'guide@test.com') {
                 $response->assertSee('Tour Guide Portal');
@@ -66,5 +71,29 @@ class PortalWorkspaceLayoutTest extends TestCase
             ->assertSee('Primary navigation', false)
             ->assertSee('Explore Ethiopia')
             ->assertSee('Things to Do');
+    }
+
+    public function test_every_authenticated_workspace_exposes_the_shared_theme_control(): void
+    {
+        $workspaces = [
+            ['email' => 'admin@test.com', 'route' => 'admin.dashboard'],
+            ['email' => 'bureau@test.com', 'route' => 'bureau.dashboard'],
+            ['email' => 'guide@test.com', 'route' => 'tour-guide.dashboard'],
+            ['email' => 'hotel@test.com', 'route' => 'hotel.dashboard'],
+            ['email' => 'restaurant@test.com', 'route' => 'restaurant.dashboard'],
+            ['email' => 'transport@test.com', 'route' => 'transportation.dashboard'],
+            ['email' => 'event@test.com', 'route' => 'event-organizer.dashboard'],
+            ['email' => 'tourist@test.com', 'route' => 'tourist.dashboard'],
+        ];
+
+        foreach ($workspaces as $workspace) {
+            $user = User::where('email', $workspace['email'])->firstOrFail();
+
+            $this->actingAs($user)->get(route($workspace['route']))
+                ->assertOk()
+                ->assertSee('data-theme-toggle', false)
+                ->assertSee('Switch to dark mode', false)
+                ->assertSee('ethio_tour_theme', false);
+        }
     }
 }
