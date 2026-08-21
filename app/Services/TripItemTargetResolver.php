@@ -36,8 +36,8 @@ class TripItemTargetResolver
         match ($type) {
             'heritage_site' => $query->with('destination'),
             'service' => $query->with(['serviceProvider.user', 'destination', 'category']),
-            'guide' => $query->with('user'),
-            'event' => $query->with(['destination', 'serviceProvider.user']),
+            'guide' => $query->with(['user', 'destination']),
+            'event' => $query->with(['destination', 'serviceProvider.user', 'ticketTypes']),
             default => $query,
         };
 
@@ -87,7 +87,7 @@ class TripItemTargetResolver
             'heritage_site' => $target->heritage_type,
             'museum' => $target->museum_name,
             'service' => $target->service_name,
-            'guide' => 'Tour Guide Profile',
+            'guide' => $target instanceof TourGuide ? $target->displayName() : 'Tour Guide',
             'event' => $target->event_name,
         };
         $destination = match ($type) {
@@ -95,7 +95,7 @@ class TripItemTargetResolver
             'heritage_site' => $target->destination?->name,
             'museum' => $target->location,
             'service' => $target->destination?->name,
-            'guide' => null,
+            'guide' => $target->destination?->name ?? 'Ethiopia',
             'event' => $target->destination?->name,
         };
         $summary = match ($type) {
@@ -103,7 +103,7 @@ class TripItemTargetResolver
             'heritage_site' => $target->destination?->name.' · Open '.$target->opening_hours,
             'museum' => $target->description,
             'service' => $target->description,
-            'guide' => $target->expertise,
+            'guide' => $target->bio ?: $target->expertise,
             'event' => $target->description.' · '.$target->venue,
         };
         $rating = $this->rating($type, $target);
@@ -117,12 +117,65 @@ class TripItemTargetResolver
             'summary' => $summary,
             'destination' => $destination,
             'rating' => $rating,
+            'image_url' => $this->imageUrl($type, $target),
+            'price_hint' => $this->priceHint($type, $target),
+            'icon' => $this->categoryIcon($type, $target),
             'detail_url' => $this->detailUrl($type, $target),
             'map_url' => $this->mapUrl($type, $target, $title),
             'booking_url' => $this->bookingUrl($type, $target),
             'latitude' => $target->latitude ?? null,
             'longitude' => $target->longitude ?? null,
         ];
+    }
+
+    public function imageUrl(string $type, Model $target): string
+    {
+        return match ($type) {
+            'destination' => $target->hero_image ? asset($target->hero_image) : asset('images/destinations/gondar-castles.jpg'),
+            'heritage_site' => asset('images/destinations/gondar-castles.jpg'),
+            'museum' => asset('images/destinations/gondar-castles.jpg'),
+            'service' => match ($target->serviceProvider?->provider_type) {
+                'restaurant' => asset('images/services/coffee-tasting.jpg'),
+                'transportation_car_rental' => asset('images/services/safari-4x4.jpg'),
+                default => asset('images/services/hotel-suite.jpg'),
+            },
+            'guide' => $target instanceof TourGuide ? $target->profileImageUrl() : asset('images/guides/tour-guide.jpg'),
+            'event' => str_contains(strtolower($target->event_name ?? ''), 'meskel')
+                ? asset('images/events/meskel-festival.jpg')
+                : asset('images/events/timkat-festival.jpg'),
+        };
+    }
+
+    public function priceHint(string $type, Model $target): ?string
+    {
+        return match ($type) {
+            'service' => $target->price ? number_format((float) $target->price, 2) . ' ETB' . ($target->serviceProvider?->provider_type === 'hotel' ? '/night' : ($target->serviceProvider?->provider_type === 'transportation_car_rental' ? '/day' : '')) : null,
+            'guide' => $target->daily_rate ? number_format((float) $target->daily_rate, 2) . ' ETB/day' : null,
+            'heritage_site' => $target->entrance_fee ? number_format((float) $target->entrance_fee, 2) . ' ETB' : null,
+            'event' => $target->ticketTypes?->min('price') ? 'From ' . number_format((float) $target->ticketTypes->min('price'), 2) . ' ETB' : null,
+            default => null,
+        };
+    }
+
+    public function categoryIcon(string $type, Model $target): string
+    {
+        if ($type === 'service') {
+            return match ($target->serviceProvider?->provider_type) {
+                'hotel' => 'bi-building',
+                'restaurant' => 'bi-cup-hot',
+                'transportation_car_rental' => 'bi-car-front',
+                default => 'bi-briefcase',
+            };
+        }
+
+        return match ($type) {
+            'destination' => 'bi-geo-alt',
+            'heritage_site' => 'bi-bank',
+            'museum' => 'bi-columns',
+            'guide' => 'bi-person-badge',
+            'event' => 'bi-calendar-event',
+            default => 'bi-pin-map',
+        };
     }
 
     private function isPublic(string $type, Model $target): bool

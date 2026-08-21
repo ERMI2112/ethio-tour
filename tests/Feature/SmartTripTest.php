@@ -158,6 +158,22 @@ class SmartTripTest extends TestCase
         $this->assertDatabaseCount('trip_items', 1);
     }
 
+    public function test_tourist_can_view_printable_itinerary_sheet(): void
+    {
+        [$destination] = $this->catalog();
+        $owner = $this->tourist();
+        $other = $this->tourist();
+        $trip = $this->makeTrip($owner, $destination);
+        $trip->items()->create(['item_type' => 'destination', 'item_id' => $destination->destination_id, 'planned_date' => $trip->start_date, 'sequence' => 1, 'source' => 'manual']);
+
+        $this->actingAs($other)->get(route('smart-trip.print', $trip))->assertForbidden();
+        $this->actingAs($owner)->get(route('smart-trip.print', $trip))
+            ->assertOk()
+            ->assertSee($trip->title)
+            ->assertSee($destination->name)
+            ->assertSee('Daily Travel Schedule');
+    }
+
     private function tourist(): User
     {
         $user = User::factory()->create(['role' => 'tourist']);

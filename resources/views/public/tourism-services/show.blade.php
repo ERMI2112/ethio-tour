@@ -8,8 +8,27 @@
 
     <div class="row g-4 mt-1">
         <div class="{{ ($tourismService->hotelRoomType || $isRestaurantReservationOffering) ? 'col-lg-7' : 'col-12' }}">
-            <article class="public-catalog-card h-100" data-aos="fade-up">
-                <div class="public-catalog-card__media public-catalog-card__media--service" style="min-height: 12rem"><div><div class="public-catalog-card__media-kicker">{{ str($tourismService->serviceProvider?->provider_type ?? 'tourism service')->replace('_', ' ')->title() }}</div><div class="public-catalog-card__media-label">{{ $tourismService->destination->name }}</div></div></div>
+            <article class="public-catalog-card h-100 overflow-hidden" data-aos="fade-up">
+                @php
+                    $type = $tourismService->serviceProvider?->provider_type ?? 'hotel';
+                    $lowerName = strtolower($tourismService->service_name);
+                    $serviceImg = asset('images/services/hotel-suite.jpg');
+                    if (str_contains($lowerName, 'coffee') || str_contains($lowerName, 'breakfast') || str_contains($lowerName, 'dining') || $type === 'restaurant') {
+                        $serviceImg = asset('images/services/coffee-tasting.jpg');
+                    } elseif (str_contains($lowerName, '4x4') || str_contains($lowerName, 'safari') || str_contains($lowerName, 'transport') || $type === 'transportation_car_rental') {
+                        $serviceImg = asset('images/services/safari-4x4.jpg');
+                    } elseif (str_contains($lowerName, 'suite') || str_contains($lowerName, 'room') || $type === 'hotel') {
+                        $serviceImg = asset('images/services/hotel-suite.jpg');
+                    }
+                @endphp
+                <div class="public-catalog-card__media position-relative" style="height: 240px; overflow: hidden; background: #0d3824;">
+                    <img src="{{ $serviceImg }}" alt="{{ $tourismService->service_name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);"></div>
+                    <div class="position-absolute bottom-0 start-0 m-4 text-white">
+                        <div class="public-catalog-card__media-kicker text-warning">{{ str($tourismService->serviceProvider?->provider_type ?? 'tourism service')->replace('_', ' ')->title() }}</div>
+                        <div class="public-catalog-card__media-label fw-bold text-white fs-5">📍 {{ $tourismService->destination->name }}</div>
+                    </div>
+                </div>
                 <div class="public-catalog-card__body p-4 p-md-5">
                     <p class="text-uppercase text-muted small mb-2">
                         <a href="{{ route('categories.index') }}" class="text-decoration-none">{{ $tourismService->category->category_name }}</a>

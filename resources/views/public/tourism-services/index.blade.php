@@ -3,7 +3,9 @@
 @section('title', $providerType === 'hotel' ? 'Hotels' : ($providerType === 'restaurant' ? 'Restaurants' : 'Tourism Services'))
 
 @section('content')
-    @php($pageTitle = $providerType === 'hotel' ? 'Hotels' : ($providerType === 'restaurant' ? 'Restaurants' : 'Tourism Services'))
+    @php
+        $pageTitle = $providerType === 'hotel' ? 'Hotels' : ($providerType === 'restaurant' ? 'Restaurants' : 'Tourism Services');
+    @endphp
     <div class="container public-catalog-page py-4 py-lg-5">
         <header class="public-page-hero mb-4" data-aos="fade-up">
             <p class="landing-eyebrow mb-2">Discover and compare</p>
@@ -28,18 +30,38 @@
         @else
             <div class="row g-4">
                 @foreach($services as $service)
-                    @php($serviceType = str($service->serviceProvider?->provider_type ?? 'service')->replace('_', ' ')->title())
+                    @php
+                        $serviceType = str($service->serviceProvider?->provider_type ?? 'service')->replace('_', ' ')->title();
+                        $type = $service->serviceProvider?->provider_type ?? 'hotel';
+                        $lowerName = strtolower($service->service_name);
+                        $serviceImg = asset('images/services/hotel-suite.jpg');
+                        if (str_contains($lowerName, 'coffee') || str_contains($lowerName, 'breakfast') || str_contains($lowerName, 'dining') || $type === 'restaurant') {
+                            $serviceImg = asset('images/services/coffee-tasting.jpg');
+                        } elseif (str_contains($lowerName, '4x4') || str_contains($lowerName, 'safari') || str_contains($lowerName, 'transport') || $type === 'transportation_car_rental') {
+                            $serviceImg = asset('images/services/safari-4x4.jpg');
+                        } elseif (str_contains($lowerName, 'suite') || str_contains($lowerName, 'room') || $type === 'hotel') {
+                            $serviceImg = asset('images/services/hotel-suite.jpg');
+                        }
+                    @endphp
                     <div class="col-md-6 col-xl-4" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 3) * 70 }}">
-                        <article class="public-catalog-card h-100">
-                            <div class="public-catalog-card__media public-catalog-card__media--service">
-                                <div><div class="public-catalog-card__media-kicker">{{ $serviceType }}</div><div class="public-catalog-card__media-label">{{ $service->destination?->name ?? 'Ethiopia' }}</div></div>
+                        <article class="public-catalog-card h-100 overflow-hidden">
+                            <div class="public-catalog-card__media position-relative" style="height: 180px; overflow: hidden; background: #0d3824;">
+                                <img src="{{ $serviceImg }}" alt="{{ $service->service_name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);"></div>
+                                <div class="position-absolute bottom-0 start-0 m-3 text-white">
+                                    <div class="public-catalog-card__media-kicker text-warning">{{ $serviceType }}</div>
+                                    <div class="public-catalog-card__media-label fw-bold text-white">{{ $service->destination?->name ?? 'Ethiopia' }}</div>
+                                </div>
                             </div>
                             <div class="public-catalog-card__body">
                                 <div class="d-flex justify-content-between gap-2 mb-2"><span class="badge badge-verified">Verified service</span><span class="public-catalog-card__meta">{{ $service->category?->category_name }}</span></div>
-                                <h2 class="mb-2"><a class="public-catalog-card__title" href="{{ route('tourism-services.show', $service) }}">{{ $service->service_name }}</a></h2>
+                                <h2 class="mb-2"><a class="public-catalog-card__title text-dark text-decoration-none" href="{{ route('tourism-services.show', $service) }}">{{ $service->service_name }}</a></h2>
                                 <p class="public-catalog-card__meta mb-2">{{ $service->serviceProvider?->business_name ?? 'Local provider' }}</p>
-                                <p class="public-catalog-card__description line-clamp-3 mb-3">{{ \Illuminate\Support\Str::limit($service->description, 150) }}</p>
-                                <div class="public-catalog-card__footer"><span class="small fw-semibold text-success">{{ number_format((float) $service->price, 2) }} ETB</span><a class="btn btn-outline-success btn-sm" href="{{ route('tourism-services.show', $service) }}">View details <span aria-hidden="true">→</span></a></div>
+                                <p class="public-catalog-card__description line-clamp-3 mb-3 text-secondary">{{ \Illuminate\Support\Str::limit($service->description, 150) }}</p>
+                                <div class="public-catalog-card__footer mt-auto pt-3 border-top d-flex justify-content-between align-items-center">
+                                    <span class="small fw-bold text-success fs-6">{{ number_format((float) $service->price, 2) }} ETB</span>
+                                    <a class="btn btn-outline-success btn-sm" href="{{ route('tourism-services.show', $service) }}">View details <span aria-hidden="true">→</span></a>
+                                </div>
                             </div>
                         </article>
                     </div>

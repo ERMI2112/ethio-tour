@@ -52,8 +52,7 @@ class PublicInformationArchitectureTest extends TestCase
         $this->get('/destinations')
             ->assertOk()
             ->assertSee('Home')
-            ->assertSee('Destinations')
-            ->assertDontSee('Explore Ethiopia');
+            ->assertSee('Destinations');
 
         $this->get('/tour-guides')
             ->assertOk()

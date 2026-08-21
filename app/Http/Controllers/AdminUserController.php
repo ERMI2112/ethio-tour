@@ -15,9 +15,36 @@ class AdminUserController extends Controller
         $search = $request->string('q')->trim()->value();
         $role = $request->string('role')->trim()->value();
         $active = $request->input('active');
-        $users = User::query()->when($search, fn ($q) => $q->where('email', 'like', "%{$search}%"))->when($role, fn ($q) => $q->where('role', $role))->when(in_array($active, ['0', '1'], true), fn ($q) => $q->where('is_active', (bool) $active))->orderBy('email')->paginate(15)->withQueryString();
+        $users = User::query()
+            ->with(['tourist', 'tourGuide.destination', 'serviceProvider', 'tourismBureauOfficer'])
+            ->when($search, fn ($q) => $q->where('email', 'like', "%{$search}%"))
+            ->when($role, fn ($q) => $q->where('role', $role))
+            ->when(in_array($active, ['0', '1'], true), fn ($q) => $q->where('is_active', (bool) $active))
+            ->orderBy('email')
+            ->paginate(15)
+            ->withQueryString();
 
         return view('admin.users.index', compact('users', 'search', 'role', 'active'));
+    }
+
+    public function show(User $user): View
+    {
+        $user->loadMissing([
+            'tourist.trips.destinations',
+            'tourist.bookings',
+            'tourGuide.destination',
+            'tourGuide.reviews',
+            'tourGuide.bookings',
+            'tourGuide.tourPackages.destination',
+            'serviceProvider.tourismServices.destination',
+            'serviceProvider.tourismServices.category',
+            'serviceProvider.transportationVehicles',
+            'serviceProvider.culturalEvents.ticketTypes',
+            'serviceProvider.restaurantTables',
+            'tourismBureauOfficer.destinations',
+        ]);
+
+        return view('admin.users.show', compact('user'));
     }
 
     public function toggle(Request $request, User $user, AuditService $audit): RedirectResponse

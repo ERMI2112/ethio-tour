@@ -64,13 +64,117 @@
 
             <section class="landing-section" aria-labelledby="gondar-heading"><div class="landing-feature overflow-hidden"><div class="row g-0 align-items-stretch"><div class="col-lg-5"><div class="landing-feature-media h-100" style="background-image: url('{{ asset('images/attractions/fasil-ghebbi.jpg') }}');" role="img" aria-label="Fasil Ghebbi royal enclosure in Gondar"></div></div><div class="col-lg-7 p-4 p-lg-5"><p class="landing-eyebrow mb-1">Gondar pilot</p><h2 id="gondar-heading" class="landing-section-title mb-2">Begin in the city of castles.</h2><p class="text-secondary mb-4">{{ $gondar?->description ? \Illuminate\Support\Str::words($gondar->description, 46, '...') : 'Explore imperial heritage, living culture, and practical local services in Gondar.' }}</p><div class="row g-3 mb-4"><div class="col-6"><div class="landing-mini-stat"><strong>{{ $attractions->count() }}</strong><span>featured landmarks</span></div></div><div class="col-6"><div class="landing-mini-stat"><strong>{{ $gondarServices->count() }}</strong><span>public services</span></div></div><div class="col-6"><div class="landing-mini-stat"><strong>{{ $gondarEvents->count() }}</strong><span>upcoming events</span></div></div><div class="col-6"><div class="landing-mini-stat"><strong>{{ $museums->count() }}</strong><span>nearby museums</span></div></div></div>@if ($gondar)<a class="btn btn-success px-4" href="{{ route('destinations.show', $gondar) }}">Explore {{ $gondar->name }}</a>@endif <a class="btn btn-outline-success ms-2" href="{{ route('map') }}">Open the map</a></div></div></div></section>
 
-            <section class="landing-section pt-0" aria-labelledby="services-heading"><div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4"><div><p class="landing-eyebrow mb-1">Real public listings</p><h2 id="services-heading" class="landing-section-title mb-1">Plan with verified local services</h2><p class="text-secondary mb-0">Service information comes from operational providers; prices and availability are never fabricated.</p></div><a class="landing-section-link" href="{{ route('tourism-services.index') }}">Browse services <span aria-hidden="true">→</span></a></div>@if ($experiences->isEmpty())<div class="landing-empty">No public experiences are available yet. Check back as providers complete activation.</div>@else<div class="row g-3">@foreach ($experiences->take(4) as $service)<div class="col-md-6 col-xl-3"><article class="landing-service-card h-100"><div class="d-flex justify-content-between align-items-start gap-2 mb-3"><span class="landing-card-mark" aria-hidden="true">{{ str($service->serviceProvider?->provider_type ?? 'service')->substr(0, 1)->upper() }}</span><span class="badge badge-verified">Verified</span></div><h3 class="h5 mb-2">{{ $service->service_name }}</h3><p class="small text-muted mb-2">{{ $service->serviceProvider?->business_name ?? 'Operational tourism service' }}</p><p class="small text-secondary line-clamp-3 mb-3">{{ \Illuminate\Support\Str::words($service->description, 20, '...') }}</p><div class="mt-auto d-flex justify-content-between align-items-center gap-2">@if ($service->price !== null && (float) $service->price > 0)<span class="small fw-semibold text-success">{{ number_format((float) $service->price, 2) }} ETB</span>@else<span class="small text-muted">See details</span>@endif<a class="small landing-section-link" href="{{ route('tourism-services.show', $service) }}">View <span aria-hidden="true">→</span></a></div></article></div>@endforeach</div>@endif</section>
+            <section class="landing-section pt-0" aria-labelledby="services-heading">
+                <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+                    <div>
+                        <p class="landing-eyebrow mb-1">Real public listings</p>
+                        <h2 id="services-heading" class="landing-section-title mb-1">Plan with verified local services</h2>
+                        <p class="text-secondary mb-0">Service information comes from operational providers; prices and availability are never fabricated.</p>
+                    </div>
+                    <a class="landing-section-link" href="{{ route('tourism-services.index') }}">Browse services <span aria-hidden="true">→</span></a>
+                </div>
+                @if ($experiences->isEmpty())
+                    <div class="landing-empty">No public experiences are available yet. Check back as providers complete activation.</div>
+                @else
+                    <div class="row g-3">
+                        @foreach ($experiences->take(4) as $service)
+                            @php
+                                $type = $service->serviceProvider?->provider_type ?? 'hotel';
+                                $serviceImg = asset('images/services/hotel-suite.jpg');
+                                $lowerName = strtolower($service->service_name);
+                                if (str_contains($lowerName, 'coffee') || str_contains($lowerName, 'breakfast') || $type === 'restaurant') {
+                                    $serviceImg = asset('images/services/coffee-tasting.jpg');
+                                } elseif (str_contains($lowerName, '4x4') || str_contains($lowerName, 'safari') || str_contains($lowerName, 'transport') || $type === 'transportation_car_rental') {
+                                    $serviceImg = asset('images/services/safari-4x4.jpg');
+                                } elseif (str_contains($lowerName, 'meskel') || str_contains($lowerName, 'festival') || str_contains($lowerName, 'celebration') || $type === 'event_organizer') {
+                                    $serviceImg = asset('images/events/meskel-festival.jpg');
+                                } elseif (str_contains($lowerName, 'suite') || str_contains($lowerName, 'room') || $type === 'hotel') {
+                                    $serviceImg = asset('images/services/hotel-suite.jpg');
+                                }
+                            @endphp
+                            <div class="col-md-6 col-xl-3">
+                                <article class="landing-card landing-destination-card h-100 overflow-hidden p-0 d-flex flex-column">
+                                    <div class="position-relative" style="height: 140px; overflow: hidden; background: #0c1e14;">
+                                        <img src="{{ $serviceImg }}" alt="{{ $service->service_name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                        <div class="position-absolute top-0 start-0 m-2 d-flex justify-content-between align-items-center w-100 pe-4">
+                                            <span class="badge bg-dark bg-opacity-75 text-white small">{{ ucfirst(str_replace('_', ' ', $type)) }}</span>
+                                            <span class="badge badge-verified">Verified</span>
+                                        </div>
+                                    </div>
+                                    <div class="p-3 d-flex flex-column flex-grow-1">
+                                        <h3 class="h6 fw-bold mb-1"><a class="landing-card-title text-dark text-decoration-none" href="{{ route('tourism-services.show', $service) }}">{{ $service->service_name }}</a></h3>
+                                        <p class="small text-muted mb-2">{{ $service->serviceProvider?->business_name ?? 'Operational tourism service' }}</p>
+                                        <p class="small text-secondary line-clamp-2 mb-3 flex-grow-1">{{ \Illuminate\Support\Str::words($service->description, 16, '...') }}</p>
+                                        <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center gap-2">
+                                            @if ($service->price !== null && (float) $service->price > 0)
+                                                <span class="small fw-bold text-success">{{ number_format((float) $service->price, 2) }} ETB</span>
+                                            @else
+                                                <span class="small text-muted">See details</span>
+                                            @endif
+                                            <a class="small landing-section-link fw-semibold" href="{{ route('tourism-services.show', $service) }}">View <span aria-hidden="true">→</span></a>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </section>
 
-            <section class="landing-section landing-section-alt rounded-4 px-3 px-lg-5" aria-labelledby="events-heading"><div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4"><div><p class="landing-eyebrow mb-1">What’s happening</p><h2 id="events-heading" class="landing-section-title mb-1">Events &amp; Festivals</h2><p class="text-secondary mb-0">Published events with real dates and public booking paths.</p></div><a class="landing-section-link" href="{{ route('events.index') }}">View all events <span aria-hidden="true">→</span></a></div>@if ($events->isEmpty())<div class="landing-empty bg-transparent">No upcoming public events are available yet.</div>@else<div class="row g-3">@foreach ($events->take(3) as $event)<div class="col-md-4"><article class="landing-event-card h-100"><div class="landing-event-date"><strong>{{ optional($event->event_date)->format('d') }}</strong><span>{{ optional($event->event_date)->format('M Y') }}</span></div><div><h3 class="h5 mb-2">{{ $event->event_name }}</h3><p class="small text-secondary mb-3">{{ $event->destination?->name ?? 'Ethiopia' }}</p><a class="landing-section-link small" href="{{ route('events.show', $event) }}">Event details <span aria-hidden="true">→</span></a></div></article></div>@endforeach</div>@endif</section>
+            <section class="landing-section landing-section-alt rounded-4 px-3 px-lg-5" aria-labelledby="events-heading">
+                <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+                    <div>
+                        <p class="landing-eyebrow mb-1">What’s happening</p>
+                        <h2 id="events-heading" class="landing-section-title mb-1">Events &amp; Festivals</h2>
+                        <p class="text-secondary mb-0">Published events with real dates and public booking paths.</p>
+                    </div>
+                    <a class="landing-section-link" href="{{ route('events.index') }}">View all events <span aria-hidden="true">→</span></a>
+                </div>
+                @if ($events->isEmpty())
+                    <div class="landing-empty bg-transparent">No upcoming public events are available yet.</div>
+                @else
+                    <div class="row g-4">
+                        @foreach ($events->take(3) as $event)
+                            @php
+                                $lowerEvent = strtolower($event->event_name);
+                                $eventImg = str_contains($lowerEvent, 'meskel')
+                                    ? asset('images/events/meskel-festival.jpg')
+                                    : asset('images/events/timkat-festival.jpg');
+                            @endphp
+                            <div class="col-md-6 col-lg-4">
+                                <article class="landing-card landing-destination-card h-100 overflow-hidden p-0 d-flex flex-column bg-white">
+                                    <div class="position-relative" style="height: 160px; overflow: hidden; background: #0c1e14;">
+                                        <img src="{{ $eventImg }}" alt="{{ $event->event_name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                        <div class="position-absolute top-0 start-0 m-3">
+                                            <div class="badge bg-white text-dark shadow-sm px-2.5 py-1.5 text-center">
+                                                <div class="fw-bold fs-6 leading-none text-success">{{ optional($event->event_date)->format('d') }}</div>
+                                                <div class="small text-uppercase text-muted" style="font-size: 0.65rem;">{{ optional($event->event_date)->format('M Y') }}</div>
+                                            </div>
+                                        </div>
+                                        @if($event->destination)
+                                            <span class="position-absolute bottom-0 start-0 m-3 badge bg-dark bg-opacity-75 text-white">
+                                                📍 {{ $event->destination->name }}
+                                            </span>
+                                        @endif
+                                    </div>
+                                    <div class="p-3 p-lg-4 d-flex flex-column flex-grow-1">
+                                        <h3 class="h5 fw-bold mb-2"><a class="landing-card-title text-dark text-decoration-none" href="{{ route('events.show', $event) }}">{{ $event->event_name }}</a></h3>
+                                        <p class="small text-secondary mb-3 line-clamp-2">{{ $event->description ?: ($event->destination?->name ? 'Join authentic cultural celebrations in ' . $event->destination->name . '.' : 'Authentic cultural festival.') }}</p>
+                                        <div class="mt-auto pt-2 border-top d-flex justify-content-between align-items-center">
+                                            <span class="small text-muted">{{ $event->venue ?: ($event->destination?->name ?? 'Ethiopia') }}</span>
+                                            <a class="landing-section-link small fw-semibold" href="{{ route('events.show', $event) }}">Event details <span aria-hidden="true">→</span></a>
+                                        </div>
+                                    </div>
+                                </article>
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </section>
 
             <section class="landing-section" aria-labelledby="tools-heading"><div class="row g-4"><div class="col-lg-6"><div class="landing-tool-card landing-tool-card--smart h-100"><p class="landing-eyebrow mb-1">Plan with context</p><h2 id="tools-heading" class="h3 fw-bold mb-2">Keep your trip ideas together.</h2><p class="text-secondary mb-4">Save destinations and experiences into a Smart Trip itinerary, then refine it as your plans take shape.</p><a class="btn btn-success" href="{{ route('smart-trip.index') }}">Plan with Smart Trip</a></div></div><div class="col-lg-6"><div class="landing-tool-card landing-tool-card--map h-100"><p class="landing-eyebrow mb-1">Explore spatially</p><h2 class="h3 fw-bold mb-2">See what is around you.</h2><p class="text-secondary mb-4">Use the public map to compare destinations, heritage, museums, events, and public tourism services with verified coordinates.</p><a class="btn btn-outline-success" href="{{ route('map') }}">Explore on Map</a></div></div></div></section>
 
-            @if ($reviews->isNotEmpty())<section class="landing-section pt-0" aria-labelledby="reviews-heading"><div class="d-flex justify-content-between align-items-end gap-3 mb-4"><div><p class="landing-eyebrow mb-1">From recent travelers</p><h2 id="reviews-heading" class="landing-section-title mb-0">Experiences worth sharing</h2></div><a class="landing-section-link" href="{{ route('search') }}">Keep exploring <span aria-hidden="true">→</span></a></div><div class="row g-3">@foreach ($reviews as $review)@php $target = $review->booking?->tourismService?->service_name ?? $review->booking?->tourGuide?->user?->name ?? 'A verified experience'; $reviewer = $review->tourist?->full_name ?? 'Traveler'; @endphp<div class="col-md-4"><article class="landing-review h-100"><div class="d-flex justify-content-between gap-2 mb-3"><span class="small fw-semibold text-success">{{ $target }}</span><span class="text-warning" aria-label="{{ $review->rating }} out of 5 stars">{{ str_repeat('★', (int) $review->rating) }}</span></div><p class="mb-3 line-clamp-3">“{{ $review->comment }}”</p><footer class="small text-muted mt-auto">{{ $reviewer }} · {{ optional($review->review_date)->format('M Y') }}</footer></article></div>@endforeach</div></section>@else<div class="container pb-5"><div class="landing-empty">No reviews are available yet. Reviews from completed experiences will appear here.</div></div>@endif
+            @if ($reviews->isNotEmpty())<section class="landing-section pt-0" aria-labelledby="reviews-heading"><div class="d-flex justify-content-between align-items-end gap-3 mb-4"><div><p class="landing-eyebrow mb-1">From recent travelers</p><h2 id="reviews-heading" class="landing-section-title mb-0">Experiences worth sharing</h2></div><a class="landing-section-link" href="{{ route('search') }}">Keep exploring <span aria-hidden="true">→</span></a></div><div class="row g-3">@foreach ($reviews as $review)@php $target = $review->booking?->tourismService?->service_name ?? ($review->booking?->tourGuide?->full_name ? 'Tour with ' . $review->booking->tourGuide->full_name : 'A verified experience'); $reviewer = $review->tourist?->full_name ?? 'Traveler'; @endphp<div class="col-md-4"><article class="landing-review h-100"><div class="d-flex justify-content-between gap-2 mb-3"><span class="small fw-semibold text-success">{{ $target }}</span><span class="text-warning" aria-label="{{ $review->rating }} out of 5 stars">{{ str_repeat('★', (int) $review->rating) }}</span></div><p class="mb-3 line-clamp-3">“{{ $review->comment }}”</p><footer class="small text-muted mt-auto">{{ $reviewer }} · {{ optional($review->review_date)->format('M Y') }}</footer></article></div>@endforeach</div></section>@else<div class="container pb-5"><div class="landing-empty">No reviews are available yet. Reviews from completed experiences will appear here.</div></div>@endif
         </div>
 
         <section class="landing-final-cta"><div class="container text-center"><p class="landing-eyebrow mb-2">Your Ethiopia starts here</p><h2 class="h2 fw-bold mb-3">Discover something you can actually do.</h2><p class="text-secondary mx-auto mb-4" style="max-width: 42rem;">Browse public places and services today. Create an account when you are ready to save a trip, request a booking, or keep your reservations together.</p><div class="d-flex flex-wrap justify-content-center gap-3"><a class="btn btn-success btn-lg px-4" href="{{ route('destinations.index') }}">Explore Ethiopia</a><a class="btn btn-outline-success btn-lg px-4" href="{{ route('register') }}">Create an account</a></div></div></section>

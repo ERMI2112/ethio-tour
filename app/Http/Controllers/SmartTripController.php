@@ -106,4 +106,15 @@ class SmartTripController extends Controller
 
         return to_route('smart-trip.index')->with('success', 'Trip deleted.');
     }
+
+    public function print(Trip $trip, TripItemTargetResolver $resolver): View
+    {
+        Gate::authorize('view', $trip);
+        $trip->load(['destinations', 'items' => fn ($query) => $query->orderBy('planned_date')->orderBy('sequence')]);
+
+        return view('smart-trip.print', [
+            'trip' => $trip,
+            'items' => $resolver->presentItems($trip->items),
+        ]);
+    }
 }

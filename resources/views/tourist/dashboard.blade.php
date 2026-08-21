@@ -47,7 +47,7 @@
                             <div class="d-flex justify-content-between gap-2 mb-3"><span class="booking-reference">#BK-{{ sprintf('%05d', $booking->booking_id) }}</span><x-ui.status-badge :status="$booking->status" /></div>
                             <h3 class="h5">
                                 @if ($booking->tourGuide)
-                                    Tour Guide booking
+                                    Guide: {{ $booking->tourGuide->full_name ?: 'Licensed Tour Guide' }}
                                 @elseif ($event)
                                     {{ $event->event_name }}
                                 @else

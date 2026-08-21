@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateTourGuideProfileRequest;
 use App\Models\Booking;
+use App\Models\Destination;
 use App\Models\Review;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class TourGuidePortalController extends Controller
@@ -14,7 +16,7 @@ class TourGuidePortalController extends Controller
     public function dashboard(Request $request): View
     {
         $guide = $request->user()->tourGuide;
-        $guide->load('user');
+        $guide->load(['user', 'destination']);
         $bookings = Booking::query()->where('guide_id', $guide->guide_id);
 
         $stats = [
@@ -23,6 +25,7 @@ class TourGuidePortalController extends Controller
             'completedBookings' => (clone $bookings)->where('status', 'completed')->count(),
             'averageRating' => Review::query()->whereHas('booking', fn ($query) => $query->where('guide_id', $guide->guide_id))->avg('rating'),
             'reviewCount' => Review::query()->whereHas('booking', fn ($query) => $query->where('guide_id', $guide->guide_id))->count(),
+            'totalEarnings' => (clone $bookings)->where('status', 'completed')->sum('total_amount') ?? 0,
         ];
 
         return view('tour-guide.dashboard', compact('guide', 'stats'));
@@ -31,20 +34,146 @@ class TourGuidePortalController extends Controller
     public function showProfile(Request $request): View
     {
         $guide = $request->user()->tourGuide;
-        $guide->load('user');
+        $guide->load(['user', 'destination']);
 
         return view('tour-guide.profile.show', compact('guide'));
     }
 
     public function editProfile(Request $request): View
     {
-        return view('tour-guide.profile.edit', ['guide' => $request->user()->tourGuide]);
+        $guide = $request->user()->tourGuide;
+        $guide->load('destination');
+        $destinations = Destination::orderBy('name')->get();
+
+        return view('tour-guide.profile.edit', compact('guide', 'destinations'));
     }
 
     public function updateProfile(UpdateTourGuideProfileRequest $request): RedirectResponse
     {
-        $request->user()->tourGuide->update($request->validated());
+        $guide = $request->user()->tourGuide;
+        $data = $request->validated();
 
-        return to_route('tour-guide.profile')->with('success', 'Tour guide profile updated.');
+        if ($request->hasFile('profile_image')) {
+            // Delete previous custom uploaded image if stored in public storage
+            if ($guide->profile_image && Storage::disk('public')->exists($guide->profile_image)) {
+                Storage::disk('public')->delete($guide->profile_image);
+            }
+
+            $path = $request->file('profile_image')->store('guides', 'public');
+            $data['profile_image'] = $path;
+        }
+
+        // Format languages if sent as string or array
+        if (isset($data['languages'])) {
+            if (is_string($data['languages'])) {
+                $data['languages'] = array_values(array_filter(array_map('trim', explode(',', $data['languages']))));
+            }
+        }
+
+        // Format specialties if sent as string or array
+        if (isset($data['specialties'])) {
+            if (is_string($data['specialties'])) {
+                $data['specialties'] = array_values(array_filter(array_map('trim', explode(',', $data['specialties']))));
+            }
+        }
+
+        $guide->update($data);
+
+        return to_route('tour-guide.profile')->with('success', 'Professional tour guide profile updated successfully.');
+    }
+
+    public function reviews(Request $request): View
+    {
+        $guide = $request->user()->tourGuide;
+        $guide->load(['user', 'destination']);
+
+        $reviews = Review::query()
+            ->with(['tourist.user', 'booking'])
+            ->whereHas('booking', fn ($query) => $query->where('guide_id', $guide->guide_id))
+            ->latest('review_date')
+            ->paginate(10);
+
+        $allReviews = Review::query()
+            ->whereHas('booking', fn ($query) => $query->where('guide_id', $guide->guide_id))
+            ->get();
+
+        $totalReviews = $allReviews->count();
+        $averageRating = $totalReviews > 0 ? round($allReviews->avg('rating'), 1) : null;
+
+        $ratingDistribution = [
+            5 => $allReviews->where('rating', 5)->count(),
+            4 => $allReviews->where('rating', 4)->count(),
+            3 => $allReviews->where('rating', 3)->count(),
+            2 => $allReviews->where('rating', 2)->count(),
+            1 => $allReviews->where('rating', 1)->count(),
+        ];
+
+        return view('tour-guide.reviews', compact('guide', 'reviews', 'totalReviews', 'averageRating', 'ratingDistribution'));
+    }
+
+    public function earnings(Request $request): View
+    {
+        $guide = $request->user()->tourGuide;
+        $guide->load(['user', 'destination']);
+
+        $completedBookings = Booking::query()
+            ->with(['tourist.user', 'payment', 'tourGuideReservation'])
+            ->where('guide_id', $guide->guide_id)
+            ->where('status', 'completed')
+            ->latest('booking_date')
+            ->get();
+
+        $pendingBookings = Booking::query()
+            ->with(['tourist.user', 'payment', 'tourGuideReservation'])
+            ->where('guide_id', $guide->guide_id)
+            ->whereIn('status', ['accepted', 'payment_pending', 'confirmed'])
+            ->latest('booking_date')
+            ->get();
+
+        $lifetimeEarnings = $completedBookings->sum('total_amount');
+        $pendingEarnings = $pendingBookings->sum('total_amount');
+        $completedCount = $completedBookings->count();
+        $averagePerTour = $completedCount > 0 ? round($lifetimeEarnings / $completedCount, 2) : 0;
+
+        return view('tour-guide.earnings', compact(
+            'guide',
+            'completedBookings',
+            'pendingBookings',
+            'lifetimeEarnings',
+            'pendingEarnings',
+            'completedCount',
+            'averagePerTour'
+        ));
+    }
+
+    public function tours(Request $request): View
+    {
+        $guide = $request->user()->tourGuide;
+        $guide->load(['user', 'destination']);
+
+        return view('tour-guide.tours', compact('guide'));
+    }
+
+    public function settings(Request $request): View
+    {
+        $guide = $request->user()->tourGuide;
+        $guide->load(['user', 'destination']);
+
+        return view('tour-guide.settings', compact('guide'));
+    }
+
+    public function updateSettings(Request $request): RedirectResponse
+    {
+        $guide = $request->user()->tourGuide;
+
+        $validated = $request->validate([
+            'daily_rate' => ['nullable', 'numeric', 'min:0', 'max:99999999.99'],
+            'phone_number' => ['nullable', 'string', 'max:50'],
+            'availability_status' => ['required', 'in:available,unavailable'],
+        ]);
+
+        $guide->update($validated);
+
+        return to_route('tour-guide.settings')->with('success', 'Tour guide operational settings updated.');
     }
 }

@@ -13,6 +13,7 @@ use App\Models\MuseumInformation;
 use App\Models\RestaurantTable;
 use App\Models\ServiceProvider;
 use App\Models\TourGuide;
+use App\Models\TourPackage;
 use App\Models\TourismBureauOfficer;
 use App\Models\TourismService;
 use App\Models\Tourist;
@@ -39,7 +40,7 @@ class UatDemoSeeder extends Seeder
         );
 
         $guideUser = $this->user('guide@test.com', 'tour_guide');
-        $this->guide($guideUser, 'TG-GDR-001', 'Historical & cultural heritage tours across Northern Ethiopia', 'verified');
+        $guide = $this->guide($guideUser, 'TG-GDR-001', 'Historical & cultural heritage tours across Northern Ethiopia', 'verified', 'Yared Tadesse');
 
         $pendingGuideUser = $this->user('uat-guide-pending@test.com', 'tour_guide');
         $this->guide($pendingGuideUser, 'TG-PENDING-002', 'Regional cultural guide (pending verification)', 'pending');
@@ -80,6 +81,8 @@ class UatDemoSeeder extends Seeder
         );
 
         $gondar = $this->destination($bureau, 'Gondar', 'Gondar, Amhara', 'Gondar served as the capital of the Ethiopian Empire from 1636 to 1855, earning it the nickname "The Camelot of Africa" for its medieval castles and royal compounds.');
+        $guide->primary_destination_id = $gondar->destination_id;
+        $guide->save();
         $this->destination($bureau, 'Bahir Dar', 'Bahir Dar, Amhara', 'Gateway to Lake Tana\'s ancient island monasteries and the spectacular Blue Nile Falls.');
         $lalibela = $this->destination($bureau, 'Lalibela', 'Lalibela, Amhara', 'Home to eleven medieval monolithic rock-hewn churches, a UNESCO World Heritage Site.');
 
@@ -137,6 +140,67 @@ class UatDemoSeeder extends Seeder
             ['officer_id' => $bureau->officer_id, 'description' => 'Museum showcasing royal Gondarine artifacts, ecclesiastical manuscripts, and imperial regalia.', 'location' => 'Gondar, Amhara', 'opening_hours' => '09:00-17:00', 'entrance_fee' => 100, 'contact_information' => 'heritage-museum@gondartourism.gov.et'],
         );
 
+        TourPackage::updateOrCreate(
+            ['slug' => '3-day-simien-mountains-trekking-expedition'],
+            [
+                'guide_id' => $guide->guide_id,
+                'destination_id' => $gondar->destination_id,
+                'title' => '3-Day Simien Mountains Trekking Expedition',
+                'duration_days' => 3,
+                'price' => 7500.00,
+                'max_group_size' => 8,
+                'difficulty_level' => 'challenging',
+                'description' => 'A breathtaking expedition along the dramatic highland escarpments of Simien Mountains National Park. Encounter wild Gelada baboons, traverse ancient afro-alpine plateaus, and witness the 500-meter drop of Jinbar Waterfall.',
+                'itinerary' => [
+                    ['day' => 1, 'title' => 'Debark Gateway & Sankaber Camp Trek', 'description' => 'Depart from Gondar to Debark park headquarters for permits, followed by a scenic 4-hour ridge walk to Sankaber Camp (3,250m) observing endemic wildlife.'],
+                    ['day' => 2, 'title' => 'Jinbar Waterfall & Geech Plateau', 'description' => 'Trek along precipitous cliff faces overlooking the Geech Abyss and the dramatic 500m plunge of Jinbar Waterfall with scenic sunset over Imet Gogo.'],
+                    ['day' => 3, 'title' => 'Chennek Viewpoint & Return to Gondar', 'description' => 'Early morning excursion towards Chennek to spot Walia ibex on rocky crags before descending back through Debark to Gondar city.'],
+                ],
+                'included' => [
+                    'Licensed English-speaking Tour Guide',
+                    'Park Entry Permits & Armed Scout Coordination',
+                    '4x4 Expedition Transport from Gondar',
+                    'Camping Equipment & 3 Daily Cooked Meals',
+                ],
+                'excluded' => [
+                    'Personal Travel & Medical Insurance',
+                    'Alcoholic Beverages',
+                    'Gratuities & Tips for Local Scouts and Drivers',
+                ],
+                'cover_image' => 'images/destinations/gondar-castles.jpg',
+                'is_active' => true,
+            ]
+        );
+
+        TourPackage::updateOrCreate(
+            ['slug' => '2-day-gondar-castles-monasteries-circuit'],
+            [
+                'guide_id' => $guide->guide_id,
+                'destination_id' => $gondar->destination_id,
+                'title' => '2-Day Gondar Imperial Castles & Monasteries Circuit',
+                'duration_days' => 2,
+                'price' => 3600.00,
+                'max_group_size' => 12,
+                'difficulty_level' => 'easy',
+                'description' => 'Immerse yourself in the 17th-century Camelot of Africa. Explore the royal palaces of Emperor Fasilides, the winged angel ceiling of Debre Berhan Selassie, and Empress Mentewab\'s hilltop residence.',
+                'itinerary' => [
+                    ['day' => 1, 'title' => 'Fasil Ghebbi & Royal Archive Exploration', 'description' => 'Comprehensive guided tour of the UNESCO World Heritage royal enclosure, Emperor Iyasu palace, and imperial library.'],
+                    ['day' => 2, 'title' => 'Debre Berhan Selassie Murals & Fasilides Bath', 'description' => 'Morning visit to the iconic angel-painted church ceiling followed by an afternoon historical walk around Fasilides Bath and Kuskuam Complex.'],
+                ],
+                'included' => [
+                    'Accredited Cultural Historian Tour Guide',
+                    'All Heritage Site Admission Passports',
+                    'Traditional Ethiopian Coffee Ceremony with Incense',
+                ],
+                'excluded' => [
+                    'Hotel Accommodation',
+                    'Personal Souvenir Purchases',
+                ],
+                'cover_image' => 'images/destinations/gondar-castles.jpg',
+                'is_active' => true,
+            ]
+        );
+
         $this->call(GondarPilotSeeder::class);
     }
 
@@ -151,11 +215,18 @@ class UatDemoSeeder extends Seeder
         return $user;
     }
 
-    private function guide(User $user, string $license, string $expertise, string $verification): TourGuide
+    private function guide(User $user, string $license, string $expertise, string $verification, ?string $fullName = null): TourGuide
     {
         $guide = TourGuide::firstOrNew(['user_id' => $user->user_id]);
+        $guide->full_name = $fullName ?: 'Certified Tour Guide';
         $guide->license_number = $license;
         $guide->expertise = $expertise;
+        $guide->profile_image = 'images/guides/tour-guide.jpg';
+        $guide->bio = 'Certified professional cultural and trekking guide with over 8 years of experience leading historical expeditions across Gondar, the Simien Mountains National Park, and the ancient church circuits of Northern Ethiopia. Passionate about authentic cultural storytelling and traveler safety.';
+        $guide->phone_number = '+251 91 184 2901';
+        $guide->languages = ['Amharic', 'English', 'French'];
+        $guide->years_of_experience = 8;
+        $guide->specialties = ['UNESCO Heritage', 'Simien Trekking', 'Ecclesiastical History', 'Coffee Ceremony'];
         $guide->availability_status = 'available';
         $guide->daily_rate = 2000;
         $guide->verification_status = $verification;

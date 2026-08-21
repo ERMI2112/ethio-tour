@@ -123,6 +123,7 @@
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.dashboard') }}">Bureau Dashboard</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.guides.index') }}">Guide Verification</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.providers.index') }}">Provider Verification</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{{ route('bureau.attractions.index') }}">Attractions &amp; Heritage</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.museums.index') }}">Museum Information</a></li>
                         <li class="nav-item"><a class="nav-link" href="{{ route('bureau.reports.index') }}">Reports</a></li>
                     @elseif (auth()->user()->role === 'administrator')

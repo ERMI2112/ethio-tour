@@ -1,39 +1,81 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
 :root {
-    --ethio-tour-green: #0f5132;
-    --ethio-tour-dark-green: #072216;
-    --ethio-tour-gold: #e5a919;
-    --ethio-tour-gold-hover: #c99313;
-    --ethio-tour-nav-bg: #0c2b1c;
+    /* Visit Norway Inspired Brand Palette + Luxury Ethiopian Accents */
+    --vn-navy: #062133;
+    --vn-navy-dark: #03131e;
+    --vn-emerald: #0b5e42;
+    --vn-emerald-hover: #074732;
+    --vn-emerald-subtle: #e8f5f0;
+    --vn-red: #b41e1e;
+    --vn-red-hover: #961717;
+    --vn-red-subtle: #fde8e8;
+    --vn-gold: #e5a919;
+    --vn-gold-hover: #c99313;
+    --vn-gold-subtle: #fef8e7;
+    --vn-blue: #0284c7;
+    --vn-blue-subtle: #e0f2fe;
+    --vn-bg-light: #f4f7f6;
+    --vn-surface: #ffffff;
+    --vn-text-main: #1e293b;
+    --vn-text-muted: #64748b;
+    --vn-border: rgba(15, 23, 42, 0.08);
+
+    /* Legacy Ethio Tour Variable Aliases */
+    --ethio-tour-green: var(--vn-emerald);
+    --ethio-tour-dark-green: var(--vn-navy);
+    --ethio-tour-gold: var(--vn-gold);
+    --ethio-tour-gold-hover: var(--vn-gold-hover);
+    --ethio-tour-nav-bg: var(--vn-navy);
     --landing-card-bg: #ffffff;
-    --landing-card-border: #e6ebe8;
-    --landing-card-text: #212529;
-    --landing-text-muted: #6c757d;
-    --landing-subtle-bg: #f8faf9;
+    --landing-card-border: var(--vn-border);
+    --landing-card-text: var(--vn-text-main);
+    --landing-text-muted: var(--vn-text-muted);
+    --landing-subtle-bg: var(--vn-bg-light);
+
+    /* Typography & Hierarchy */
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    --font-display: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+
+    /* GetYourGuide / Apple Elevation Shadows */
+    --ethio-shadow-xs: 0 1px 2px 0 rgba(6, 33, 51, 0.04);
+    --ethio-shadow-sm: 0 4px 14px -2px rgba(6, 33, 51, 0.06), 0 2px 6px -1px rgba(6, 33, 51, 0.04);
+    --ethio-shadow-md: 0 12px 24px -4px rgba(6, 33, 51, 0.08), 0 4px 10px -2px rgba(6, 33, 51, 0.04);
+    --ethio-shadow-lg: 0 20px 32px -6px rgba(6, 33, 51, 0.12), 0 8px 16px -4px rgba(6, 33, 51, 0.06);
+    --ethio-radius: 1.125rem;
 }
 
 [data-bs-theme="dark"] {
-    --ethio-tour-nav-bg: #061a10;
-    --landing-card-bg: #12221a;
-    --landing-card-border: #1d3a2c;
+    --vn-navy: #03131e;
+    --ethio-tour-nav-bg: #03131e;
+    --landing-card-bg: #0b1d28;
+    --landing-card-border: #142f40;
     --landing-card-text: #f1f5f9;
     --landing-text-muted: #94a3b8;
-    --landing-subtle-bg: #0c1a13;
+    --landing-subtle-bg: #061520;
+    --vn-bg-light: #061520;
+    --vn-surface: #0b1d28;
+    --vn-text-main: #f1f5f9;
+    --vn-text-muted: #94a3b8;
 }
 
 body {
     min-height: 100vh;
-    background: var(--bs-body-bg, #f8f9fa);
-    color: var(--bs-body-color, #212529);
-    transition: background-color .2s ease, color .2s ease;
+    font-family: var(--font-sans);
+    background: var(--vn-bg-light);
+    color: var(--vn-text-main);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color .25s ease, color .25s ease;
+    letter-spacing: -0.01em;
 }
 
-/* Shared product polish: restrained depth, focus states, and responsive motion. */
-:root {
-    --ethio-shadow-sm: 0 6px 20px rgba(15, 81, 50, .07);
-    --ethio-shadow-md: 0 14px 36px rgba(15, 81, 50, .11);
-    --ethio-radius: 1rem;
+h1, h2, h3, h4, h5, h6,
+.display-1, .display-2, .display-3, .display-4, .display-5, .display-6,
+.navbar-brand {
+    font-family: var(--font-display);
+    letter-spacing: -0.025em;
+    font-weight: 700;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -223,32 +265,81 @@ button:focus-visible {
 .workspace-layout {
     display: flex;
     min-height: calc(100vh - 58px);
+    background: #f8fafc;
 }
 
 .workspace-sidebar {
-    background: #fff;
-    border-right: 1px solid #e9ecef;
-    flex: 0 0 248px;
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    flex: 0 0 256px;
     min-height: calc(100vh - 58px);
-    width: 248px;
+    width: 256px;
+    z-index: 100;
 }
 
 .workspace-sidebar .nav-link {
-    border-radius: .5rem;
-    color: #495057;
-    font-size: .93rem;
-    padding: .65rem .8rem;
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.55rem 0.85rem !important;
+    font-size: 0.875rem !important;
+    font-weight: 500 !important;
+    color: #475569 !important;
+    border-radius: 0.5rem !important;
+    transition: all 0.15s ease !important;
+    text-decoration: none !important;
+    min-height: auto !important;
+}
+
+.workspace-sidebar .nav-link i {
+    font-size: 1.05rem !important;
+    width: 1.25rem !important;
+    height: 1.25rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
 }
 
 .workspace-sidebar .nav-link:hover,
 .workspace-sidebar .nav-link:focus {
-    background: #f1f5f3;
-    color: var(--ethio-tour-green);
+    background: #f1f5f9 !important;
+    color: #0f172a !important;
 }
 
 .workspace-sidebar .nav-link.active {
-    background: var(--ethio-tour-green);
-    color: #fff;
+    background: #062133 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 12px rgba(6, 33, 51, 0.15) !important;
+}
+
+.workspace-sidebar .nav-link.active i {
+    color: #34d399 !important;
+}
+
+[data-bs-theme='dark'] .workspace-layout {
+    background: #081622;
+}
+
+[data-bs-theme='dark'] .workspace-sidebar {
+    background: #0a1c2c;
+    border-right-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-bs-theme='dark'] .workspace-sidebar .nav-link {
+    color: #94a3b8 !important;
+}
+
+[data-bs-theme='dark'] .workspace-sidebar .nav-link:hover {
+    background: rgba(255, 255, 255, 0.06) !important;
+    color: #f8fafc !important;
+}
+
+[data-bs-theme='dark'] .workspace-sidebar .nav-link.active {
+    background: rgba(16, 185, 129, 0.15) !important;
+    color: #34d399 !important;
+    border: 1px solid rgba(16, 185, 129, 0.3) !important;
 }
 
 .workspace-content {
@@ -1873,3 +1964,302 @@ button:focus-visible {
         transition: none;
     }
 }
+
+/* ==========================================================================
+   VISIT NORWAY & GETYOURGUIDE MASTERCLASS DESIGN SYSTEM
+   ========================================================================== */
+
+/* Buttons & CTAs */
+.btn-vn-red {
+    background: linear-gradient(135deg, #b41e1e 0%, #961717 100%);
+    color: #ffffff !important;
+    border: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.65rem 1.35rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(180, 30, 30, 0.25);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-vn-red:hover {
+    background: linear-gradient(135deg, #c82828 0%, #a81a1a 100%);
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(180, 30, 30, 0.35);
+}
+
+.btn-vn-navy {
+    background: #062133;
+    color: #ffffff !important;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.65rem 1.35rem;
+    border-radius: 0.75rem;
+    transition: all 0.25s ease;
+}
+
+.btn-vn-navy:hover {
+    background: #0a334f;
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(6, 33, 51, 0.25);
+}
+
+.btn-vn-emerald {
+    background: linear-gradient(135deg, #0b5e42 0%, #074732 100%);
+    color: #ffffff !important;
+    border: none;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.65rem 1.35rem;
+    border-radius: 0.75rem;
+    box-shadow: 0 4px 12px rgba(11, 94, 66, 0.25);
+    transition: all 0.25s ease;
+}
+
+.btn-vn-emerald:hover {
+    background: linear-gradient(135deg, #0d7351 0%, #09593f 100%);
+    color: #ffffff !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(11, 94, 66, 0.35);
+}
+
+/* Masterclass Experience & Destination Card (GetYourGuide standard) */
+.vn-experience-card {
+    background: #ffffff;
+    border-radius: 1.25rem;
+    border: 1px solid rgba(15, 23, 42, 0.07);
+    box-shadow: 0 4px 14px -2px rgba(6, 33, 51, 0.05), 0 2px 6px -1px rgba(6, 33, 51, 0.03);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease;
+}
+
+.vn-experience-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 32px -6px rgba(6, 33, 51, 0.12), 0 8px 16px -4px rgba(6, 33, 51, 0.05);
+    border-color: rgba(11, 94, 66, 0.25);
+}
+
+.vn-card-media {
+    position: relative;
+    height: 220px;
+    overflow: hidden;
+    background: #062133;
+}
+
+.vn-card-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.vn-experience-card:hover .vn-card-media img {
+    transform: scale(1.06);
+}
+
+/* Floating Glass Badges */
+.vn-badge-frosted {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: rgba(6, 33, 51, 0.72);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    padding: 0.35rem 0.7rem;
+    border-radius: 2rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+}
+
+.vn-badge-featured {
+    background: linear-gradient(135deg, #e5a919 0%, #c99313 100%);
+    color: #062133;
+    font-weight: 800;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 4px 12px rgba(229, 169, 25, 0.35);
+}
+
+.vn-badge-red {
+    background: #b41e1e;
+    color: #ffffff;
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(180, 30, 30, 0.3);
+}
+
+/* Floating Wishlist Heart Button */
+.vn-wishlist-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 10;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.88);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.vn-wishlist-btn:hover {
+    background: #ffffff;
+    color: #b41e1e;
+    transform: scale(1.18);
+    box-shadow: 0 6px 16px rgba(180, 30, 30, 0.25);
+}
+
+.vn-wishlist-btn.active {
+    color: #b41e1e;
+    background: #ffffff;
+}
+
+/* Card Body & Content */
+.vn-card-body {
+    padding: 1.25rem 1.35rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.vn-card-title {
+    font-family: var(--font-display);
+    font-size: 1.18rem;
+    font-weight: 700;
+    color: var(--vn-navy);
+    line-height: 1.35;
+    margin-bottom: 0.35rem;
+}
+
+.vn-card-title a {
+    color: var(--vn-navy);
+    text-decoration: none;
+    transition: color 0.15s ease;
+}
+
+.vn-card-title a:hover {
+    color: var(--vn-emerald);
+}
+
+.vn-card-kicker {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--vn-emerald);
+    margin-bottom: 0.35rem;
+}
+
+.vn-card-rating {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--vn-navy);
+}
+
+.vn-card-rating i {
+    color: #e5a919;
+}
+
+.vn-card-price {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    font-weight: 800;
+    color: var(--vn-navy);
+}
+
+.vn-card-price small {
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--vn-text-muted);
+}
+
+/* Header Frosted Sticky Navigation */
+.main-navbar {
+    background: rgba(6, 33, 51, 0.94) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.main-navbar .nav-link {
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 0.86rem;
+    letter-spacing: 0.04em;
+    color: rgba(255, 255, 255, 0.9) !important;
+    transition: all 0.2s ease;
+}
+
+.main-navbar .nav-link:hover {
+    color: #ffffff !important;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.main-navbar .dropdown-menu {
+    background: #ffffff;
+    border: 1px solid rgba(6, 33, 51, 0.08);
+    box-shadow: 0 20px 40px -8px rgba(6, 33, 51, 0.16);
+    border-radius: 1rem;
+    padding: 0.75rem;
+}
+
+.main-navbar .dropdown-item {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--vn-navy);
+    padding: 0.5rem 0.85rem;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease;
+}
+
+.main-navbar .dropdown-item:hover {
+    background: var(--vn-bg-light);
+    color: var(--vn-emerald);
+}
+
+/* Floating Search Bar (Visit Norway / GetYourGuide style) */
+.vn-search-pill {
+    background: #ffffff;
+    border: 1px solid rgba(6, 33, 51, 0.12);
+    border-radius: 3rem;
+    box-shadow: 0 16px 36px -4px rgba(6, 33, 51, 0.12);
+    padding: 0.5rem 0.65rem 0.5rem 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.vn-search-pill input {
+    border: none;
+    background: transparent;
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--vn-navy);
+    outline: none;
+}
+
+.vn-search-pill input::placeholder {
+    color: var(--vn-text-muted);
+}
+

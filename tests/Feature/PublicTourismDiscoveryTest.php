@@ -58,7 +58,7 @@ class PublicTourismDiscoveryTest extends TestCase
 
     public function test_public_search_empty_results_and_missing_records_are_handled_safely(): void
     {
-        $this->get('/destinations?q=not-a-real-destination')->assertOk()->assertSee('No destinations found');
+        $this->get('/destinations?q=not-a-real-destination')->assertOk()->assertSee('No destinations or spaces found');
         $this->get('/heritage-sites?q=not-a-real-site')->assertOk()->assertSee('No heritage sites found');
         $this->get('/tourism-services?q=not-a-real-service')->assertOk()->assertSee('No tourism services found');
         $this->get('/destinations/999999')->assertNotFound();

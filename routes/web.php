@@ -13,6 +13,7 @@ use App\Http\Controllers\Auth\ConfirmablePasswordController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\RegisteredUserController;
+use App\Http\Controllers\BureauAttractionController;
 use App\Http\Controllers\BureauDashboardController;
 use App\Http\Controllers\BureauGuideVerificationController;
 use App\Http\Controllers\BureauMuseumController;
@@ -57,6 +58,7 @@ use App\Http\Controllers\SmartTripMapController;
 use App\Http\Controllers\TourGuideBookingController;
 use App\Http\Controllers\TourGuideBookingRequestController;
 use App\Http\Controllers\TourGuidePortalController;
+use App\Http\Controllers\TourPackageController;
 use App\Http\Controllers\TouristPortalController;
 use App\Http\Controllers\TouristReservationController;
 use App\Http\Controllers\TouristReviewController;
@@ -127,6 +129,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/providers/{serviceProvider}', [AdminProviderController::class, 'show'])->name('providers.show');
         Route::patch('/providers/{serviceProvider}/status', [AdminProviderController::class, 'updateStatus'])->name('providers.status');
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
+        Route::get('/users/{user}', [AdminUserController::class, 'show'])->name('users.show');
         Route::patch('/users/{user}/toggle', [AdminUserController::class, 'toggle'])->name('users.toggle');
         Route::get('/subscriptions', [AdminSubscriptionController::class, 'index'])->name('subscriptions.index');
         Route::post('/subscriptions', [AdminSubscriptionController::class, 'store'])->name('subscriptions.store');
@@ -148,6 +151,17 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/requests/{booking}', [TourGuideBookingRequestController::class, 'show'])->name('requests.show');
         Route::patch('/requests/{booking}/accept', [TourGuideBookingRequestController::class, 'accept'])->name('requests.accept');
         Route::patch('/requests/{booking}/reject', [TourGuideBookingRequestController::class, 'reject'])->name('requests.reject');
+        Route::get('/reviews', [TourGuidePortalController::class, 'reviews'])->name('reviews');
+        Route::get('/earnings', [TourGuidePortalController::class, 'earnings'])->name('earnings');
+        Route::get('/tours', [TourPackageController::class, 'index'])->name('tours');
+        Route::get('/packages/create', [TourPackageController::class, 'create'])->name('packages.create');
+        Route::post('/packages', [TourPackageController::class, 'store'])->name('packages.store');
+        Route::get('/packages/{package}/edit', [TourPackageController::class, 'edit'])->name('packages.edit');
+        Route::put('/packages/{package}', [TourPackageController::class, 'update'])->name('packages.update');
+        Route::patch('/packages/{package}/toggle', [TourPackageController::class, 'toggle'])->name('packages.toggle');
+        Route::delete('/packages/{package}', [TourPackageController::class, 'destroy'])->name('packages.destroy');
+        Route::get('/settings', [TourGuidePortalController::class, 'settings'])->name('settings');
+        Route::put('/settings', [TourGuidePortalController::class, 'updateSettings'])->name('settings.update');
     });
 
     Route::middleware('role:tourist')->prefix('tourist')->name('tourist.')->group(function () {
@@ -187,6 +201,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/{trip}/edit', [SmartTripController::class, 'edit'])->name('edit');
         Route::put('/{trip}', [SmartTripController::class, 'update'])->name('update');
         Route::delete('/{trip}', [SmartTripController::class, 'destroy'])->name('destroy');
+        Route::get('/{trip}/print', [SmartTripController::class, 'print'])->name('print');
         Route::get('/{trip}', [SmartTripController::class, 'show'])->name('show');
     });
 
@@ -264,5 +279,6 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/providers/{serviceProvider}', [BureauProviderVerificationController::class, 'show'])->name('providers.show');
         Route::patch('/providers/{serviceProvider}/decision', [BureauProviderVerificationController::class, 'decide'])->name('providers.decide');
         Route::resource('museums', BureauMuseumController::class)->except(['show'])->parameters(['museums' => 'museumInformation']);
+        Route::resource('attractions', BureauAttractionController::class)->except(['show'])->parameters(['attractions' => 'attraction']);
     });
 });

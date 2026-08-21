@@ -67,6 +67,38 @@ class Attraction extends Model
         return $this->images[0] ?? null;
     }
 
+    public function primaryImageUrl(): string
+    {
+        $img = $this->primaryImage();
+        if (! $img || empty($img['path'])) {
+            return asset('images/destinations/gondar-castles.jpg');
+        }
+
+        $path = $img['path'];
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        if (str_starts_with($path, '/images/') || str_starts_with($path, 'images/')) {
+            return asset(ltrim($path, '/'));
+        }
+
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+            return asset('storage/' . ltrim($path, '/'));
+        }
+
+        return asset('images/destinations/gondar-castles.jpg');
+    }
+
+    protected static function booted(): void
+    {
+        static::creating(function (Attraction $attraction) {
+            if (empty($attraction->slug)) {
+                $attraction->slug = \Illuminate\Support\Str::slug($attraction->name) . '-' . \Illuminate\Support\Str::random(5);
+            }
+        });
+    }
+
     public function scopeFeatured($query)
     {
         return $query->where('is_featured', true);

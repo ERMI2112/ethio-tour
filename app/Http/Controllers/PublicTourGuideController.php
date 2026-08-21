@@ -31,7 +31,7 @@ class PublicTourGuideController extends Controller
     public function show(TourGuide $guide): View
     {
         $this->ensurePubliclyEligible($guide);
-        $guide->load('user');
+        $guide->load(['user', 'tourPackages' => fn ($q) => $q->active()->with('destination')->latest()]);
         $this->attachRatings(collect([$guide]));
 
         return view('public.tour-guides.show', compact('guide'));

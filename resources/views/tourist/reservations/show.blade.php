@@ -45,8 +45,33 @@
                         <h2 class="h5 mb-0">Tour Guide Booking Details</h2>
                     </div>
                     <div class="card-body p-4">
-                        <h3 class="h4 text-primary">Tour Guide</h3>
-                        <p class="text-muted mb-3">License {{ $booking->tourGuide->license_number ?? 'N/A' }}</p>
+                        @php
+                            $guideObj = $booking->tourGuide;
+                            $guideName = $guideObj?->full_name ?: ($guideObj?->user?->email ?? 'Licensed Tour Guide');
+                        @endphp
+                        <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                            @if($guideObj)
+                                <img src="{{ $guideObj->profileImageUrl() }}"
+                                     alt="{{ $guideName }}"
+                                     class="rounded-circle border border-2 shadow-sm"
+                                     style="width: 70px; height: 70px; object-fit: cover;">
+                            @endif
+                            <div>
+                                <h3 class="h5 mb-1 text-dark fw-bold">{{ $guideName }}</h3>
+                                <div class="text-muted small">License: {{ $guideObj?->license_number ?? 'N/A' }}</div>
+                                @if($guideObj?->phone_number)
+                                    <div class="text-muted small">📞 {{ $guideObj->phone_number }}</div>
+                                @endif
+                                @if($guideObj && !empty($guideObj->languagesList()))
+                                    <div class="d-flex flex-wrap gap-1 mt-1">
+                                        @foreach($guideObj->languagesList() as $lang)
+                                            <span class="badge bg-light text-dark border small">{{ $lang }}</span>
+                                        @endforeach
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
                         <div class="row g-3 p-3 bg-light rounded border">
                             <div class="col-sm-6"><span class="text-muted small d-block">Start Date</span><strong>{{ $booking->tourGuideReservation->start_date->format('F d, Y') }}</strong></div>
                             <div class="col-sm-6"><span class="text-muted small d-block">End Date</span><strong>{{ $booking->tourGuideReservation->end_date->format('F d, Y') }}</strong></div>
