@@ -1647,3 +1647,229 @@ button:focus-visible {
         transition: none;
     }
 }
+
+/* Tourist workspace: a calm, action-oriented consumer account experience. */
+.tourist-dashboard,
+.tourist-reservations-page,
+.tourist-booking-detail,
+.tourist-reviews-page,
+.tourist-profile-page {
+    --tourist-panel-bg: var(--landing-card-bg);
+    --tourist-panel-border: var(--landing-card-border);
+    --tourist-muted: var(--landing-text-muted);
+}
+
+.tourist-page-header {
+    border-bottom: 1px solid var(--tourist-panel-border);
+    padding-bottom: 1.5rem;
+}
+
+.tourist-kicker,
+.tourist-section-kicker {
+    color: var(--ethio-tour-green);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.tourist-section-kicker {
+    color: var(--tourist-muted);
+    letter-spacing: .08em;
+}
+
+.tourist-section-link {
+    color: var(--ethio-tour-green);
+    font-size: .88rem;
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.tourist-section-link:hover,
+.tourist-section-link:focus-visible {
+    color: var(--ethio-tour-gold-hover);
+    text-decoration: underline;
+}
+
+.tourist-attention-card {
+    background: linear-gradient(135deg, rgba(255, 193, 7, .13), var(--tourist-panel-bg));
+    border: 1px solid rgba(227, 164, 12, .44);
+    border-radius: 1rem;
+    padding: 1rem 1.1rem;
+}
+
+.tourist-calm-state {
+    align-items: center;
+    background: linear-gradient(135deg, rgba(25, 135, 84, .1), var(--tourist-panel-bg));
+    border: 1px solid rgba(25, 135, 84, .22);
+    border-radius: 1rem;
+    display: flex;
+    gap: .8rem;
+    padding: 1rem 1.1rem;
+}
+
+.tourist-calm-icon {
+    align-items: center;
+    background: var(--ethio-tour-green);
+    border-radius: 50%;
+    color: #fff;
+    display: inline-flex;
+    flex: 0 0 1.75rem;
+    font-weight: 800;
+    height: 1.75rem;
+    justify-content: center;
+    width: 1.75rem;
+}
+
+.tourist-booking-card,
+.tourist-side-card,
+.tourist-filter-card {
+    background: var(--tourist-panel-bg);
+    border: 1px solid var(--tourist-panel-border);
+    border-radius: 1rem;
+    box-shadow: var(--ethio-shadow-sm);
+    color: var(--landing-card-text);
+    overflow: hidden;
+}
+
+.tourist-booking-card {
+    transition: transform .24s ease, box-shadow .24s ease, border-color .24s ease;
+}
+
+.tourist-booking-card:hover,
+.tourist-booking-card:focus-within {
+    border-color: rgba(15, 81, 50, .32);
+    box-shadow: var(--ethio-shadow-md);
+    transform: translateY(-3px);
+}
+
+.tourist-side-card .card-header,
+.tourist-filter-card .card-header {
+    background: transparent;
+    border-bottom: 1px solid var(--tourist-panel-border);
+    padding: 1rem 1.25rem;
+}
+
+.tourist-side-card .card-body {
+    padding: 1.25rem;
+}
+
+.booking-reference {
+    background: var(--landing-subtle-bg);
+    border: 1px solid var(--tourist-panel-border);
+    border-radius: 999px;
+    color: var(--tourist-muted);
+    font-size: .74rem;
+    font-weight: 700;
+    letter-spacing: .05em;
+    padding: .28rem .55rem;
+}
+
+.booking-date {
+    color: var(--tourist-muted);
+}
+
+.booking-amount {
+    align-items: baseline;
+    border-top: 1px solid var(--tourist-panel-border);
+    display: flex;
+    justify-content: space-between;
+    padding-top: .8rem;
+}
+
+.booking-amount span {
+    color: var(--tourist-muted);
+}
+
+.booking-amount strong {
+    color: var(--ethio-tour-green);
+    font-size: 1rem;
+}
+
+.tourist-list-row {
+    border-bottom: 1px solid var(--tourist-panel-border);
+}
+
+.tourist-list-row:last-child {
+    border-bottom: 0;
+}
+
+.tourist-notification-unread {
+    background: rgba(13, 110, 253, .09);
+    border-left: 3px solid #0d6efd !important;
+}
+
+.tourist-booking-table {
+    --bs-table-bg: transparent;
+    --bs-table-hover-bg: rgba(15, 81, 50, .045);
+    color: var(--landing-card-text);
+}
+
+.tourist-booking-table thead th {
+    background: var(--landing-subtle-bg);
+    border-bottom: 1px solid var(--tourist-panel-border);
+    color: var(--tourist-muted);
+    font-size: .72rem;
+    letter-spacing: .08em;
+    padding: .9rem 1rem;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.tourist-booking-table tbody td {
+    border-color: var(--tourist-panel-border);
+    padding: 1rem;
+}
+
+.tourist-booking-detail .card,
+.tourist-reviews-page .card,
+.tourist-profile-page .card {
+    border-color: var(--tourist-panel-border) !important;
+}
+
+.tourist-booking-detail .card-header,
+.tourist-reviews-page .card-header,
+.tourist-profile-page .card-header {
+    background: transparent !important;
+    border-bottom-color: var(--tourist-panel-border);
+}
+
+[data-bs-theme="dark"] .tourist-kicker,
+[data-bs-theme="dark"] .tourist-section-link,
+[data-bs-theme="dark"] .booking-amount strong {
+    color: #75c49a;
+}
+
+[data-bs-theme="dark"] .tourist-attention-card {
+    background: linear-gradient(135deg, rgba(255, 193, 7, .12), #12221a);
+    border-color: rgba(229, 169, 25, .45);
+}
+
+[data-bs-theme="dark"] .tourist-calm-state {
+    background: linear-gradient(135deg, rgba(25, 135, 84, .16), #12221a);
+    border-color: #2a6044;
+}
+
+[data-bs-theme="dark"] .tourist-notification-unread {
+    background: rgba(13, 110, 253, .16);
+}
+
+@media (max-width: 767.98px) {
+    .tourist-page-header .display-6 {
+        font-size: 2rem;
+    }
+
+    .tourist-page-header .lead {
+        font-size: 1rem;
+    }
+
+    .tourist-booking-table {
+        min-width: 860px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .tourist-booking-card {
+        transition: none;
+    }
+}

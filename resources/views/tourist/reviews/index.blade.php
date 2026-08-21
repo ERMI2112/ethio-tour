@@ -3,8 +3,8 @@
 @section('title', 'My Reviews')
 
 @section('content')
-<div class="container py-4 py-lg-5">
-    <div class="d-flex justify-content-between align-items-end gap-3 mb-4">
+<div class="container py-4 py-lg-5 tourist-reviews-page">
+    <div class="tourist-page-header d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4" data-aos="fade-up">
         <div>
             <p class="text-uppercase text-success small fw-semibold mb-1">Traveler workspace</p>
             <h1 class="h2 mb-1">My Reviews</h1>
@@ -14,7 +14,7 @@
     </div>
     <div class="row g-4">
         <div class="col-lg-7">
-            <section class="card border-0 shadow-sm">
+            <section class="tourist-side-card">
                 <div class="card-header bg-white"><h2 class="h5 mb-0">Submitted reviews</h2></div>
                 <div class="card-body">
                     @forelse ($reviews as $review)
@@ -33,7 +33,7 @@
             </section>
         </div>
         <div class="col-lg-5">
-            <section class="card border-0 shadow-sm">
+            <section class="tourist-side-card">
                 <div class="card-header bg-white"><h2 class="h5 mb-0">Ready to review</h2></div>
                 <div class="card-body">
                     @forelse ($reviewOpportunities as $booking)
