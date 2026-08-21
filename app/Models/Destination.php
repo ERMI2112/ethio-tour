@@ -11,7 +11,7 @@ class Destination extends Model
 
     protected $primaryKey = 'destination_id';
 
-    protected $fillable = ['officer_id', 'name', 'location', 'description', 'latitude', 'longitude'];
+    protected $fillable = ['officer_id', 'name', 'slug', 'location', 'description', 'tagline', 'hero_image', 'latitude', 'longitude'];
 
     protected function casts(): array
     {
@@ -21,6 +21,11 @@ class Destination extends Model
     public function officer()
     {
         return $this->belongsTo(TourismBureauOfficer::class, 'officer_id', 'officer_id');
+    }
+
+    public function attractions()
+    {
+        return $this->hasMany(Attraction::class, 'destination_id', 'destination_id');
     }
 
     public function heritageSites()

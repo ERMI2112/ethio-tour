@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateTouristProfileRequest;
+use App\Support\WorkspaceHome;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -15,7 +16,11 @@ class AccountController extends Controller
             return view('tourist.profile.show', ['tourist' => $request->user()->tourist]);
         }
 
-        return view('account.placeholder', ['user' => $request->user()]);
+        return view('account.placeholder', [
+            'user' => $request->user(),
+            'workspaceRoute' => WorkspaceHome::routeNameFor($request->user()),
+            'workspaceLabel' => WorkspaceHome::labelFor($request->user()),
+        ]);
     }
 
     public function editTouristProfile(Request $request): View

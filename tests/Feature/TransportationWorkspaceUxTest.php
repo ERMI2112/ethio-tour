@@ -22,7 +22,7 @@ class TransportationWorkspaceUxTest extends TestCase
         $transport = User::where('email', 'transport@test.com')->firstOrFail();
 
         $this->actingAs($transport)->get(route('transportation.dashboard'))
-            ->assertOk()->assertSee('Needs attention')->assertSee('Fleet overview')->assertSee('Vehicles')->assertSee('Notifications')->assertSee('View Public Site')->assertDontSee('Explore Ethiopia');
+            ->assertOk()->assertSee('Needs attention')->assertSee('Fleet overview')->assertSee('Vehicles')->assertSee('Notifications')->assertDontSee('View Public Site')->assertDontSee('Explore Ethiopia');
     }
 
     public function test_transportation_reservation_filters_and_inventory_pages_render(): void

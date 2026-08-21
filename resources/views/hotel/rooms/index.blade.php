@@ -63,7 +63,7 @@
                                         </td>
                                         <td class="text-end">
                                             <a class="btn btn-sm btn-outline-primary" href="{{ route('hotel.rooms.edit', $room) }}">Edit</a>
-                                            <form class="d-inline" method="POST" action="{{ route('hotel.rooms.destroy', $room) }}" onsubmit="return confirm('Remove room {{ $room->room_number }}? Rooms with reservation history cannot be removed; mark them inactive instead.')">
+                                            <form class="d-inline" method="POST" action="{{ route('hotel.rooms.destroy', $room) }}" data-confirm="Remove room {{ $room->room_number }}? Rooms with reservation history cannot be removed; mark them inactive instead.">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>

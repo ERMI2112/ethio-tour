@@ -29,7 +29,9 @@ class SharedLayoutTest extends TestCase
             ->assertSee('Log in')
             ->assertSee('Register')
             ->assertDontSee('Log out')
-            ->assertDontSee('Bookings');
+            ->assertDontSee('Bookings')
+            ->assertDontSee('>Portals<', false)
+            ->assertDontSee('Nine portals');
     }
 
     public function test_authenticated_tourist_navigation_shows_only_functional_tourist_actions(): void

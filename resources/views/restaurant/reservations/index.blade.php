@@ -19,7 +19,7 @@
                     @if($res?->restaurantTable)<span class="badge bg-success-subtle text-success border">Table {{ $res->restaurantTable->table_number }}</span>@else<span class="text-muted small">Unassigned</span>@endif
                 </td><td><x-ui.status-badge :status="$booking->status" /></td><td><div class="d-flex gap-1"><a class="btn btn-sm btn-outline-secondary" href="{{ route('restaurant.reservations.show', $booking) }}">View</a>
                     @if($booking->status === 'pending')
-                        <form method="POST" action="{{ route('restaurant.reservations.accept', $booking) }}">@csrf @method('PATCH')<button class="btn btn-sm btn-success">Accept</button></form><form method="POST" action="{{ route('restaurant.reservations.reject', $booking) }}" onsubmit="return confirm('Reject this request?');">@csrf @method('PATCH')<button class="btn btn-sm btn-outline-danger">Reject</button></form>
+                        <form method="POST" action="{{ route('restaurant.reservations.accept', $booking) }}">@csrf @method('PATCH')<button class="btn btn-sm btn-success">Accept</button></form><form method="POST" action="{{ route('restaurant.reservations.reject', $booking) }}" data-confirm="Reject this request?">@csrf @method('PATCH')<button class="btn btn-sm btn-outline-danger">Reject</button></form>
                     @endif
                 </div></td></tr>
             @endforeach

@@ -37,7 +37,7 @@ class TouristPortalTest extends TestCase
     public function test_dashboard_aggregates_real_bookings_trips_notifications_and_review_links(): void
     {
         $tourist = User::where('email', 'tourist@test.com')->firstOrFail();
-        $service = TourismService::where('service_name', 'UAT Standard Room')->firstOrFail();
+        $service = TourismService::where('service_name', 'Standard Heritage View Room')->firstOrFail();
         $destination = Destination::where('name', 'Gondar')->firstOrFail();
         $booking = Booking::create([
             'tourist_id' => $tourist->tourist->tourist_id,
@@ -67,10 +67,10 @@ class TouristPortalTest extends TestCase
 
         $this->actingAs($tourist)->get(route('tourist.dashboard'))
             ->assertOk()
-            ->assertSee('Welcome, UAT Tourist')
+            ->assertSee('Welcome, Abebe Bekele')
             ->assertSee('Needs attention')
             ->assertSee('Upcoming bookings')
-            ->assertSee('UAT Standard Room')
+            ->assertSee('Standard Heritage View Room')
             ->assertSee('Continue Payment')
             ->assertSee('Gondar Weekend')
             ->assertSee('Booking accepted')
@@ -82,7 +82,7 @@ class TouristPortalTest extends TestCase
     {
         $tourist = User::where('email', 'tourist@test.com')->firstOrFail();
 
-        $this->actingAs($tourist)->get(route('tourist.profile'))->assertOk()->assertSee('UAT Tourist');
+        $this->actingAs($tourist)->get(route('tourist.profile'))->assertOk()->assertSee('Abebe Bekele');
         $this->actingAs($tourist)->get(route('tourist.profile.edit'))->assertOk()->assertSee('Edit Profile');
         $this->actingAs($tourist)->get(route('tourist.reviews.index'))->assertOk()->assertSee('My Reviews');
 

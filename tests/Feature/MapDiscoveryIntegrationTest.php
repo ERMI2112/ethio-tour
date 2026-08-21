@@ -24,12 +24,12 @@ class MapDiscoveryIntegrationTest extends TestCase
     public function test_public_detail_pages_link_to_map_only_when_coordinates_exist(): void
     {
         $destination = Destination::where('name', 'Gondar')->firstOrFail();
-        $service = TourismService::where('service_name', 'UAT Standard Room')->firstOrFail();
-        $event = CulturalEvent::where('event_name', 'UAT Gondar Cultural Festival')->firstOrFail();
+        $service = TourismService::where('service_name', 'Standard Heritage View Room')->firstOrFail();
+        $event = CulturalEvent::where('event_name', 'Timkat Gondar Epiphany & Cultural Festival')->firstOrFail();
         $museum = MuseumInformation::firstOrFail();
         $heritage = HeritageSite::create([
             'destination_id' => $destination->destination_id,
-            'heritage_type' => 'UAT Royal Heritage Site',
+            'heritage_type' => 'Gondar Royal Heritage Site',
             'opening_hours' => '08:00-17:00',
             'entrance_fee' => 50,
             'latitude' => 12.61,

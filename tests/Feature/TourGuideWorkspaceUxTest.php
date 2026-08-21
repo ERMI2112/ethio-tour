@@ -22,7 +22,7 @@ class TourGuideWorkspaceUxTest extends TestCase
         $guide = User::where('email', 'guide@test.com')->firstOrFail();
 
         $this->actingAs($guide)->get(route('tour-guide.dashboard'))
-            ->assertOk()->assertSee('Needs attention')->assertSee('Profile summary')->assertSee('Availability')->assertSee('Reports')->assertSee('Notifications')->assertSee('View Public Site')->assertDontSee('Explore Ethiopia');
+            ->assertOk()->assertSee('Needs attention')->assertSee('Profile summary')->assertSee('Availability')->assertSee('Reports')->assertSee('Notifications')->assertDontSee('View Public Site')->assertDontSee('Explore Ethiopia');
     }
 
     public function test_guide_requests_availability_and_profile_workflows_render(): void

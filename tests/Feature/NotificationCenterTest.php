@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Models\Notification;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -52,6 +53,22 @@ class NotificationCenterTest extends TestCase
         $this->createNotifications($user, 16, false);
 
         $this->actingAs($user)->get(route('notifications.index'))->assertOk()->assertSee('page=2');
+    }
+
+    public function test_central_workflow_alerts_are_mirrored_to_active_administrators(): void
+    {
+        $administrator = User::factory()->create(['role' => 'administrator', 'is_active' => true]);
+        $recipient = User::factory()->create(['role' => 'tourist', 'is_active' => true]);
+
+        app(NotificationService::class)->createForUserAndAdministrators(
+            $recipient,
+            'booking_request',
+            'New booking request',
+            'A new booking needs review.',
+        );
+
+        $this->assertDatabaseHas('notifications', ['user_id' => $recipient->user_id, 'title' => 'New booking request']);
+        $this->assertDatabaseHas('notifications', ['user_id' => $administrator->user_id, 'title' => 'Platform alert: New booking request', 'read_status' => 0]);
     }
 
     private function createNotifications(User $user, int $count, bool $read, string $title = 'Test notification')

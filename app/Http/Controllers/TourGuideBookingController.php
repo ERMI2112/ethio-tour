@@ -65,7 +65,7 @@ class TourGuideBookingController extends Controller
             return $booking;
         });
 
-        $notifications->createForUser($guide->user, 'booking_request', 'New tour guide booking request', 'A tourist requested your guide services for the selected dates.');
+        $notifications->createForUserAndAdministrators($guide->user, 'booking_request', 'New tour guide booking request', 'A tourist requested your guide services for the selected dates.');
 
         return to_route('tourist.reservations.show', $booking)->with('success', 'Guide booking request submitted successfully.');
     }

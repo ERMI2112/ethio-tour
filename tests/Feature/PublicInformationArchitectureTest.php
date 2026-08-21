@@ -37,7 +37,7 @@ class PublicInformationArchitectureTest extends TestCase
             ->assertDontSee('aria-expanded="false">Map', false)
             ->assertSee('data-bs-toggle="dropdown"', false)
             ->assertSee('data-bs-target="#primary-navigation"', false)
-            ->assertSee('data-nav-placeholder="true"', false);
+            ->assertSee('Highlands &amp; Nature', false);
     }
 
     public function test_public_urls_remain_available_under_the_new_navigation(): void

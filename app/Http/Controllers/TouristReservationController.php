@@ -82,7 +82,7 @@ class TouristReservationController extends Controller
         $booking->load(['tourismService.serviceProvider.user', 'tourGuide.user']);
         $booking->update(['status' => 'cancelled']);
         $recipient = $booking->tourismService?->serviceProvider?->user ?? $booking->tourGuide?->user;
-        $notifications->createForUser($recipient, 'booking_cancelled', 'Booking cancelled', 'A tourist cancelled booking #'.$booking->booking_id.'.');
+        $notifications->createForUserAndAdministrators($recipient, 'booking_cancelled', 'Booking cancelled', 'A tourist cancelled booking #'.$booking->booking_id.'.');
 
         return back()->with('success', 'Reservation request cancelled.');
     }

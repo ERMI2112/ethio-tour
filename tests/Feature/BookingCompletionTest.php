@@ -138,7 +138,7 @@ class BookingCompletionTest extends TestCase
     private function hotelBooking(Carbon $checkout, string $status = 'confirmed', bool $paid = true): Booking
     {
         $tourist = User::where('email', 'tourist@test.com')->firstOrFail()->tourist;
-        $service = TourismService::where('service_name', 'UAT Standard Room')->firstOrFail();
+        $service = TourismService::where('service_name', 'Standard Heritage View Room')->firstOrFail();
         $booking = Booking::create(['tourist_id' => $tourist->tourist_id, 'service_id' => $service->service_id, 'status' => $status, 'total_amount' => 1500, 'currency' => 'ETB']);
         HotelRoomReservation::create(['booking_id' => $booking->booking_id, 'check_in_date' => $checkout->copy()->subDays(2), 'check_out_date' => $checkout, 'guest_count' => 1]);
         if ($paid) {
@@ -151,7 +151,7 @@ class BookingCompletionTest extends TestCase
     private function restaurantBooking(Carbon $date, string $endTime): Booking
     {
         $tourist = User::where('email', 'tourist@test.com')->firstOrFail()->tourist;
-        $service = TourismService::where('service_name', 'UAT Gondar Dining Reservation')->firstOrFail();
+        $service = TourismService::where('service_name', 'Traditional Feast & Coffee Ceremony')->firstOrFail();
         $booking = Booking::create(['tourist_id' => $tourist->tourist_id, 'service_id' => $service->service_id, 'status' => 'confirmed', 'total_amount' => 350, 'currency' => 'ETB']);
         RestaurantReservation::create(['booking_id' => $booking->booking_id, 'reservation_date' => $date, 'start_time' => '18:00:00', 'end_time' => $endTime, 'guest_count' => 1]);
         $booking->payment()->create(['amount' => 350, 'status' => 'success', 'payment_method' => 'chapa']);
@@ -162,7 +162,7 @@ class BookingCompletionTest extends TestCase
     private function transportBooking(Carbon $dropoff): Booking
     {
         $tourist = User::where('email', 'tourist@test.com')->firstOrFail()->tourist;
-        $service = TourismService::where('service_name', 'UAT Gondar Car Rental')->firstOrFail();
+        $service = TourismService::where('service_name', 'Simien 4x4 Safari Car Rental')->firstOrFail();
         $booking = Booking::create(['tourist_id' => $tourist->tourist_id, 'service_id' => $service->service_id, 'status' => 'confirmed', 'total_amount' => 1800, 'currency' => 'ETB']);
         TransportationReservation::create(['booking_id' => $booking->booking_id, 'pickup_location' => 'Gondar', 'dropoff_location' => 'Gondar', 'pickup_at' => $dropoff->copy()->subDay(), 'dropoff_at' => $dropoff, 'passenger_count' => 1]);
         $booking->payment()->create(['amount' => 1800, 'status' => 'success', 'payment_method' => 'chapa']);
@@ -184,7 +184,7 @@ class BookingCompletionTest extends TestCase
     private function eventBooking(Carbon $date, string $endTime): Booking
     {
         $tourist = User::where('email', 'tourist@test.com')->firstOrFail()->tourist;
-        $baseEvent = CulturalEvent::where('event_name', 'UAT Gondar Cultural Festival')->firstOrFail();
+        $baseEvent = CulturalEvent::where('event_name', 'Timkat Gondar Epiphany & Cultural Festival')->firstOrFail();
         $baseService = TourismService::findOrFail($baseEvent->service_id);
         $service = $baseService->replicate();
         $service->service_name = 'Completion Test Offering '.uniqid();

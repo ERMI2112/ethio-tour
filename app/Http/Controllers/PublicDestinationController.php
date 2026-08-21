@@ -15,6 +15,7 @@ class PublicDestinationController extends Controller
 
         $destinations = Destination::query()
             ->withCount([
+                'attractions',
                 'heritageSites',
                 'culturalEvents as upcoming_events_count' => fn ($query) => $query->where('status', 'published')->whereDate('event_date', '>=', now()->toDateString()),
                 'tourismServices as public_services_count' => fn ($query) => $query->whereHas('serviceProvider', fn ($provider) => $provider->publiclyOperational()),
@@ -33,6 +34,7 @@ class PublicDestinationController extends Controller
     public function show(Destination $destination): View
     {
         $destination->load([
+            'attractions' => fn ($query) => $query->orderByDesc('is_featured')->orderBy('name'),
             'heritageSites' => fn ($query) => $query->orderBy('heritage_type'),
             'culturalEvents' => fn ($query) => $query
                 ->where('status', 'published')
@@ -45,6 +47,7 @@ class PublicDestinationController extends Controller
                 ->orderBy('service_name'),
         ]);
 
+        $attractions = $destination->attractions;
         $hotels = $destination->tourismServices->filter(fn ($s) => $s->serviceProvider?->provider_type === 'hotel')->values();
         $restaurants = $destination->tourismServices->filter(fn ($s) => $s->serviceProvider?->provider_type === 'restaurant')->values();
         $transportation = $destination->tourismServices->filter(fn ($s) => $s->serviceProvider?->provider_type === 'transportation_car_rental')->values();
@@ -70,12 +73,13 @@ class PublicDestinationController extends Controller
 
         $otherDestinations = Destination::query()
             ->where('destination_id', '!=', $destination->destination_id)
-            ->withCount(['heritageSites', 'tourismServices' => fn ($q) => $q->whereHas('serviceProvider', fn ($p) => $p->publiclyOperational())])
+            ->withCount(['attractions', 'heritageSites', 'tourismServices' => fn ($q) => $q->whereHas('serviceProvider', fn ($p) => $p->publiclyOperational())])
             ->limit(3)
             ->get();
 
         return view('public.destinations.show', compact(
             'destination',
+            'attractions',
             'hotels',
             'restaurants',
             'transportation',

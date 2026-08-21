@@ -49,7 +49,7 @@ class BureauProviderVerificationController extends Controller
             'verification_notes' => $data['verification_notes'] ?? null,
         ]);
 
-        $notifications->createForUser($serviceProvider->user, 'provider_verification', 'Provider verification decision', $data['decision'] === 'approve' ? 'Your provider profile has been verified by the Tourism Bureau and is awaiting administrator activation.' : 'Your provider profile was rejected by the Tourism Bureau.');
+        $notifications->createForUserAndAdministrators($serviceProvider->user, 'provider_verification', 'Provider verification decision', $data['decision'] === 'approve' ? 'Your provider profile has been verified by the Tourism Bureau and is awaiting administrator activation.' : 'Your provider profile was rejected by the Tourism Bureau.', $request->user()->user_id);
 
         return to_route('bureau.providers.show', $serviceProvider)->with('success', 'Provider verification decision saved.');
     }

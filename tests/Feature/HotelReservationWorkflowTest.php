@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\Models\Booking;
 use App\Models\Category;
 use App\Models\Destination;
-use App\Models\HotelRoom;
 use App\Models\HotelRoomReservation;
 use App\Models\ServiceProvider;
 use App\Models\TourismBureauOfficer;

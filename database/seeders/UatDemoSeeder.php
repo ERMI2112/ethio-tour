@@ -35,53 +35,53 @@ class UatDemoSeeder extends Seeder
         $touristUser = $this->user('tourist@test.com', 'tourist');
         Tourist::firstOrCreate(
             ['user_id' => $touristUser->user_id],
-            ['full_name' => 'UAT Tourist', 'nationality' => 'Ethiopian'],
+            ['full_name' => 'Abebe Bekele', 'nationality' => 'Ethiopian'],
         );
 
         $guideUser = $this->user('guide@test.com', 'tour_guide');
-        $this->guide($guideUser, 'UAT-GUIDE-001', 'History and cultural heritage tours', 'verified');
+        $this->guide($guideUser, 'TG-GDR-001', 'Historical & cultural heritage tours across Northern Ethiopia', 'verified');
 
         $pendingGuideUser = $this->user('uat-guide-pending@test.com', 'tour_guide');
-        $this->guide($pendingGuideUser, 'UAT-GUIDE-PENDING', 'Pending verification test guide', 'pending');
+        $this->guide($pendingGuideUser, 'TG-PENDING-002', 'Regional cultural guide (pending verification)', 'pending');
 
         $hotelUser = $this->user('hotel@test.com', 'service_provider');
-        $hotel = $this->provider($hotelUser, 'UAT Gondar Hotel', 'hotel', 'verified', 'approved');
+        $hotel = $this->provider($hotelUser, 'Goha Hotel Gondar', 'hotel', 'verified', 'approved');
 
         $restaurantUser = $this->user('restaurant@test.com', 'service_provider');
-        $restaurant = $this->provider($restaurantUser, 'UAT Gondar Restaurant', 'restaurant', 'verified', 'approved');
+        $restaurant = $this->provider($restaurantUser, 'Four Sisters Restaurant', 'restaurant', 'verified', 'approved');
 
         $transportUser = $this->user('transport@test.com', 'service_provider');
-        $transport = $this->provider($transportUser, 'UAT Gondar Transport', 'transportation_car_rental', 'verified', 'approved');
+        $transport = $this->provider($transportUser, 'Simien Highlands 4x4 Transport', 'transportation_car_rental', 'verified', 'approved');
 
         $eventUser = $this->user('event@test.com', 'service_provider');
-        $eventOrganizer = $this->provider($eventUser, 'UAT Gondar Events', 'event_organizer', 'verified', 'approved');
+        $eventOrganizer = $this->provider($eventUser, 'Gondar Cultural Events Association', 'event_organizer', 'verified', 'approved');
 
-        // These accounts keep the Bureau and Administrator queues useful during manual UAT.
+        // These accounts keep the Bureau and Administrator queues useful in a development environment.
         $this->provider(
             $this->user('uat-provider-pending@test.com', 'service_provider'),
-            'UAT Pending Provider',
+            'Ras Dashen Lodge (Pending)',
             'hotel',
             'pending',
             'pending',
         );
         $this->provider(
             $this->user('uat-provider-verified@test.com', 'service_provider'),
-            'UAT Bureau-Verified Provider',
+            'Habesha Cultural Dining',
             'restaurant',
             'verified',
             'pending',
         );
         $this->provider(
             $this->user('uat-provider-suspended@test.com', 'service_provider'),
-            'UAT Suspended Provider',
+            'Abyssinia Car Rentals (Suspended)',
             'transportation_car_rental',
             'verified',
             'suspended',
         );
 
-        $gondar = $this->destination($bureau, 'Gondar', 'Gondar, Amhara', 'Primary UAT destination for manual tourism testing.');
-        $this->destination($bureau, 'Bahir Dar', 'Bahir Dar, Amhara', 'UAT destination for discovery and filtering tests.');
-        $lalibela = $this->destination($bureau, 'Lalibela', 'Lalibela, Amhara', 'UAT destination for discovery and filtering tests.');
+        $gondar = $this->destination($bureau, 'Gondar', 'Gondar, Amhara', 'Gondar served as the capital of the Ethiopian Empire from 1636 to 1855, earning it the nickname "The Camelot of Africa" for its medieval castles and royal compounds.');
+        $this->destination($bureau, 'Bahir Dar', 'Bahir Dar, Amhara', 'Gateway to Lake Tana\'s ancient island monasteries and the spectacular Blue Nile Falls.');
+        $lalibela = $this->destination($bureau, 'Lalibela', 'Lalibela, Amhara', 'Home to eleven medieval monolithic rock-hewn churches, a UNESCO World Heritage Site.');
 
         $accommodation = $this->category('Accommodation');
         $dining = $this->category('Dining & Reservations');
@@ -89,8 +89,8 @@ class UatDemoSeeder extends Seeder
         $culturalEvents = $this->category('Cultural Events');
         $heritage = $this->category('Heritage & Culture');
 
-        $standard = $this->service($hotel, $accommodation, $gondar, 'UAT Standard Room', 1500, 'A comfortable standard room for manual hotel booking and availability tests.');
-        $deluxe = $this->service($hotel, $accommodation, $gondar, 'UAT Deluxe Room', 2500, 'A larger deluxe room for manual hotel booking and availability tests.');
+        $standard = $this->service($hotel, $accommodation, $gondar, 'Standard Heritage View Room', 1500, 'A comfortable standard room with panoramic mountain views and modern amenities.');
+        $deluxe = $this->service($hotel, $accommodation, $gondar, 'Deluxe Imperial Suite', 2500, 'A spacious deluxe suite featuring traditional Gondarine decor and private balcony overlooking the city.');
         $standardType = HotelRoomType::updateOrCreate(
             ['service_id' => $standard->service_id],
             ['capacity' => 2, 'amenities' => ['Wi-Fi', 'TV', 'Private Bathroom']],
@@ -99,43 +99,45 @@ class UatDemoSeeder extends Seeder
             ['service_id' => $deluxe->service_id],
             ['capacity' => 4, 'amenities' => ['Wi-Fi', 'TV', 'Private Bathroom', 'Breakfast']],
         );
-        foreach (['UAT-101', 'UAT-102'] as $roomNumber) {
+        foreach (['RM-101', 'RM-102'] as $roomNumber) {
             HotelRoom::updateOrCreate(['room_type_id' => $standardType->room_type_id, 'room_number' => $roomNumber], ['status' => 'active']);
         }
-        foreach (['UAT-201', 'UAT-202'] as $roomNumber) {
+        foreach (['RM-201', 'RM-202'] as $roomNumber) {
             HotelRoom::updateOrCreate(['room_type_id' => $deluxeType->room_type_id, 'room_number' => $roomNumber], ['status' => 'active']);
         }
 
-        $this->service($restaurant, $dining, $gondar, 'UAT Gondar Dining Reservation', 350, 'A dining reservation offering for restaurant availability and acceptance tests.');
-        $this->service($restaurant, $dining, $gondar, 'UAT Gondar Coffee & Breakfast', 150, 'A coffee and breakfast offering for restaurant discovery tests.');
-        foreach ([['UAT-T1', 2], ['UAT-T2', 4], ['UAT-T3', 6]] as [$number, $capacity]) {
+        $this->service($restaurant, $dining, $gondar, 'Traditional Feast & Coffee Ceremony', 350, 'Authentic Ethiopian culinary feast featuring injera, doro wat, and traditional coffee roasting ceremony.');
+        $this->service($restaurant, $dining, $gondar, 'Specialty Coffee & Breakfast Tasting', 150, 'Single-origin Ethiopian highland coffee tasting paired with fresh local breakfast.');
+        foreach ([['T-01', 2], ['T-02', 4], ['T-03', 6]] as [$number, $capacity]) {
             RestaurantTable::updateOrCreate(
                 ['provider_id' => $restaurant->provider_id, 'table_number' => $number],
                 ['capacity' => $capacity, 'status' => 'active'],
             );
         }
 
-        $transportService = $this->service($transport, $transportation, $gondar, 'UAT Gondar Car Rental', 1800, 'A transportation service for vehicle availability and reservation tests.');
-        foreach ([['UAT-CAR-01', 'SUV', 'Toyota', 'RAV4', 4, 'active'], ['UAT-CAR-02', 'Minibus', 'Toyota', 'Hiace', 12, 'active'], ['UAT-CAR-03', 'Sedan', 'Toyota', 'Corolla', 4, 'inactive']] as [$identifier, $type, $make, $model, $capacity, $status]) {
+        $transportService = $this->service($transport, $transportation, $gondar, 'Simien 4x4 Safari Car Rental', 1800, 'Heavy-duty 4WD vehicle with professional driver tailored for Simien Mountains and historical circuit.');
+        foreach ([['ETH-4WD-01', 'SUV', 'Toyota', 'RAV4', 4, 'active'], ['ETH-MINI-02', 'Minibus', 'Toyota', 'Hiace', 12, 'active'], ['ETH-SEDAN-03', 'Sedan', 'Toyota', 'Corolla', 4, 'inactive']] as [$identifier, $type, $make, $model, $capacity, $status]) {
             TransportationVehicle::updateOrCreate(
                 ['provider_id' => $transport->provider_id, 'vehicle_identifier' => $identifier],
                 ['service_id' => $transportService->service_id, 'vehicle_type' => $type, 'make' => $make, 'model' => $model, 'year' => 2024, 'capacity' => $capacity, 'status' => $status],
             );
         }
 
-        $festivalService = $this->service($eventOrganizer, $culturalEvents, $gondar, 'UAT Gondar Cultural Festival', 0, 'A public cultural event offering for ticket booking tests.');
-        $heritageService = $this->service($eventOrganizer, $heritage, $lalibela, 'UAT Heritage Celebration', 0, 'A second cultural event offering for discovery and ticket tests.');
-        $festival = $this->event($eventOrganizer, $festivalService, 'UAT Gondar Cultural Festival', $gondar, 45);
-        $heritageEvent = $this->event($eventOrganizer, $heritageService, 'UAT Heritage Celebration', $lalibela, 60);
+        $festivalService = $this->service($eventOrganizer, $culturalEvents, $gondar, 'Timkat Gondar Epiphany & Cultural Festival', 0, 'Annual baptism and epiphany festival celebration with sacred tabot procession at Fasilides Bath.');
+        $heritageService = $this->service($eventOrganizer, $heritage, $lalibela, 'Lalibela Meskel Cultural Celebration', 0, 'Ancient festival of the Finding of the True Cross celebrated with torchlight processions.');
+        $festival = $this->event($eventOrganizer, $festivalService, 'Timkat Gondar Epiphany & Cultural Festival', $gondar, 45);
+        $heritageEvent = $this->event($eventOrganizer, $heritageService, 'Lalibela Meskel Cultural Celebration', $lalibela, 60);
         $this->ticket($festival, 'General Admission', 250, 100);
         $this->ticket($festival, 'VIP Admission', 600, 25);
         $this->ticket($heritageEvent, 'Standard Admission', 200, 80);
         $this->ticket($heritageEvent, 'Family Admission', 450, 30);
 
         MuseumInformation::firstOrCreate(
-            ['museum_name' => 'UAT Gondar Heritage Museum'],
-            ['officer_id' => $bureau->officer_id, 'description' => 'Museum information for manual Bureau and public discovery testing.', 'location' => 'Gondar, Amhara', 'opening_hours' => '09:00-17:00', 'entrance_fee' => 100, 'contact_information' => 'uat-museum@example.com'],
+            ['museum_name' => 'Gondar Imperial Heritage Museum'],
+            ['officer_id' => $bureau->officer_id, 'description' => 'Museum showcasing royal Gondarine artifacts, ecclesiastical manuscripts, and imperial regalia.', 'location' => 'Gondar, Amhara', 'opening_hours' => '09:00-17:00', 'entrance_fee' => 100, 'contact_information' => 'heritage-museum@gondartourism.gov.et'],
         );
+
+        $this->call(GondarPilotSeeder::class);
     }
 
     private function user(string $email, string $role): User

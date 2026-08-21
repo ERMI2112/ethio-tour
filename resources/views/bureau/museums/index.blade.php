@@ -30,7 +30,7 @@
                             <td>{{ $museum->updated_at?->format('Y-m-d') }}</td>
                             <td class="text-end">
                                 <a class="btn btn-sm btn-outline-primary" href="{{ route('bureau.museums.edit', $museum) }}">Edit</a>
-                                <form class="d-inline" method="POST" action="{{ route('bureau.museums.destroy', $museum) }}" onsubmit="return confirm('Remove this museum from publication?');">
+                                <form class="d-inline" method="POST" action="{{ route('bureau.museums.destroy', $museum) }}" data-confirm="Remove this museum from publication?">
                                     @csrf @method('DELETE')
                                     <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>
                                 </form>

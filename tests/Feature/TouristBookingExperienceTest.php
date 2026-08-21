@@ -25,7 +25,7 @@ class TouristBookingExperienceTest extends TestCase
     public function test_hotel_detail_uses_frozen_total_and_explains_awaiting_payment(): void
     {
         $tourist = User::where('email', 'tourist@test.com')->firstOrFail();
-        $service = TourismService::where('service_name', 'UAT Standard Room')->firstOrFail();
+        $service = TourismService::where('service_name', 'Standard Heritage View Room')->firstOrFail();
         $booking = Booking::create([
             'tourist_id' => $tourist->tourist->tourist_id,
             'service_id' => $service->service_id,
@@ -56,7 +56,7 @@ class TouristBookingExperienceTest extends TestCase
     public function test_guide_history_shows_frozen_amount_and_review_action_for_completed_booking(): void
     {
         $tourist = User::where('email', 'tourist@test.com')->firstOrFail();
-        $guide = TourGuide::where('license_number', 'UAT-GUIDE-001')->firstOrFail();
+        $guide = TourGuide::where('license_number', 'TG-GDR-001')->firstOrFail();
         $booking = Booking::create([
             'tourist_id' => $tourist->tourist->tourist_id,
             'guide_id' => $guide->guide_id,

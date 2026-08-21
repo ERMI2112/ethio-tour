@@ -68,7 +68,7 @@ class TransportationTouristReservationController extends Controller
             return back()->withErrors($exception->errors())->withInput();
         }
 
-        $notifications->createForUser($tourismService->serviceProvider?->user, 'reservation_request', 'New transportation request', 'A tourist submitted a transportation request for '.$tourismService->service_name.'.');
+        $notifications->createForUserAndAdministrators($tourismService->serviceProvider?->user, 'reservation_request', 'New transportation request', 'A tourist submitted a transportation request for '.$tourismService->service_name.'.');
 
         return to_route('tourist.reservations.show', $booking)->with('success', 'Transportation request submitted successfully. Pending provider review.');
     }

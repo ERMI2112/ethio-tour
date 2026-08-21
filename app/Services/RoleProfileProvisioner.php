@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Hash;
 
 class RoleProfileProvisioner
 {
+    public function __construct(private readonly NotificationService $notifications) {}
+
     public function registerPublicUser(array $attributes): User
     {
         return DB::transaction(function () use ($attributes) {
@@ -44,6 +46,12 @@ class RoleProfileProvisioner
                     'verification_status' => 'pending',
                 ]),
             };
+
+            if ($role === 'tour_guide') {
+                $this->notifications->createForAdministrators('guide_registration', 'New tour guide application', 'A new tour guide application is ready for Tourism Bureau verification.');
+            } elseif ($role === 'service_provider') {
+                $this->notifications->createForAdministrators('provider_registration', 'New provider application', 'A new tourism provider application is ready for Bureau verification.');
+            }
 
             return $user;
         });

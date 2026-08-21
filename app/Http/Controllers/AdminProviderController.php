@@ -44,7 +44,7 @@ class AdminProviderController extends Controller
 
         $serviceProvider->forceFill(['status' => $target])->save();
         $audit->record($request->user(), 'provider_status_changed', ServiceProvider::class, $serviceProvider->provider_id, ['from' => $previous, 'to' => $target]);
-        $notifications->createForUser($serviceProvider->user, 'provider_'.($target === 'approved' ? 'approved' : $target), 'Provider platform status updated', 'Your provider platform status is now '.str_replace('_', ' ', $target).'.');
+        $notifications->createForUserAndAdministrators($serviceProvider->user, 'provider_'.($target === 'approved' ? 'approved' : $target), 'Provider platform status updated', 'Your provider platform status is now '.str_replace('_', ' ', $target).'.', $request->user()->user_id);
 
         return to_route('admin.providers.show', $serviceProvider)->with('success', 'Provider operational status updated.');
     }

@@ -61,7 +61,7 @@
                             <div class="d-flex flex-wrap gap-2 mt-3">
                                 <a class="btn btn-sm btn-outline-primary" href="{{ route('hotel.services.edit', $service) }}">Edit</a>
                                 <a class="btn btn-sm btn-outline-secondary" href="{{ route('hotel.rooms.index') }}">Rooms</a>
-                                <form class="d-inline" method="POST" action="{{ route('hotel.services.destroy', $service) }}" onsubmit="return confirm('Remove this room-type service? Its physical rooms and booking history, if any, cannot be removed.')">
+                                <form class="d-inline" method="POST" action="{{ route('hotel.services.destroy', $service) }}" data-confirm="Remove this room-type service? Its physical rooms and booking history, if any, cannot be removed.">
                                     @csrf
                                     @method('DELETE')
                                     <button class="btn btn-sm btn-outline-danger" type="submit">Remove</button>

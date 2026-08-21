@@ -67,7 +67,7 @@ class RestaurantReservationController extends Controller
             return back()->with('error', 'Acceptance failed: '.$exception->getMessage());
         }
 
-        $notifications->createForUser($booking->fresh('tourist')->tourist?->user, 'reservation_accepted', 'Restaurant reservation accepted', 'Your restaurant reservation was accepted and a table was allocated.');
+        $notifications->createForUserAndAdministrators($booking->fresh('tourist')->tourist?->user, 'reservation_accepted', 'Restaurant reservation accepted', 'Your restaurant reservation was accepted and a table was allocated.');
 
         return back()->with('success', 'Reservation accepted and a table was allocated.');
     }
@@ -81,7 +81,7 @@ class RestaurantReservationController extends Controller
         }
 
         $booking->update(['status' => 'rejected']);
-        $notifications->createForUser($booking->fresh('tourist')->tourist?->user, 'reservation_rejected', 'Restaurant reservation rejected', 'Your restaurant reservation request was rejected.');
+        $notifications->createForUserAndAdministrators($booking->fresh('tourist')->tourist?->user, 'reservation_rejected', 'Restaurant reservation rejected', 'Your restaurant reservation request was rejected.');
 
         return back()->with('success', 'Reservation request rejected.');
     }

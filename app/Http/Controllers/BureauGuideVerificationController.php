@@ -50,7 +50,7 @@ class BureauGuideVerificationController extends Controller
             'verification_notes' => $data['verification_notes'] ?? null,
         ]);
 
-        $notifications->createForUser($tourGuide->user, $data['decision'] === 'approve' ? 'guide_verification' : 'guide_verification', 'Tour guide verification decision', $data['decision'] === 'approve' ? 'Your tour guide profile has been verified by the Tourism Bureau.' : 'Your tour guide profile was rejected by the Tourism Bureau.');
+        $notifications->createForUserAndAdministrators($tourGuide->user, 'guide_verification', 'Tour guide verification decision', $data['decision'] === 'approve' ? 'Your tour guide profile has been verified by the Tourism Bureau.' : 'Your tour guide profile was rejected by the Tourism Bureau.', $request->user()->user_id);
 
         return to_route('bureau.guides.show', $tourGuide)->with('success', 'Guide verification decision saved.');
     }

@@ -102,7 +102,7 @@ class HotelReservationController extends Controller
             return $booking;
         });
 
-        $notifications->createForUser($tourismService->serviceProvider?->user, 'booking_request', 'New hotel reservation request', 'A tourist submitted a reservation request for '.$tourismService->service_name.'.');
+        $notifications->createForUserAndAdministrators($tourismService->serviceProvider?->user, 'booking_request', 'New hotel reservation request', 'A tourist submitted a reservation request for '.$tourismService->service_name.'.');
 
         return to_route('tourist.reservations.show', $booking)->with('success', 'Reservation request submitted successfully! Pending hotel review.');
     }

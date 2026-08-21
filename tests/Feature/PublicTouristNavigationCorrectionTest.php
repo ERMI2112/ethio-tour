@@ -41,14 +41,14 @@ class PublicTouristNavigationCorrectionTest extends TestCase
         $this->get(route('tourism-services.index', ['provider_type' => 'hotel']))
             ->assertOk()
             ->assertSee('Hotels')
-            ->assertSee('UAT Standard Room')
-            ->assertDontSee('UAT Gondar Dining Reservation');
+            ->assertSee('Standard Heritage View Room')
+            ->assertDontSee('Traditional Feast &amp; Coffee Ceremony', false);
 
         $this->get(route('tourism-services.index', ['provider_type' => 'restaurant']))
             ->assertOk()
             ->assertSee('Restaurants')
-            ->assertSee('UAT Gondar Dining Reservation')
-            ->assertDontSee('UAT Standard Room');
+            ->assertSee('Traditional Feast &amp; Coffee Ceremony', false)
+            ->assertDontSee('Standard Heritage View Room');
     }
 
     public function test_authenticated_tourist_keeps_consumer_navigation_without_provider_or_governance_links(): void

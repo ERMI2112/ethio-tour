@@ -146,7 +146,7 @@
                                                 </form>
                                             @endif
                                             @if ($booking->status === 'pending')
-                                                <form method="POST" action="{{ route('tourist.reservations.cancel', $booking) }}" onsubmit="return confirm('Are you sure you want to cancel this reservation request?');">
+                                                <form method="POST" action="{{ route('tourist.reservations.cancel', $booking) }}" data-confirm="Are you sure you want to cancel this reservation request?">
                                                     @csrf
                                                     @method('PATCH')
                                                     <button type="submit" class="btn btn-outline-danger btn-sm">Cancel</button>

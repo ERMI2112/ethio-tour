@@ -14,6 +14,10 @@ class AdminDashboardController extends Controller
 {
     public function __invoke(): View
     {
+        $administrator = request()->user();
+        $adminNotifications = $administrator->notifications()->latest('sent_date')->limit(6)->get();
+        $adminUnreadNotifications = $administrator->notifications()->where('read_status', false)->count();
+
         $activeProviders = ServiceProvider::where('verification_status', 'verified')
             ->where('status', 'approved')
             ->whereHas('user', fn ($query) => $query->where('is_active', true))
@@ -41,6 +45,8 @@ class AdminDashboardController extends Controller
             'recentAudit' => AuditLog::with('actor')->latest()->limit(8)->get(),
             'pendingActions' => $pendingProviderActions,
             'pendingProviderActions' => $pendingProviderActions,
+            'adminNotifications' => $adminNotifications,
+            'adminUnreadNotifications' => $adminUnreadNotifications,
         ]);
     }
 }

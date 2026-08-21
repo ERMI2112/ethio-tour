@@ -32,7 +32,7 @@ class BureauWorkspaceUxTest extends TestCase
             ->assertSee('1 guide awaiting verification')
             ->assertSee('1 provider awaiting verification')
             ->assertSee('Notifications')
-            ->assertSee('View Public Site')
+            ->assertDontSee('View Public Site')
             ->assertDontSee('Explore Ethiopia')
             ->assertDontSee('Things to Do');
     }
@@ -41,10 +41,10 @@ class BureauWorkspaceUxTest extends TestCase
     {
         $bureau = User::where('email', 'bureau@test.com')->firstOrFail();
 
-        $this->actingAs($bureau)->get(route('bureau.guides.index', ['status' => 'pending', 'q' => 'UAT-GUIDE-PENDING']))
-            ->assertOk()->assertSee('UAT-GUIDE-PENDING')->assertSee('Review');
-        $this->actingAs($bureau)->get(route('bureau.providers.index', ['status' => 'pending', 'q' => 'UAT Pending Provider']))
-            ->assertOk()->assertSee('UAT Pending Provider')->assertSee('Review');
+        $this->actingAs($bureau)->get(route('bureau.guides.index', ['status' => 'pending', 'q' => 'TG-PENDING-002']))
+            ->assertOk()->assertSee('TG-PENDING-002')->assertSee('Review');
+        $this->actingAs($bureau)->get(route('bureau.providers.index', ['status' => 'pending', 'q' => 'Ras Dashen Lodge (Pending)']))
+            ->assertOk()->assertSee('Ras Dashen Lodge (Pending)')->assertSee('Review');
     }
 
     public function test_bureau_review_pages_keep_governance_boundaries_visible(): void

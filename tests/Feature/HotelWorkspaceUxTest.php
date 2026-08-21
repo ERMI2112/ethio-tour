@@ -29,7 +29,7 @@ class HotelWorkspaceUxTest extends TestCase
             ->assertSee('Reservations')
             ->assertSee('Guest feedback')
             ->assertSee('Notifications')
-            ->assertSee('View Public Site')
+            ->assertDontSee('View Public Site')
             ->assertDontSee('Explore Ethiopia')
             ->assertDontSee('Things to Do');
     }
@@ -41,7 +41,7 @@ class HotelWorkspaceUxTest extends TestCase
         $this->actingAs($hotel)->get(route('hotel.reservations.index', ['status' => 'completed']))
             ->assertOk()->assertSee('Completed')->assertSee('Reservation status guide');
         $this->actingAs($hotel)->get(route('hotel.services.index'))
-            ->assertOk()->assertSee('Room-type services')->assertSee('UAT Standard Room');
+            ->assertOk()->assertSee('Room-type services')->assertSee('Standard Heritage View Room');
         $this->actingAs($hotel)->get(route('hotel.rooms.index'))
             ->assertOk()->assertSee('Physical rooms')->assertSee('Reservation history');
     }

@@ -41,6 +41,7 @@ use App\Http\Controllers\PublicLandingController;
 use App\Http\Controllers\PublicMapController;
 use App\Http\Controllers\PublicMapDataController;
 use App\Http\Controllers\PublicMuseumController;
+use App\Http\Controllers\PublicPortalController;
 use App\Http\Controllers\PublicTourGuideController;
 use App\Http\Controllers\PublicTourismServiceController;
 use App\Http\Controllers\PublicTransportationController;
@@ -67,6 +68,7 @@ use App\Http\Controllers\TransportationVehicleController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', PublicLandingController::class)->name('home');
+Route::get('/portals', PublicPortalController::class)->name('portals.index');
 
 Route::get('/destinations', [PublicDestinationController::class, 'index'])->name('destinations.index');
 Route::get('/destinations/{destination}', [PublicDestinationController::class, 'show'])->name('destinations.show');

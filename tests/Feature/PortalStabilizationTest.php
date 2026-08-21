@@ -108,7 +108,7 @@ class PortalStabilizationTest extends TestCase
     public function test_transportation_service_selector_and_vehicle_creation_work(): void
     {
         $transport = User::where('email', 'transport@test.com')->firstOrFail();
-        $service = TourismService::where('service_name', 'UAT Gondar Car Rental')->firstOrFail();
+        $service = TourismService::where('service_name', 'Simien 4x4 Safari Car Rental')->firstOrFail();
 
         $this->actingAs($transport)->get(route('transportation.vehicles.create'))
             ->assertOk()
@@ -136,7 +136,7 @@ class PortalStabilizationTest extends TestCase
     public function test_event_organizer_can_reach_ticket_management_and_create_a_ticket_type(): void
     {
         $organizer = User::where('email', 'event@test.com')->firstOrFail();
-        $event = CulturalEvent::where('event_name', 'UAT Gondar Cultural Festival')->firstOrFail();
+        $event = CulturalEvent::where('event_name', 'Timkat Gondar Epiphany & Cultural Festival')->firstOrFail();
 
         $this->actingAs($organizer)->get(route('event-organizer.events.show', $event))
             ->assertOk()
@@ -186,7 +186,7 @@ class PortalStabilizationTest extends TestCase
     {
         $tourist = User::where('email', 'tourist@test.com')->firstOrFail();
         $touristId = $tourist->tourist->tourist_id;
-        $event = CulturalEvent::where('event_name', 'UAT Gondar Cultural Festival')->firstOrFail();
+        $event = CulturalEvent::where('event_name', 'Timkat Gondar Epiphany & Cultural Festival')->firstOrFail();
         $ticket = $event->ticketTypes()->firstOrFail();
 
         $eventBooking = Booking::create([
@@ -209,7 +209,7 @@ class PortalStabilizationTest extends TestCase
             ->assertSee('Event ticket reservation')
             ->assertDontSee('@elseif', false);
 
-        $transportService = TourismService::where('service_name', 'UAT Gondar Car Rental')->firstOrFail();
+        $transportService = TourismService::where('service_name', 'Simien 4x4 Safari Car Rental')->firstOrFail();
         $transportBooking = Booking::create([
             'tourist_id' => $touristId,
             'service_id' => $transportService->service_id,

@@ -28,7 +28,7 @@ class RestaurantWorkspaceUxTest extends TestCase
             ->assertSee('Table inventory')
             ->assertSee('Guest feedback')
             ->assertSee('Notifications')
-            ->assertSee('View Public Site')
+            ->assertDontSee('View Public Site')
             ->assertDontSee('Explore Ethiopia')
             ->assertDontSee('Things to Do');
     }

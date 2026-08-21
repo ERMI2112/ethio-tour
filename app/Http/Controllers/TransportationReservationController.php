@@ -49,7 +49,7 @@ class TransportationReservationController extends Controller
             return back()->with('error', 'Acceptance failed: '.$exception->getMessage());
         }
 
-        $notifications->createForUser($booking->fresh('tourist')->tourist?->user, 'reservation_accepted', 'Transportation request accepted', 'Your transportation request was accepted and a vehicle was allocated.');
+        $notifications->createForUserAndAdministrators($booking->fresh('tourist')->tourist?->user, 'reservation_accepted', 'Transportation request accepted', 'Your transportation request was accepted and a vehicle was allocated.');
 
         return back()->with('success', 'Transportation request accepted and a vehicle was allocated.');
     }
@@ -61,7 +61,7 @@ class TransportationReservationController extends Controller
             return back()->with('error', 'Only pending transportation requests can be rejected.');
         }
         $booking->update(['status' => 'rejected']);
-        $notifications->createForUser($booking->fresh('tourist')->tourist?->user, 'reservation_rejected', 'Transportation request rejected', 'Your transportation request was rejected by the provider.');
+        $notifications->createForUserAndAdministrators($booking->fresh('tourist')->tourist?->user, 'reservation_rejected', 'Transportation request rejected', 'Your transportation request was rejected by the provider.');
 
         return back()->with('success', 'Transportation request rejected.');
     }

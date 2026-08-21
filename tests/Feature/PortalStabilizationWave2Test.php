@@ -131,8 +131,8 @@ class PortalStabilizationWave2Test extends TestCase
     {
         $tourist = User::where('email', 'tourist@test.com')->firstOrFail();
         $destination = Destination::where('name', 'Gondar')->firstOrFail();
-        $service = TourismService::where('service_name', 'UAT Standard Room')->firstOrFail();
-        $event = CulturalEvent::where('event_name', 'UAT Gondar Cultural Festival')->firstOrFail();
+        $service = TourismService::where('service_name', 'Standard Heritage View Room')->firstOrFail();
+        $event = CulturalEvent::where('event_name', 'Timkat Gondar Epiphany & Cultural Festival')->firstOrFail();
 
         foreach ([
             route('home'),

@@ -61,7 +61,7 @@
                     <div class="card-header bg-white py-3"><h2 class="h5 mb-0">Booking Status</h2></div>
                     <div class="card-body p-4">
                         @if ($booking->status === 'pending')
-                            <form method="POST" action="{{ route('tourist.reservations.cancel', $booking) }}" onsubmit="return confirm('Are you sure you want to cancel this booking request?');">
+                            <form method="POST" action="{{ route('tourist.reservations.cancel', $booking) }}" data-confirm="Are you sure you want to cancel this booking request?">
                                 @csrf
                                 @method('PATCH')
                                 <button type="submit" class="btn btn-outline-danger w-100">Cancel Request</button>
@@ -89,7 +89,7 @@
     @endphp
     <div class="row g-4">
         <div class="col-lg-8"><div class="card border-0 shadow-sm"><div class="card-header bg-white py-3"><h2 class="h5 mb-0">Restaurant Reservation Details</h2></div><div class="card-body p-4"><h3 class="h4 text-primary">{{ $booking->tourismService->service_name ?? 'Restaurant reservation' }}</h3><p class="text-muted mb-3">Provided by <strong>{{ $booking->tourismService->serviceProvider->business_name ?? 'N/A' }}</strong></p><div class="row g-3 p-3 bg-light rounded border"><div class="col-sm-6"><span class="text-muted small d-block">Date</span><strong>{{ $restaurantRes->reservation_date->format('F d, Y') }}</strong></div><div class="col-sm-6"><span class="text-muted small d-block">Time</span><strong>{{ substr($restaurantRes->start_time, 0, 5) }}–{{ substr($restaurantRes->end_time, 0, 5) }}</strong></div><div class="col-sm-6"><span class="text-muted small d-block">Guests</span><strong>{{ $restaurantRes->guest_count }} guest(s)</strong></div><div class="col-sm-6"><span class="text-muted small d-block">Table</span><strong>{{ $restaurantRes->restaurantTable ? 'Table '.$restaurantRes->restaurantTable->table_number : 'Unassigned' }}</strong></div></div></div></div></div>
-        <div class="col-lg-4"><div class="card border-0 shadow-sm"><div class="card-header bg-white py-3"><h2 class="h5 mb-0">Pricing Summary</h2></div><div class="card-body p-4"><div class="d-flex justify-content-between mb-2"><span>Reservation price</span><strong>{{ $booking->total_amount !== null ? number_format((float) $booking->total_amount, 2).' '.($booking->currency ?? 'ETB') : 'Not priced' }}</strong></div><div class="d-flex justify-content-between pb-3 border-bottom text-primary fw-bold"><span>Booking total</span><strong>{{ $booking->total_amount !== null ? number_format((float) $booking->total_amount, 2).' '.($booking->currency ?? 'ETB') : 'Not priced' }}</strong></div><p class="small text-muted mt-3 mb-0">The booking total is frozen when you submit your request and is payable after acceptance.</p>@if($booking->status === 'pending')<form class="mt-3" method="POST" action="{{ route('tourist.reservations.cancel', $booking) }}" onsubmit="return confirm('Cancel this request?');">@csrf @method('PATCH')<button class="btn btn-outline-danger w-100">Cancel Request</button></form>@endif</div></div></div>
+        <div class="col-lg-4"><div class="card border-0 shadow-sm"><div class="card-header bg-white py-3"><h2 class="h5 mb-0">Pricing Summary</h2></div><div class="card-body p-4"><div class="d-flex justify-content-between mb-2"><span>Reservation price</span><strong>{{ $booking->total_amount !== null ? number_format((float) $booking->total_amount, 2).' '.($booking->currency ?? 'ETB') : 'Not priced' }}</strong></div><div class="d-flex justify-content-between pb-3 border-bottom text-primary fw-bold"><span>Booking total</span><strong>{{ $booking->total_amount !== null ? number_format((float) $booking->total_amount, 2).' '.($booking->currency ?? 'ETB') : 'Not priced' }}</strong></div><p class="small text-muted mt-3 mb-0">The booking total is frozen when you submit your request and is payable after acceptance.</p>@if($booking->status === 'pending')<form class="mt-3" method="POST" action="{{ route('tourist.reservations.cancel', $booking) }}" data-confirm="Cancel this request?">@csrf @method('PATCH')<button class="btn btn-outline-danger w-100">Cancel Request</button></form>@endif</div></div></div>
     </div>
     @else
     <div class="row g-4">
@@ -171,7 +171,7 @@
                     </div>
 
                     @if ($booking->status === 'pending')
-                        <form method="POST" action="{{ route('tourist.reservations.cancel', $booking) }}" onsubmit="return confirm('Are you sure you want to cancel this reservation request?');">
+                        <form method="POST" action="{{ route('tourist.reservations.cancel', $booking) }}" data-confirm="Are you sure you want to cancel this reservation request?">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-outline-danger w-100">Cancel Request</button>

@@ -7,8 +7,10 @@ use App\Models\Destination;
 use App\Models\HeritageSite;
 use App\Models\MuseumInformation;
 use App\Models\Review;
+use App\Models\ServiceProvider;
 use App\Models\TourGuide;
 use App\Models\TourismService;
+use App\Support\PortalCatalog;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\View\View;
 
@@ -61,6 +63,10 @@ class PublicLandingController extends Controller
             ? TourGuide::query()->with('user')->where('verification_status', 'verified')->whereHas('user', fn ($query) => $query->where('is_active', true))->orderBy('guide_id')->limit(4)->get()
             : collect();
 
+        $attractions = $gondar && Schema::hasTable('attractions')
+            ? $gondar->attractions()->orderByDesc('is_featured')->limit(4)->get()
+            : collect();
+
         $heritageSites = $gondar && Schema::hasTable('heritage_sites')
             ? HeritageSite::query()->with('destination')->where('destination_id', $gondar->destination_id)->limit(3)->get()
             : collect();
@@ -80,6 +86,21 @@ class PublicLandingController extends Controller
                 ->get()
             : collect();
 
+        $publishedDestinationCount = Schema::hasTable('destinations')
+            ? Destination::query()->count()
+            : 0;
+        $operationalProviderCount = Schema::hasTable('service_providers') && Schema::hasTable('users')
+            ? ServiceProvider::query()->publiclyOperational()->count()
+            : 0;
+        $verifiedGuideCount = Schema::hasTable('tour_guides') && Schema::hasTable('users')
+            ? TourGuide::query()->where('verification_status', 'verified')->whereHas('user', fn ($query) => $query->where('is_active', true))->count()
+            : 0;
+        $publishedEventCount = Schema::hasTable('cultural_events') && Schema::hasTable('service_providers')
+            ? CulturalEvent::query()->where('status', 'published')->whereDate('event_date', '>=', today())->whereHas('serviceProvider', fn ($query) => $query->publiclyOperational())->count()
+            : 0;
+
+        $portals = PortalCatalog::all();
+
         return view('welcome', compact(
             'destinations',
             'experiences',
@@ -91,9 +112,15 @@ class PublicLandingController extends Controller
             'transport',
             'events',
             'guides',
+            'attractions',
             'heritageSites',
             'museums',
             'reviews',
+            'publishedDestinationCount',
+            'operationalProviderCount',
+            'verifiedGuideCount',
+            'publishedEventCount',
+            'portals',
         ));
     }
 }

@@ -3,6 +3,7 @@
 @section('title', 'Register')
 
 @section('auth-content')
+    <p class="landing-eyebrow mb-2">Public registration</p>
     <h1 class="h3 mb-2">Create an account</h1>
     <p class="text-muted">Choose a permitted public account type. Bureau Officer and Administrator accounts are provisioned through controlled processes.</p>
     <form method="POST" action="{{ route('register.store') }}">
@@ -13,8 +14,9 @@
         <div id="tourist-fields"><div class="mb-3"><label class="form-label" for="full_name">Full name</label><input class="form-control" id="full_name" name="full_name" value="{{ old('full_name') }}"></div><div class="mb-3"><label class="form-label" for="nationality">Nationality</label><input class="form-control" id="nationality" name="nationality" value="{{ old('nationality') }}"></div></div>
         <div id="guide-fields" class="d-none"><div class="mb-3"><label class="form-label" for="license_number">License number</label><input class="form-control" id="license_number" name="license_number" value="{{ old('license_number') }}"></div><div class="mb-3"><label class="form-label" for="expertise">Expertise</label><textarea class="form-control" id="expertise" name="expertise">{{ old('expertise') }}</textarea></div></div>
         <div id="provider-fields" class="d-none"><div class="mb-3"><label class="form-label" for="business_name">Business name</label><input class="form-control" id="business_name" name="business_name" value="{{ old('business_name') }}"></div><div class="mb-3"><label class="form-label" for="provider_type">Provider type</label><select class="form-select" id="provider_type" name="provider_type"><option value="hotel">Hotel</option><option value="restaurant">Restaurant</option><option value="transportation_car_rental">Transportation &amp; Car Rental</option><option value="event_organizer">Event Organizer</option></select></div></div>
-        <button class="btn btn-primary w-100" type="submit">Create account</button>
+        <button class="btn btn-success w-100" type="submit">Create account</button>
     </form>
     <p class="text-center small mt-3 mb-0">Already registered? <a href="{{ route('login') }}">Log in</a></p>
+    <p class="text-center small text-muted mt-2 mb-0"><a href="{{ route('home') }}">Explore Ethio Tour</a></p>
     @push('scripts')<script>const type=document.getElementById('account_type'); const fields={tourist:document.getElementById('tourist-fields'),tour_guide:document.getElementById('guide-fields'),service_provider:document.getElementById('provider-fields')}; function updateFields(){Object.entries(fields).forEach(([key,field])=>field.classList.toggle('d-none',key!==type.value));} type.addEventListener('change',updateFields);updateFields();</script>@endpush
 @endsection

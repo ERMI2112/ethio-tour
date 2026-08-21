@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Administrator;
+use App\Models\Notification;
 use App\Models\ServiceProvider;
 use App\Models\TourGuide;
 use App\Models\TourismBureauOfficer;
@@ -44,6 +45,22 @@ class AuthenticationAuthorizationTest extends TestCase
         $provider = User::where('email', 'provider@example.com')->firstOrFail();
         $this->assertSame('service_provider', $provider->role);
         $this->assertSame('hotel', $provider->serviceProvider->provider_type);
+    }
+
+    public function test_new_guide_and_provider_applications_alert_active_administrators(): void
+    {
+        $administrator = User::factory()->create(['role' => 'administrator', 'is_active' => true]);
+
+        $this->post('/register', ['account_type' => 'tour_guide', 'email' => 'guide-alert@example.com', 'password' => 'secure-password', 'password_confirmation' => 'secure-password', 'license_number' => 'GUIDE-ALERT-01', 'expertise' => 'History'])
+            ->assertRedirect('/account');
+
+        $this->post('/logout');
+        $this->post('/register', ['account_type' => 'service_provider', 'email' => 'provider-alert@example.com', 'password' => 'secure-password', 'password_confirmation' => 'secure-password', 'business_name' => 'Alert Hotel', 'provider_type' => 'hotel'])
+            ->assertRedirect('/account');
+
+        $this->assertSame(2, Notification::where('user_id', $administrator->user_id)->count());
+        $this->assertDatabaseHas('notifications', ['user_id' => $administrator->user_id, 'type' => 'guide_registration']);
+        $this->assertDatabaseHas('notifications', ['user_id' => $administrator->user_id, 'type' => 'provider_registration']);
     }
 
     public function test_public_registration_cannot_assign_privileged_or_unapproved_roles(): void

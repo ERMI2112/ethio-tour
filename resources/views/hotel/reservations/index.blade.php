@@ -96,7 +96,7 @@
                                                     @method('PATCH')
                                                     <button type="submit" class="btn btn-success btn-sm">Accept</button>
                                                 </form>
-                                                <form method="POST" action="{{ route('hotel.reservations.reject', $booking) }}" onsubmit="return confirm('Reject this reservation request?');">
+                                                <form method="POST" action="{{ route('hotel.reservations.reject', $booking) }}" data-confirm="Reject this reservation request?">
                                                     @csrf
                                                     @method('PATCH')
                                                     <button type="submit" class="btn btn-outline-danger btn-sm">Reject</button>

@@ -19,8 +19,8 @@ class EventTouristBookingController extends Controller
             return back()->with('error', $exception->getMessage())->withInput();
         }
 
-        $notifications->createForUser($culturalEvent->serviceProvider?->user, 'event_booking', 'New event ticket booking', 'A tourist reserved tickets for '.$culturalEvent->event_name.'.');
-        $notifications->createForUser($request->user(), 'event_booking', 'Event tickets reserved', 'Your event tickets were reserved successfully. Complete payment from your booking when it is ready.');
+        $notifications->createForUserAndAdministrators($culturalEvent->serviceProvider?->user, 'event_booking', 'New event ticket booking', 'A tourist reserved tickets for '.$culturalEvent->event_name.'.');
+        $notifications->createForUserAndAdministrators($request->user(), 'event_booking', 'Event tickets reserved', 'Your event tickets were reserved successfully. Complete payment from your booking when it is ready.');
 
         return to_route('tourist.reservations.show', $booking)->with('success', 'Event tickets reserved successfully. Review your booking to continue to payment.');
     }

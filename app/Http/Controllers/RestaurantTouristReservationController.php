@@ -106,7 +106,7 @@ class RestaurantTouristReservationController extends Controller
             return back()->withErrors($exception->errors())->withInput();
         }
 
-        $notifications->createForUser($tourismService->serviceProvider?->user, 'reservation_request', 'New restaurant reservation request', 'A tourist requested a table at '.$tourismService->service_name.'.');
+        $notifications->createForUserAndAdministrators($tourismService->serviceProvider?->user, 'reservation_request', 'New restaurant reservation request', 'A tourist requested a table at '.$tourismService->service_name.'.');
 
         return to_route('tourist.reservations.show', $booking)->with('success', 'Restaurant reservation request submitted successfully.');
     }

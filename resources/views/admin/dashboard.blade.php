@@ -18,13 +18,23 @@
             <div><h2 id="attention-heading" class="h5 mb-1">Attention</h2><p class="text-muted small mb-0">Actionable administrator work from the current governance workflows.</p></div>
         </div>
         @if ($pendingProviderActions > 0)
-            <div class="card border-warning shadow-sm"><div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
+            <div class="card border-warning shadow-sm mb-3"><div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
                 <div><span class="badge text-bg-warning text-dark mb-2">Action required</span><h3 class="h5 mb-1">{{ $pendingProviderActions }} provider{{ $pendingProviderActions === 1 ? '' : 's' }} waiting for activation</h3><p class="text-muted mb-0">These providers are Bureau-verified and ready for Administrator review. Approving one makes it operational.</p></div>
                 <a class="btn btn-warning" href="{{ route('admin.providers.index', ['verification' => 'verified', 'status' => 'pending']) }}">Review activation queue</a>
             </div></div>
         @else
             <div class="card border-success shadow-sm"><div class="card-body d-flex align-items-center gap-3"><span class="badge text-bg-success">Clear</span><div><h3 class="h6 mb-1">No provider activation actions are waiting</h3><p class="text-muted small mb-0">The Administrator activation queue has no Bureau-verified pending providers.</p></div></div></div>
         @endif
+        <div class="card border-0 shadow-sm">
+            <div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div>
+                    <span class="badge {{ $adminUnreadNotifications ? 'text-bg-primary' : 'text-bg-success' }} mb-2">{{ $adminUnreadNotifications ? 'Unread platform alerts' : 'All alerts reviewed' }}</span>
+                    <h3 class="h5 mb-1">Administrator alert center</h3>
+                    <p class="text-muted mb-0">{{ $adminUnreadNotifications ? $adminUnreadNotifications.' new '.($adminUnreadNotifications === 1 ? 'alert needs' : 'alerts need').' review.' : 'There are no unread platform alerts right now.' }}</p>
+                </div>
+                <a class="btn btn-outline-primary" href="{{ route('notifications.index') }}">Open alert center</a>
+            </div>
+        </div>
     </section>
 
     <section aria-labelledby="overview-heading" class="mb-4">
@@ -62,5 +72,23 @@
             </div><div class="card-footer bg-white small text-muted">Payment and revenue reporting remain unavailable until the centralized payment phase.</div></div>
         </section>
     </div>
+    <section class="mt-4" aria-labelledby="alerts-heading">
+        <div class="card border-0 shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+                <div><h2 id="alerts-heading" class="h5 mb-1">Recent platform alerts</h2><p class="text-muted small mb-0">Central notifications from booking, payment, and governance workflows.</p></div>
+                <a class="small" href="{{ route('notifications.index') }}">View all alerts</a>
+            </div>
+            <div class="list-group list-group-flush">
+                @forelse ($adminNotifications as $notification)
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-start gap-3 {{ $notification->read_status ? '' : 'bg-primary-subtle' }}" href="{{ route('notifications.index') }}">
+                        <span><span class="badge text-bg-light text-primary me-2">{{ str_replace('_', ' ', $notification->type) }}</span><strong>{{ $notification->title }}</strong><span class="d-block small text-muted mt-1">{{ $notification->message }}</span></span>
+                        <time class="small text-muted text-nowrap" datetime="{{ $notification->sent_date?->toIso8601String() }}">{{ $notification->sent_date?->diffForHumans() }}</time>
+                    </a>
+                @empty
+                    <div class="p-4 text-muted">Platform alerts will appear here as real workflows need attention.</div>
+                @endforelse
+            </div>
+        </div>
+    </section>
 </div>
 @endsection

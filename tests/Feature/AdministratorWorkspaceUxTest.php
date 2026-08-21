@@ -39,7 +39,7 @@ class AdministratorWorkspaceUxTest extends TestCase
         $this->actingAs($admin)->get(route('admin.dashboard'))
             ->assertSee('Provider governance')
             ->assertSee('Notifications')
-            ->assertSee('View Public Site')
+            ->assertDontSee('View Public Site')
             ->assertDontSee('Explore Ethiopia')
             ->assertDontSee('Things to Do')
             ->assertDontSee('Stay &amp; Eat', false)
@@ -53,7 +53,7 @@ class AdministratorWorkspaceUxTest extends TestCase
         $this->actingAs($admin)->get(route('admin.providers.index', ['verification' => 'verified', 'status' => 'pending']))
             ->assertOk()
             ->assertSee('Activation queue')
-            ->assertSee('UAT Bureau-Verified Provider')
+            ->assertSee('Habesha Cultural Dining')
             ->assertSee('Bureau verification')
             ->assertSee('Platform status');
     }
