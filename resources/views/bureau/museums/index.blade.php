@@ -4,13 +4,9 @@
 
 @section('content')
 <div class="container py-4">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-        <div>
-            <p class="text-uppercase small text-primary fw-semibold mb-1">Tourism Bureau</p>
-            <h1 class="h2 mb-1">Museum Information</h1>
-            <p class="text-muted mb-0">Publish and maintain museum information for tourists.</p>
-        </div>
-        <a class="btn btn-primary" href="{{ route('bureau.museums.create') }}">Add museum</a>
+    <div class="ws-page-header mb-4">
+        <div><span class="ws-eyebrow"><span class="ws-eye-dot" aria-hidden="true"></span>Tourism Bureau</span><h1 class="ws-title">Museum Information</h1><p class="ws-lead">Publish and maintain museum information for tourists.</p></div>
+        <div class="ws-actions"><a class="btn btn-primary" href="{{ route('bureau.museums.create') }}">Add museum</a></div>
     </div>
 
     <form class="card card-body border-0 shadow-sm mb-4" method="GET"><div class="row g-2 align-items-end"><div class="col-md-10"><label class="form-label" for="museum-search">Search museums</label><input id="museum-search" class="form-control" name="q" value="{{ $search }}" placeholder="Museum name or location"></div><div class="col-md-2"><button class="btn btn-primary w-100">Search</button></div></div></form>

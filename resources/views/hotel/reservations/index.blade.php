@@ -11,12 +11,9 @@
         </ol>
     </nav>
 
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-        <div>
-            <h1 class="h2 mb-1">Reservations</h1>
-            <p class="text-muted small mb-0">Requests shown here apply only to your hotel.</p>
-        </div>
-        <div class="d-flex gap-2">
+    <div class="ws-page-header mb-4">
+        <div><span class="ws-eyebrow"><span class="ws-eye-dot" aria-hidden="true"></span>Hotel operations</span><h1 class="ws-title">Reservations</h1><p class="ws-lead">Requests shown here apply only to your hotel.</p></div>
+        <div class="ws-actions d-flex gap-2">
             <a href="{{ route('hotel.services.index') }}" class="btn btn-outline-secondary btn-sm">Room Types</a>
             <a href="{{ route('hotel.rooms.index') }}" class="btn btn-outline-secondary btn-sm">Physical Rooms</a>
         </div>
