@@ -5,11 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreReviewRequest;
 use App\Models\Booking;
 use App\Policies\ReviewPolicy;
+use App\Services\NotificationService;
 use Illuminate\Http\RedirectResponse;
 
 class TouristReviewController extends Controller
 {
-    public function store(StoreReviewRequest $request, Booking $booking): RedirectResponse
+    public function store(StoreReviewRequest $request, Booking $booking, NotificationService $notifications): RedirectResponse
     {
         $booking->loadMissing(['review', 'tourGuideReservation', 'hotelRoomReservation', 'restaurantReservation', 'transportationReservation', 'eventReservation.ticketType.event']);
 
@@ -25,6 +26,12 @@ class TouristReviewController extends Controller
             'comment' => $request->validated('comment'),
             'review_date' => today(),
         ]);
+
+        $notifications->createForAdministrators(
+            'review_submitted',
+            'New review submitted',
+            'A tourist submitted a review for booking #'.$booking->booking_id.'.'
+        );
 
         return back()->with('success', 'Thank you. Your review was submitted.');
     }

@@ -63,6 +63,17 @@ class ReviewVerticalTest extends TestCase
         $this->assertDatabaseCount('reviews', 0);
     }
 
+    public function test_submitted_review_alerts_active_administrators(): void
+    {
+        $administrator = User::factory()->create(['role' => 'administrator', 'is_active' => true]);
+        $context = $this->booking('completed');
+
+        $this->actingAs($context['user'])->post(route('tourist.reservations.reviews.store', $context['booking']), ['rating' => 5, 'comment' => 'Excellent guide and a memorable experience.'])->assertRedirect();
+
+        $this->assertDatabaseHas('reviews', ['booking_id' => $context['booking']->booking_id, 'rating' => 5]);
+        $this->assertDatabaseHas('notifications', ['user_id' => $administrator->user_id, 'type' => 'review_submitted']);
+    }
+
     private function booking(string $status, string $start = '2026-09-01', string $end = '2026-09-03'): array
     {
         $user = User::factory()->create(['role' => 'tourist']);
