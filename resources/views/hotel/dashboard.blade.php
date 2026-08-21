@@ -11,16 +11,16 @@
         </ol>
     </nav>
 
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div class="ws-page-header mb-4">
         <div>
-            <p class="text-muted small mb-1 text-uppercase">Hotel Portal</p>
-            <h1 class="h2 mb-1">{{ $provider->business_name }}</h1>
+            <span class="ws-eyebrow"><span class="ws-eye-dot" aria-hidden="true"></span>Hotel Portal</span>
+            <h1 class="ws-title">{{ $provider->business_name }}</h1>
             <div class="d-flex flex-wrap align-items-center gap-2">
                 <span class="badge text-bg-primary text-capitalize">{{ str_replace('_', ' ', $provider->provider_type) }}</span>
                 <span class="badge text-bg-{{ $provider->status === 'approved' ? 'success' : 'secondary' }}">{{ ucfirst($provider->status) }}</span>
             </div>
         </div>
-        <a class="btn btn-outline-primary" href="{{ route('hotel.profile') }}">View profile</a>
+        <div class="ws-actions"><a class="btn btn-outline-primary" href="{{ route('hotel.profile') }}">View profile</a></div>
     </div>
 
     <section aria-labelledby="attention-heading" class="mb-4"><h2 id="attention-heading" class="h5 mb-3">Needs attention</h2>@if ($stats['pendingAttention'] > 0)<div class="alert alert-warning d-flex flex-wrap justify-content-between align-items-center gap-3"><div><strong>{{ $stats['pendingAttention'] }} reservation request(s) waiting</strong><div class="small">Review availability and decide whether to accept or reject each request.</div></div><a class="btn btn-warning" href="{{ route('hotel.reservations.index', ['status' => 'pending']) }}">Review reservations</a></div>@else<div class="alert alert-success"><strong>No reservation requests are waiting.</strong> New guest requests will appear in Reservations.</div>@endif</section>
@@ -29,32 +29,32 @@
         <div class="col-6 col-xl-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <p class="text-muted small mb-1">Room-type services</p>
-                    <p class="display-6 fw-bold mb-0">{{ $stats['roomTypeCount'] }}</p>
+                    <div class="ws-stat-label">Room-type services</div>
+                    <div class="ws-stat-value">{{ $stats['roomTypeCount'] }}</div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-xl-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <p class="text-muted small mb-1">Physical rooms</p>
-                    <p class="display-6 fw-bold mb-0">{{ $stats['totalRooms'] }}</p>
+                    <div class="ws-stat-label">Physical rooms</div>
+                    <div class="ws-stat-value">{{ $stats['totalRooms'] }}</div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-xl-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <p class="text-muted small mb-1">Active rooms</p>
-                    <p class="display-6 fw-bold text-success mb-0">{{ $stats['activeRooms'] }}</p>
+                    <div class="ws-stat-label">Active rooms</div>
+                    <div class="ws-stat-value text-success">{{ $stats['activeRooms'] }}</div>
                 </div>
             </div>
         </div>
         <div class="col-6 col-xl-3">
             <div class="card border-0 shadow-sm h-100">
                 <div class="card-body">
-                    <p class="text-muted small mb-1">Inactive rooms</p>
-                    <p class="display-6 fw-bold text-muted mb-0">{{ $stats['inactiveRooms'] }}</p>
+                    <div class="ws-stat-label">Inactive rooms</div>
+                    <div class="ws-stat-value text-muted">{{ $stats['inactiveRooms'] }}</div>
                 </div>
             </div>
         </div>

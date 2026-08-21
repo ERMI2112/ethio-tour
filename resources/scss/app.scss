@@ -163,3 +163,273 @@ $workspace-radius: 1rem;
         transition: none;
     }
 }
+
+/* =========================================================================
+   Workspace design system
+   -------------------------------------------------------------------------
+   Scoped to authenticated workspaces only. layouts/app.blade.php adds the
+   `workspace-body` class to <body> whenever an authenticated role is using
+   a real workspace route, so every admin / bureau / provider / guide page
+   inherits this treatment without affecting the public discovery site.
+
+   Layered over the existing Bootstrap markup (cards, tables, list-groups,
+   badges, alerts, buttons) so the whole workspace family shares one look.
+   ========================================================================= */
+
+body.workspace-body {
+    --ethio-ws-radius: 1rem;
+    --ethio-ws-radius-sm: .75rem;
+    --ethio-ws-edge: rgba(15, 81, 50, .12);
+    --ethio-ws-edge-strong: rgba(15, 81, 50, .26);
+    --ethio-ws-shadow: 0 8px 22px rgba(15, 81, 50, .08);
+    --ethio-ws-shadow-hover: 0 16px 36px rgba(15, 81, 50, .14);
+}
+
+[data-bs-theme='dark'] body.workspace-body {
+    --ethio-ws-edge: rgba(151, 197, 176, .14);
+    --ethio-ws-edge-strong: rgba(151, 197, 176, .34);
+    --ethio-ws-shadow: 0 10px 26px rgba(0, 0, 0, .28);
+    --ethio-ws-shadow-hover: 0 18px 40px rgba(0, 0, 0, .38);
+}
+
+/* -- Cards --------------------------------------------------------------- */
+body.workspace-body .card {
+    border-radius: var(--ethio-ws-radius);
+    border: 1px solid var(--ethio-ws-edge);
+    box-shadow: var(--ethio-ws-shadow);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    body.workspace-body a.card,
+    body.workspace-body .card.h-100 {
+        transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    }
+
+    body.workspace-body a.card:hover,
+    body.workspace-body .card.h-100:hover {
+        border-color: var(--ethio-ws-edge-strong);
+        box-shadow: var(--ethio-ws-shadow-hover);
+        transform: translateY(-3px);
+    }
+}
+
+body.workspace-body .card-header {
+    border-color: var(--ethio-ws-edge);
+}
+
+body.workspace-body .card-footer {
+    border-color: var(--ethio-ws-edge);
+}
+
+/* -- Page header ------------------------------------------------ */
+.ws-page-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.25rem 1.5rem;
+}
+
+.ws-page-header .ws-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: .45rem;
+    color: var(--bs-secondary-color);
+    font-size: .8125rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.ws-page-header .ws-eye-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 999px;
+    background: #0f5132;
+    flex: 0 0 auto;
+}
+
+.ws-page-header h1.ws-title {
+    font-size: 1.625rem;
+    font-weight: 700;
+    letter-spacing: -.012em;
+    line-height: 1.15;
+}
+
+.ws-page-header .ws-lead {
+    color: var(--bs-secondary-color);
+    font-size: .95rem;
+    max-width: 62ch;
+}
+
+.ws-page-header .ws-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+}
+
+/* -- Stat cards ---------------------------------------------------- */
+.ws-stat .ws-stat-value {
+    font-size: 2rem;
+    font-weight: 750;
+    letter-spacing: -.02em;
+    line-height: 1;
+    color: var(--bs-body-color);
+}
+
+.ws-stat .ws-stat-label {
+    color: var(--bs-secondary-color);
+    font-size: .8125rem;
+    font-weight: 600;
+    letter-spacing: .02em;
+    text-transform: uppercase;
+}
+
+.ws-stat .ws-stat-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    flex: 0 0 auto;
+    border-radius: .875rem;
+    background: rgba(15, 81, 50, .1);
+    color: #0f5132;
+}
+
+[data-bs-theme='dark'] .ws-stat .ws-stat-icon {
+    background: rgba(15, 81, 50, .22);
+    color: #a7cfb2;
+}
+
+/* -- Section headings ------------------------------------------------ */
+.ws-section-title {
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    font-size: 1rem;
+    font-weight: 650;
+    letter-spacing: -.005em;
+    color: var(--bs-body-color);
+}
+
+.ws-section-title::before {
+    content: '';
+    width: 3px;
+    height: 1.15em;
+    border-radius: 2px;
+    background: #0f5132;
+    flex: 0 0 auto;
+}
+
+.ws-section-subtitle {
+    color: var(--bs-secondary-color);
+    font-size: .875rem;
+}
+
+/* -- Tables ------------------------------------------------------------ */
+body.workspace-body .table thead th {
+    font-size: .8125rem;
+    font-weight: 650;
+    letter-spacing: .015em;
+    color: var(--bs-secondary-color);
+    vertical-align: top;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    body.workspace-body .table tbody tr {
+        transition: background-color .16s ease;
+    }
+}
+
+body.workspace-body .table tbody tr:hover {
+    --bs-table-accent-bg: rgba(15, 81, 50, .045);
+}
+
+[data-bs-theme='dark'] body.workspace-body .table tbody tr:hover {
+    --bs-table-accent-bg: rgba(15, 81, 50, .14);
+}
+
+/* -- List-group management ------------------------------------------ */
+body.workspace-body .list-group-item-action {
+    border-color: var(--ethio-ws-edge);
+    transition: background-color .18s ease, color .18s ease, border-color .18s ease;
+}
+
+body.workspace-body .list-group-item-action:hover,
+body.workspace-body .list-group-item-action:focus-visible {
+    background-color: rgba(15, 81, 50, .045);
+    border-color: var(--ethio-ws-edge-strong);
+}
+
+[data-bs-theme='dark'] body.workspace-body .list-group-item-action:hover,
+[data-bs-theme='dark'] body.workspace-body .list-group-item-action:focus-visible {
+    background-color: rgba(15, 81, 50, .14);
+    border-color: rgba(151, 197, 176, .34);
+}
+
+/* -- Badges ----------------------------------------------------------- */
+body.workspace-body .badge {
+    font-weight: 600;
+    letter-spacing: .02em;
+}
+
+/* -- Empty states ------------------------------------------------------ */
+.ws-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: 2rem 1rem;
+    text-align: center;
+    color: var(--bs-secondary-color);
+}
+
+.ws-empty .ws-empty-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 1rem;
+    background: var(--bs-secondary-bg);
+    color: var(--bs-secondary-color);
+}
+
+.ws-empty strong {
+    font-weight: 650;
+    color: var(--bs-body-color);
+}
+
+/* -- Sidebar active accent -------------------------------------------- */
+.workspace-sidebar .nav-link.active {
+    background-color: rgba(15, 81, 50, .14);
+    color: #0f5132;
+    font-weight: 600;
+}
+
+[data-bs-theme='dark'] .workspace-sidebar .nav-link.active {
+    background-color: rgba(15, 81, 50, .24);
+    color: #bfe0cc;
+}
+
+/* -- Header soft shadow ------------------------------------------------ */
+@media (prefers-reduced-motion: no-preference) {
+    .workspace-header {
+        transition: box-shadow .2s ease, border-color .2s ease;
+        box-shadow: 0 1px 12px rgba(15, 81, 50, .06);
+    }
+}
+
+/* -- Reduced-motion: strip all decorative transforms --------------------- */
+@media (prefers-reduced-motion: reduce) {
+    body.workspace-body a.card,
+    body.workspace-body .card.h-100,
+    body.workspace-body .list-group-item-action,
+    body.workspace-body .table tbody tr,
+    .workspace-header {
+        transition: none;
+    }
+}

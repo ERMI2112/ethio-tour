@@ -4,19 +4,17 @@
 
 @section('content')
 <div class="container-fluid py-4 py-lg-5">
-    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
+    <div class="ws-page-header mb-4">
         <div>
-            <p class="text-uppercase text-muted small fw-semibold mb-1">Platform operations</p>
-            <h1 class="h2 mb-1">Administrator Dashboard</h1>
-            <p class="text-muted mb-0">Review the work that needs attention, then monitor the platform from one console.</p>
+            <span class="ws-eyebrow"><span class="ws-eye-dot" aria-hidden="true"></span>Platform operations</span>
+            <h1 class="ws-title">Administrator Dashboard</h1>
+            <p class="ws-lead">Review the work that needs attention, then monitor the platform from one console.</p>
         </div>
-        <span class="badge text-bg-success px-3 py-2">Operational</span>
+        <div class="ws-actions"><span class="badge text-bg-success px-3 py-2">Operational</span></div>
     </div>
 
     <section aria-labelledby="attention-heading" class="mb-4">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <div><h2 id="attention-heading" class="h5 mb-1">Attention</h2><p class="text-muted small mb-0">Actionable administrator work from the current governance workflows.</p></div>
-        </div>
+        <h2 id="attention-heading" class="ws-section-title mb-1">Attention</h2><p class="ws-section-subtitle mb-3">Actionable administrator work from the current governance workflows.</p>
         @if ($pendingProviderActions > 0)
             <div class="card border-warning shadow-sm mb-3"><div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3">
                 <div><span class="badge text-bg-warning text-dark mb-2">Action required</span><h3 class="h5 mb-1">{{ $pendingProviderActions }} provider{{ $pendingProviderActions === 1 ? '' : 's' }} waiting for activation</h3><p class="text-muted mb-0">These providers are Bureau-verified and ready for Administrator review. Approving one makes it operational.</p></div>
@@ -38,7 +36,7 @@
     </section>
 
     <section aria-labelledby="overview-heading" class="mb-4">
-        <h2 id="overview-heading" class="h5 mb-3">Platform overview</h2>
+        <h2 id="overview-heading" class="ws-section-title mb-3">Platform overview</h2>
         <div class="row g-3">
             @foreach ([
                 ['Total users', $totalUsers, 'admin.users.index', 'text-primary'],
@@ -48,7 +46,7 @@
                 ['Active bookings', $bookings, 'admin.reports.index', 'text-primary'],
                 ['Reviews', $reviewCount, 'admin.reviews.index', 'text-warning'],
             ] as [$label, $value, $route, $color])
-                <div class="col-6 col-md-4 col-xl-2"><a class="card border-0 shadow-sm h-100 text-decoration-none" href="{{ route($route) }}"><div class="card-body"><div class="small text-muted">{{ $label }}</div><div class="display-6 fw-semibold {{ $color }}">{{ $value }}</div></div></a></div>
+                <div class="col-6 col-md-4 col-xl-2"><a class="card border-0 shadow-sm h-100 text-decoration-none" href="{{ route($route) }}"><div class="card-body"><div class="ws-stat-label">{{ $label }}</div><div class="ws-stat-value {{ $color }}">{{ $value }}</div></div></a></div>
             @endforeach
         </div>
     </section>

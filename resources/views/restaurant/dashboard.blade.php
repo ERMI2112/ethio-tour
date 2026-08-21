@@ -4,14 +4,14 @@
 
 @section('content')
 <div class="container py-4 py-lg-5">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
-        <div><p class="text-muted small text-uppercase mb-1">Restaurant Portal</p><h1 class="h2 mb-1">Welcome, {{ $provider->business_name }}</h1><p class="text-muted mb-0">Manage your menu offerings, tables, and reservation requests.</p></div>
-        <a class="btn btn-primary" href="{{ route('restaurant.profile') }}">View profile</a>
+    <div class="ws-page-header mb-4">
+        <div><span class="ws-eyebrow"><span class="ws-eye-dot" aria-hidden="true"></span>Restaurant Portal</span><h1 class="ws-title">Welcome, {{ $provider->business_name }}</h1><p class="ws-lead">Manage your menu offerings, tables, and reservation requests.</p></div>
+        <div class="ws-actions"><a class="btn btn-primary" href="{{ route('restaurant.profile') }}">View profile</a></div>
     </div>
-    <section aria-labelledby="attention-heading" class="mb-4"><h2 id="attention-heading" class="h5 mb-3">Needs attention</h2>@if($stats['pendingReservations'] > 0)<div class="alert alert-warning d-flex flex-wrap justify-content-between align-items-center gap-3"><div><strong>{{ $stats['pendingReservations'] }} reservation request(s) waiting</strong><div class="small">Review time and table availability before accepting.</div></div><a class="btn btn-warning" href="{{ route('restaurant.reservations.index', ['status'=>'pending']) }}">Review reservations</a></div>@else<div class="alert alert-success"><strong>No reservation requests are waiting.</strong> New requests will appear in Reservations.</div>@endif</section>
+    <section aria-labelledby="attention-heading" class="mb-4"><h2 id="attention-heading" class="ws-section-title mb-3">Needs attention</h2>@if($stats['pendingReservations'] > 0)<div class="alert alert-warning d-flex flex-wrap justify-content-between align-items-center gap-3"><div><strong>{{ $stats['pendingReservations'] }} reservation request(s) waiting</strong><div class="small">Review time and table availability before accepting.</div></div><a class="btn btn-warning" href="{{ route('restaurant.reservations.index', ['status'=>'pending']) }}">Review reservations</a></div>@else<div class="alert alert-success"><strong>No reservation requests are waiting.</strong> New requests will appear in Reservations.</div>@endif</section>
     <div class="row g-3 mb-4">
         @foreach ([['Services', $stats['serviceCount'], 'restaurant.services.index'], ['Tables', $stats['tableCount'], 'restaurant.tables.index'], ['Active tables', $stats['activeTables'], 'restaurant.tables.index'], ['Pending reservations', $stats['pendingReservations'], 'restaurant.reservations.index']] as [$label, $value, $route])
-            <div class="col-sm-6 col-xl-3"><a class="card border-0 shadow-sm h-100 text-decoration-none" href="{{ route($route) }}"><div class="card-body"><div class="small text-muted">{{ $label }}</div><div class="display-6 fw-semibold text-primary">{{ $value }}</div></div></a></div>
+            <div class="col-sm-6 col-xl-3"><a class="card border-0 shadow-sm h-100 text-decoration-none" href="{{ route($route) }}"><div class="card-body"><div class="ws-stat-label">{{ $label }}</div><div class="ws-stat-value text-primary">{{ $value }}</div></div></a></div>
         @endforeach
     </div>
     <div class="card border-0 shadow-sm mb-4"><div class="card-body d-flex flex-wrap justify-content-between align-items-center gap-3"><div><h2 class="h6 mb-1">Guest feedback</h2><p class="text-muted small mb-0">Reviews received across your restaurant services.</p></div><x-reviews.rating-summary :average="$stats['reviewAverage']" :count="$stats['reviewCount']" /></div></div>
