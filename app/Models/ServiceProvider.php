@@ -17,17 +17,23 @@ class ServiceProvider extends Model
         'verification_notes',
         'manager_name',
         'manager_title',
+        'secondary_contact_name',
+        'secondary_contact_title',
         'manager_phone',
         'contact_email',
         'tin_number',
         'trade_license_number',
+        'permit_number',
         'star_rating',
         'destination_id',
         'physical_address',
         'total_rooms_count',
+        'capacity_count',
         'check_in_time',
         'check_out_time',
+        'operating_hours',
         'amenities',
+        'specialties',
         'payout_bank_name',
         'payout_account_number',
         'payout_account_name',
@@ -46,7 +52,9 @@ class ServiceProvider extends Model
     {
         return [
             'amenities' => 'array',
+            'specialties' => 'array',
             'total_rooms_count' => 'integer',
+            'capacity_count' => 'integer',
             'application_step' => 'integer',
         ];
     }

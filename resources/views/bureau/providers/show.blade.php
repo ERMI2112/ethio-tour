@@ -1,5 +1,43 @@
 @extends('layouts.app')
 
+@php
+    $type = $provider->provider_type;
+    $typeLabels = match($type) {
+        'restaurant' => [
+            'badge' => '🍽️ Restaurant & Culinary Inspection',
+            'contact1' => 'Manager / Owner',
+            'contact2' => 'Executive Head Chef',
+            'capacity' => 'Seating Capacity (Messobs & Tables)',
+            'permit' => 'Health & Food Safety Permit',
+            'amenities' => 'Cuisine & Dining Features',
+        ],
+        'transportation_car_rental' => [
+            'badge' => '🚐 Transportation & Fleet Inspection',
+            'contact1' => 'Fleet Operations Director',
+            'contact2' => 'Senior Route Dispatcher',
+            'capacity' => 'Active Fleet Size (Vehicles)',
+            'permit' => 'RTA Commercial Permit',
+            'amenities' => 'Safety & Fleet Standards',
+        ],
+        'event_organizer' => [
+            'badge' => '🎭 Cultural Event Secretariat Inspection',
+            'contact1' => 'Secretariat Coordinator',
+            'contact2' => 'Clergy / Cultural Liaison',
+            'capacity' => 'Pilgrim & Audience Capacity',
+            'permit' => 'Bureau Assembly Permit',
+            'amenities' => 'Liturgical & Safety Protocols',
+        ],
+        default => [
+            'badge' => '🏨 Hotel & Lodging Inspection',
+            'contact1' => 'General Manager',
+            'contact2' => 'Front Desk Manager',
+            'capacity' => 'Total Physical Rooms',
+            'permit' => 'Star Rating Accreditation',
+            'amenities' => 'Verified Property Amenities',
+        ]
+    };
+@endphp
+
 @section('title', 'Review Provider Application · ' . $provider->business_name)
 
 @section('content')
@@ -17,7 +55,7 @@
         <div>
             <div class="d-flex align-items-center gap-2 mb-1">
                 <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-2.5 py-0.5" style="font-size: 0.72rem; font-weight: 700;">
-                    🛡️ Regulatory Inspection
+                    {{ $typeLabels['badge'] }}
                 </span>
                 <span class="badge bg-light text-dark border rounded-pill px-2.5 py-0.5 font-monospace" style="font-size: 0.72rem;">
                     ID #PRV-{{ str_pad($provider->provider_id, 4, '0', STR_PAD_LEFT) }}
@@ -41,21 +79,26 @@
     @include('layouts.partials.flash-messages')
 
     <div class="row g-4">
-        {{-- Left Column (7 cols): Submitted Hotel & Provider Dossier --}}
+        {{-- Left Column (7 cols): Submitted Multi-Vertical Provider Dossier --}}
         <div class="col-lg-7">
-            {{-- Property & Management Dossier --}}
             <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
                 <div class="card-header bg-white p-3.5 border-bottom">
                     <h2 class="h6 fw-bold mb-0 text-dark" style="font-family: var(--font-display);">
-                        <i class="bi bi-building-check text-success me-1.5"></i> Submitted Property &amp; Management Dossier
+                        <i class="bi bi-building-check text-success me-1.5"></i> Submitted Organization &amp; Management Dossier
                     </h2>
                 </div>
                 <div class="card-body p-4">
                     <div class="row g-3">
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block" style="font-size: 0.72rem;">General Manager</span>
+                            <span class="text-muted small d-block" style="font-size: 0.72rem;">{{ $typeLabels['contact1'] }}</span>
                             <strong class="text-dark">{{ $provider->manager_name ?: 'Ato Abnet Kebede (Demo)' }}</strong>
-                            <span class="text-muted small d-block">{{ $provider->manager_title ?: 'General Manager' }}</span>
+                            <span class="text-muted small d-block">{{ $provider->manager_title ?: 'Executive Lead' }}</span>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block" style="font-size: 0.72rem;">{{ $typeLabels['contact2'] }}</span>
+                            <strong class="text-dark">{{ $provider->secondary_contact_name ?: ($provider->contact_email ?: $provider->user?->email) }}</strong>
+                            <span class="text-muted small d-block">{{ $provider->secondary_contact_title ?: 'Operations Lead' }}</span>
                         </div>
 
                         <div class="col-sm-6">
@@ -70,8 +113,13 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block" style="font-size: 0.72rem;">Tourism Trade License</span>
+                            <span class="text-muted small d-block" style="font-size: 0.72rem;">Commercial Trade License</span>
                             <strong class="text-dark font-monospace">{{ $provider->trade_license_number ?: 'TRD-GDR-2024-8891' }}</strong>
+                        </div>
+
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block" style="font-size: 0.72rem;">{{ $typeLabels['permit'] }}</span>
+                            <strong class="text-dark font-monospace">{{ $provider->permit_number ?: 'Verified Permit on File' }}</strong>
                         </div>
 
                         <div class="col-sm-6">
@@ -81,9 +129,9 @@
                         </div>
 
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block" style="font-size: 0.72rem;">Room Capacity &amp; Hours</span>
-                            <strong class="text-dark">{{ $provider->total_rooms_count ?: 32 }} Rooms</strong>
-                            <span class="text-muted small d-block">In: {{ $provider->check_in_time ?: '14:00' }} &bull; Out: {{ $provider->check_out_time ?: '11:00' }}</span>
+                            <span class="text-muted small d-block" style="font-size: 0.72rem;">{{ $typeLabels['capacity'] }} &amp; Hours</span>
+                            <strong class="text-dark">{{ $provider->capacity_count ?: ($provider->total_rooms_count ?: 30) }} Capacity</strong>
+                            <span class="text-muted small d-block">{{ $provider->operating_hours ?: ($provider->check_in_time ? 'In: '.$provider->check_in_time.' · Out: '.$provider->check_out_time : 'Standard hours') }}</span>
                         </div>
 
                         <div class="col-12">
@@ -93,9 +141,9 @@
                         </div>
 
                         <div class="col-12">
-                            <span class="text-muted small d-block mb-1" style="font-size: 0.72rem;">Verified Property Amenities</span>
+                            <span class="text-muted small d-block mb-1" style="font-size: 0.72rem;">{{ $typeLabels['amenities'] }}</span>
                             <div class="d-flex flex-wrap gap-1.5">
-                                @forelse((array) ($provider->amenities ?: ['wifi', 'generator', 'breakfast', 'security', 'shuttle']) as $amenityKey)
+                                @forelse((array) ($provider->amenities ?: ['wifi', 'generator', 'security', 'fasting_buffet']) as $amenityKey)
                                     <span class="badge bg-light text-dark border rounded-pill px-2.5 py-1 small">
                                         ● {{ ucfirst(str_replace('_', ' ', $amenityKey)) }}
                                     </span>
@@ -107,7 +155,7 @@
 
                         @if($provider->description)
                             <div class="col-12 mt-3 pt-3 border-top">
-                                <span class="text-muted small d-block mb-1" style="font-size: 0.72rem;">Property Overview</span>
+                                <span class="text-muted small d-block mb-1" style="font-size: 0.72rem;">Operational &amp; Heritage Overview</span>
                                 <p class="small text-dark mb-0" style="line-height: 1.6;">{{ $provider->description }}</p>
                             </div>
                         @endif
@@ -118,7 +166,6 @@
 
         {{-- Right Column (5 cols): Bureau Verification Decision Gate --}}
         <div class="col-lg-5">
-            {{-- Governance Status & Decision Card --}}
             <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
                 <div class="card-header bg-white p-3.5 border-bottom">
                     <h2 class="h6 fw-bold mb-0 text-dark" style="font-family: var(--font-display);">

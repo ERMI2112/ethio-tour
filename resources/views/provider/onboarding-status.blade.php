@@ -1,5 +1,43 @@
 @extends('layouts.app')
 
+@php
+    $type = $provider->provider_type;
+    $typeLabels = match($type) {
+        'restaurant' => [
+            'badge' => '🍽️ Restaurant & Culinary Gateway',
+            'contact1' => 'Manager / Owner',
+            'contact2' => 'Executive Head Chef',
+            'capacity' => 'Seating Capacity',
+            'permit' => 'Health & Food Safety Permit',
+            'amenities' => 'Cuisine & Dining Features',
+        ],
+        'transportation_car_rental' => [
+            'badge' => '🚐 Transportation & Fleet Gateway',
+            'contact1' => 'Fleet Operations Director',
+            'contact2' => 'Senior Dispatcher',
+            'capacity' => 'Active Fleet Size',
+            'permit' => 'RTA Commercial Permit',
+            'amenities' => 'Safety & Fleet Standards',
+        ],
+        'event_organizer' => [
+            'badge' => '🎭 Cultural Event Secretariat Gateway',
+            'contact1' => 'Secretariat Coordinator',
+            'contact2' => 'Clergy / Cultural Liaison',
+            'capacity' => 'Pilgrim & Audience Capacity',
+            'permit' => 'Bureau Assembly Permit',
+            'amenities' => 'Liturgical & Safety Protocols',
+        ],
+        default => [
+            'badge' => '🏨 Hotel & Lodging Gateway',
+            'contact1' => 'General Manager',
+            'contact2' => 'Front Desk Manager',
+            'capacity' => 'Rooms Capacity',
+            'permit' => 'Star Rating Accreditation',
+            'amenities' => 'Verified Hotel Amenities',
+        ]
+    };
+@endphp
+
 @section('title', 'Provider Application Status · ' . $provider->business_name)
 
 @section('content')
@@ -16,7 +54,7 @@
             <div class="d-flex align-items-center gap-2 mb-1">
                 <span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle rounded-pill px-2.5 py-0.5" style="font-size: 0.72rem; font-weight: 700;">
                     <span class="spinner-grow spinner-grow-sm me-1" style="width: 5px; height: 5px;" role="status"></span>
-                    Onboarding Gateway
+                    {{ $typeLabels['badge'] }}
                 </span>
                 <span class="badge bg-light text-dark border rounded-pill px-2.5 py-0.5 font-monospace" style="font-size: 0.72rem;">
                     Application #APP-{{ str_pad($provider->provider_id, 4, '0', STR_PAD_LEFT) }}
@@ -55,13 +93,13 @@
                 </div>
             </div>
 
-            {{-- Step 2: Hotel Profile --}}
+            {{-- Step 2: Details Submitted --}}
             <div class="col-6 col-md-3">
                 <div class="p-3 rounded-3 border {{ $provider->manager_name || $provider->trade_license_number ? 'bg-success-subtle bg-opacity-25' : 'bg-warning-subtle bg-opacity-25' }} h-100">
                     <div class="badge {{ $provider->manager_name || $provider->trade_license_number ? 'bg-success' : 'bg-warning text-dark' }} rounded-circle p-2 mb-2">
                         {{ $provider->manager_name || $provider->trade_license_number ? '✓' : '2' }}
                     </div>
-                    <strong class="small d-block text-dark fw-bold">2. Manager &amp; Property Details</strong>
+                    <strong class="small d-block text-dark fw-bold">2. Organization Dossier</strong>
                     <span class="small text-muted" style="font-size: 0.72rem;">
                         {{ $provider->manager_name ? 'Submitted' : 'Pending Details' }}
                     </span>
@@ -149,9 +187,9 @@
                 <div class="card-header bg-white p-3.5 border-bottom d-flex justify-content-between align-items-center">
                     <div>
                         <h2 class="h6 fw-bold mb-0 text-dark" style="font-family: var(--font-display);">
-                            <i class="bi bi-building-check text-success me-1.5"></i> Submitted Property Dossier
+                            <i class="bi bi-building-check text-success me-1.5"></i> Submitted Organization Dossier
                         </h2>
-                        <span class="text-muted small">Hotel management &amp; compliance data under review</span>
+                        <span class="text-muted small">Management credentials &amp; compliance data under review</span>
                     </div>
                     <a class="small text-success fw-bold text-decoration-none" href="{{ route('provider.profile.edit') }}">Update &rarr;</a>
                 </div>
@@ -159,39 +197,50 @@
                 <div class="card-body p-4">
                     <div class="row g-3">
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block" style="font-size: 0.72rem;">General Manager</span>
-                            <strong class="text-dark small">{{ $provider->manager_name ?: 'Not provided yet' }}</strong>
-                            <span class="text-muted small d-block">{{ $provider->manager_title ?: 'Manager' }}</span>
+                            <span class="text-muted small d-block" style="font-size: 0.72rem;">{{ $typeLabels['contact1'] }}</span>
+                            <strong class="text-dark small">{{ $provider->manager_name ?: 'Pending Submission' }}</strong>
+                            <span class="text-muted small d-block">{{ $provider->manager_title ?: 'Executive' }}</span>
                         </div>
 
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block" style="font-size: 0.72rem;">Contact Mobile / Phone</span>
-                            <strong class="text-dark small font-monospace">{{ $provider->manager_phone ? '+251 '.$provider->manager_phone : ($provider->user?->email ?? '—') }}</strong>
+                            <span class="text-muted small d-block" style="font-size: 0.72rem;">{{ $typeLabels['contact2'] }}</span>
+                            <strong class="text-dark small">{{ $provider->secondary_contact_name ?: ($provider->contact_email ?: $provider->user?->email) }}</strong>
+                            <span class="text-muted small d-block">{{ $provider->secondary_contact_title ?: 'Operational Lead' }}</span>
                         </div>
 
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block" style="font-size: 0.72rem;">TIN &amp; Trade License</span>
+                            <span class="text-muted small d-block" style="font-size: 0.72rem;">TIN &amp; Commercial Permits</span>
                             <strong class="text-dark small font-monospace">
                                 TIN: {{ $provider->tin_number ?: 'Pending' }} &bull; License: {{ $provider->trade_license_number ?: 'Pending' }}
                             </strong>
+                            @if($provider->permit_number)
+                                <span class="text-muted small d-block font-monospace">Permit: {{ $provider->permit_number }}</span>
+                            @endif
                         </div>
 
                         <div class="col-sm-6">
-                            <span class="text-muted small d-block" style="font-size: 0.72rem;">Destination &amp; Capacity</span>
+                            <span class="text-muted small d-block" style="font-size: 0.72rem;">Destination &amp; {{ $typeLabels['capacity'] }}</span>
                             <strong class="text-dark small">
-                                {{ $provider->destination?->name ?? 'Gondar' }} &bull; {{ $provider->total_rooms_count ?: 32 }} Rooms
+                                {{ $provider->destination?->name ?? 'Gondar' }} &bull; {{ $provider->capacity_count ?: ($provider->total_rooms_count ?: 30) }} Capacity
                             </strong>
+                            <span class="text-muted small d-block">{{ $provider->operating_hours ?: 'Standard operating schedules' }}</span>
                         </div>
 
                         <div class="col-12">
-                            <span class="text-muted small d-block mb-1.5" style="font-size: 0.72rem;">Verified Amenities</span>
+                            <span class="text-muted small d-block" style="font-size: 0.72rem;">Escrow Settlement Bank</span>
+                            <strong class="text-dark small">{{ $provider->payout_bank_name ?: 'Commercial Bank of Ethiopia (CBE)' }}</strong>
+                            <span class="text-muted small d-block font-monospace">Acc: {{ $provider->payout_account_number ?: 'Pending settlement account' }} ({{ $provider->payout_account_name ?: $provider->business_name }})</span>
+                        </div>
+
+                        <div class="col-12">
+                            <span class="text-muted small d-block mb-1.5" style="font-size: 0.72rem;">{{ $typeLabels['amenities'] }}</span>
                             <div class="d-flex flex-wrap gap-1.5">
-                                @forelse((array) ($provider->amenities ?: ['wifi', 'breakfast', 'generator', 'security']) as $amenityKey)
+                                @forelse((array) ($provider->amenities ?: ['wifi', 'generator', 'security']) as $amenityKey)
                                     <span class="badge bg-light text-dark border rounded-pill px-2.5 py-1 small">
                                         ● {{ ucfirst(str_replace('_', ' ', $amenityKey)) }}
                                     </span>
                                 @empty
-                                    <span class="text-muted small">Standard amenities pending submission.</span>
+                                    <span class="text-muted small">Standard specifications pending submission.</span>
                                 @endforelse
                             </div>
                         </div>
@@ -245,7 +294,7 @@
                         Gondar Directorate Oversight
                     </h2>
                     <p class="text-white-50 small mb-3">
-                        Official licensing authority for hotels and hospitality providers across the historic circuit.
+                        Official licensing authority for certified tourism providers across the historic circuit.
                     </p>
 
                     <div class="p-3 rounded-3 bg-white bg-opacity-10 border border-white border-opacity-20 mb-3">
