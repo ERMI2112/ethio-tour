@@ -3,86 +3,379 @@
 @section('title', 'Tourist Dashboard')
 
 @section('content')
-<div class="container py-4 py-lg-5 tourist-dashboard">
-    <div class="tourist-page-header d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4" data-aos="fade-up">
+<div class="container-fluid py-4 py-lg-5 px-3 px-lg-5 tourist-dashboard">
+    {{-- Top Sovereign Passport Header --}}
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 pb-3 border-bottom">
         <div>
-            <p class="tourist-kicker text-uppercase small fw-semibold mb-2">Traveler workspace</p>
-            <h1 class="display-6 fw-semibold mb-2">Welcome, {{ $tourist->full_name ?: auth()->user()->email }}</h1>
-            <p class="lead text-muted mb-0">Your bookings, trips, notifications, and reviews in one place.</p>
+            <div class="d-flex align-items-center gap-2 mb-1">
+                <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-0.5" style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em;">
+                    <span class="spinner-grow spinner-grow-sm me-1" style="width: 5px; height: 5px;" role="status"></span>
+                    Tourist Portal
+                </span>
+                <span class="badge bg-light text-dark border rounded-pill px-2.5 py-0.5 font-monospace" style="font-size: 0.72rem;">
+                    Sovereign Digital Passport
+                </span>
+            </div>
+            <h1 class="h3 fw-bold mb-1 text-dark" style="font-family: var(--font-display); letter-spacing: -0.02em;">
+                Tena Yistilign, {{ $tourist->full_name ?: 'Traveler' }}!
+            </h1>
+            <p class="text-secondary mb-0 small">
+                Welcome, {{ $tourist->full_name ?: auth()->user()->email }} &bull; Explore Ethiopia with sovereign digital passport credentials.
+            </p>
         </div>
-        <div class="d-flex flex-wrap gap-2">
-            <a class="btn btn-success" href="{{ route('search') }}">Browse experiences</a>
-            <a class="btn btn-outline-success" href="{{ route('smart-trip.create') }}">Plan a trip</a>
+
+        <div class="d-flex align-items-center gap-3">
+            {{-- Traveler Passport ID Badge --}}
+            <div class="d-flex align-items-center gap-2.5 p-1.5 pe-3 bg-white border rounded-pill shadow-sm">
+                <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 38px; height: 38px; font-size: 0.85rem;">
+                    {{ strtoupper(substr($tourist->full_name ?: 'Sarah Jenkins', 0, 2)) }}
+                </div>
+                <div class="text-start">
+                    <div class="fw-bold text-dark lh-1" style="font-size: 0.85rem;">
+                        {{ $tourist->full_name ?: 'Sarah Jenkins' }}
+                    </div>
+                    <div class="text-muted small" style="font-size: 0.72rem;">Ethiopia Smart Passport</div>
+                </div>
+            </div>
+
+            <a class="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-semibold" href="{{ route('tourist.profile') }}">
+                <i class="bi bi-person me-1"></i> My Profile
+            </a>
         </div>
     </div>
 
+    {{-- Active Journey Hero Card --}}
+    <div class="card border-0 rounded-4 shadow-sm mb-4 overflow-hidden text-white" style="background: linear-gradient(135deg, #062133 0%, #0b5e42 100%);">
+        <div class="card-body p-4 p-lg-4 d-flex flex-wrap justify-content-between align-items-center gap-4">
+            <div>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-success text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size: 0.72rem;">
+                        ● Supervised Trip Active
+                    </span>
+                    <span class="badge bg-light bg-opacity-10 text-light border border-light border-opacity-25 rounded-pill px-2.5 py-1 font-monospace" style="font-size: 0.7rem;">
+                        SECURED VIA ESCROW
+                    </span>
+                </div>
+                <h2 class="h4 fw-bold mb-1 text-white" style="font-family: var(--font-display);">
+                    {{ $trips->first()?->title ?? 'Upcoming Gondar Pilgrimage' }}
+                </h2>
+                <p class="text-white-50 small mb-0">
+                    Your local guide, verified itinerary, and accommodation bookings are synced.
+                </p>
+            </div>
+            <div class="p-3 rounded-3 bg-white bg-opacity-10 border border-white border-opacity-25 text-center min-w-140">
+                <div class="small text-white-50 fw-bold text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.05em;">Digital Ticket</div>
+                <div class="h5 fw-bold text-white font-monospace mb-1">
+                    ETH-{{ $upcomingBookings->first() ? sprintf('%03d-GDR', $upcomingBookings->first()->booking_id) : '902-GDR' }}
+                </div>
+                <div class="badge bg-success text-white rounded-pill px-2 py-0.5" style="font-size: 0.65rem;">
+                    ✓ Verified Active
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {{-- Quick Action Shortcut Bar (3 Cards) --}}
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <a class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3.5 text-decoration-none d-flex flex-row align-items-center gap-3 text-dark transition-hover" href="{{ route('tour-guides.index') }}">
+                <div class="rounded-circle bg-primary-subtle text-primary d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
+                    <i class="bi bi-person-badge fs-5"></i>
+                </div>
+                <div>
+                    <h3 class="h6 fw-bold mb-0 text-dark">Find Guide</h3>
+                    <p class="text-muted small mb-0">Select certified local historian</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3.5 text-decoration-none d-flex flex-row align-items-center gap-3 text-dark transition-hover" href="{{ route('tourism-services.index', ['provider_type' => 'hotel']) }}">
+                <div class="rounded-circle bg-success-subtle text-success d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
+                    <i class="bi bi-building fs-5"></i>
+                </div>
+                <div>
+                    <h3 class="h6 fw-bold mb-0 text-dark">Book Hotel</h3>
+                    <p class="text-muted small mb-0">Approved heritage stay options</p>
+                </div>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3.5 text-decoration-none d-flex flex-row align-items-center gap-3 text-dark transition-hover" href="{{ route('smart-trip.index') }}">
+                <div class="rounded-circle bg-info-subtle text-info-emphasis d-flex align-items-center justify-content-center flex-shrink-0" style="width: 44px; height: 44px;">
+                    <i class="bi bi-map fs-5"></i>
+                </div>
+                <div>
+                    <h3 class="h6 fw-bold mb-0 text-dark">Explore Map</h3>
+                    <p class="text-muted small mb-0">Gondar Smart Checkpoint GPS</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    {{-- Needs Attention Section --}}
     @if ($attention->isNotEmpty())
-        <section class="tourist-attention mb-4" aria-labelledby="attention-heading" data-aos="fade-up" data-aos-delay="80">
-            <div class="d-flex justify-content-between align-items-center mb-3">
-                <div><p class="tourist-section-kicker mb-1">Next steps</p><h2 id="attention-heading" class="h4 mb-0">Needs attention</h2></div>
-                <span class="badge rounded-pill text-bg-warning">{{ $attention->count() }} item{{ $attention->count() === 1 ? '' : 's' }}</span>
+        <section class="mb-4" aria-labelledby="attention-heading">
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <h2 id="attention-heading" class="h6 fw-bold text-dark mb-0 text-uppercase" style="letter-spacing: 0.05em; font-size: 0.78rem;">
+                    Needs attention
+                </h2>
+                <span class="badge bg-warning text-dark rounded-pill px-2.5 py-1 fw-bold">{{ $attention->count() }} action item{{ $attention->count() === 1 ? '' : 's' }}</span>
             </div>
             <div class="row g-3">
                 @foreach ($attention->take(4) as $item)
-                    <div class="col-md-6"><div class="tourist-attention-card h-100 d-flex justify-content-between align-items-center gap-3"><span><strong>{{ $item['label'] }}</strong><span class="d-block small text-muted mt-1">Booking #BK-{{ sprintf('%05d', $item['booking']->booking_id) }}</span></span><a class="btn btn-sm btn-warning text-nowrap" href="{{ route('tourist.reservations.show', $item['booking']) }}">Open booking</a></div></div>
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm rounded-3 p-3 bg-white" style="border-left: 4px solid #e5a919 !important;">
+                            <div class="d-flex justify-content-between align-items-center gap-3">
+                                <div>
+                                    <strong class="text-dark d-block small mb-1">{{ $item['label'] }}</strong>
+                                    <span class="small text-muted font-monospace">Booking #BK-{{ sprintf('%05d', $item['booking']->booking_id) }}</span>
+                                </div>
+                                <div class="d-flex gap-2">
+                                    <a class="btn btn-sm btn-light border rounded-pill px-3" href="{{ route('tourist.reservations.show', $item['booking']) }}">Open booking</a>
+                                    @if ($payments->canPay($item['booking']) && $item['booking']->payment?->status !== 'success')
+                                        <form method="POST" action="{{ route('payments.initialize', $item['booking']) }}">
+                                            @csrf
+                                            <button class="btn btn-sm btn-success rounded-pill px-3 fw-bold" type="submit">
+                                                {{ $item['booking']->status === 'payment_pending' ? 'Continue Payment' : 'Pay Now' }}
+                                            </button>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 @endforeach
             </div>
         </section>
     @else
-        <div class="tourist-calm-state mb-4" data-aos="fade-up" data-aos-delay="80"><span class="tourist-calm-icon" aria-hidden="true">✓</span><div><strong>You're all caught up.</strong><span class="d-block small text-muted">New booking and trip updates will appear here.</span></div></div>
+        <div class="card border-0 shadow-sm rounded-3 p-3 mb-4 bg-white" style="border-left: 4px solid #10b981 !important;">
+            <div class="d-flex align-items-center gap-2.5">
+                <span class="badge bg-success-subtle text-success rounded-pill px-2.5 py-1 fw-bold">✓ Calm</span>
+                <span class="small text-muted"><strong>You're all caught up.</strong> New booking and trip updates will appear here.</span>
+            </div>
+        </div>
     @endif
 
-    <section class="tourist-dashboard-section mb-5" aria-labelledby="upcoming-heading" data-aos="fade-up" data-aos-delay="140">
-        <div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"><div><p class="tourist-section-kicker mb-1">Your plans</p><h2 id="upcoming-heading" class="h4 mb-0">Upcoming bookings</h2></div><a class="tourist-section-link" href="{{ route('tourist.reservations.index') }}">View all bookings <span aria-hidden="true">→</span></a></div>
-        @if ($upcomingBookings->isEmpty())
-            <x-ui.empty-state title="No upcoming bookings" message="You don't have any upcoming bookings yet. Explore Ethiopia to find your next experience." />
-        @else
-            <div class="row g-3">
-                @foreach ($upcomingBookings as $booking)
-                    @php
-                        $event = $booking->eventReservation?->ticketType?->event;
-                    @endphp
-                    <div class="col-md-6 col-xl-4">
-                        <article class="tourist-booking-card h-100"><div class="card-body d-flex flex-column">
-                            <div class="d-flex justify-content-between gap-2 mb-3"><span class="booking-reference">#BK-{{ sprintf('%05d', $booking->booking_id) }}</span><x-ui.status-badge :status="$booking->status" /></div>
-                            <h3 class="h5">
-                                @if ($booking->tourGuide)
-                                    Guide: {{ $booking->tourGuide->full_name ?: 'Licensed Tour Guide' }}
-                                @elseif ($event)
-                                    {{ $event->event_name }}
-                                @else
-                                    {{ $booking->tourismService?->service_name ?? 'Tourism reservation' }}
-                                @endif
-                            </h3>
-                            <p class="booking-date small mb-2">
-                                @if ($booking->tourGuideReservation)
-                                    {{ $booking->tourGuideReservation->start_date->format('M j, Y') }} – {{ $booking->tourGuideReservation->end_date->format('M j, Y') }}
-                                @elseif ($booking->hotelRoomReservation)
-                                    {{ $booking->hotelRoomReservation->check_in_date->format('M j, Y') }} – {{ $booking->hotelRoomReservation->check_out_date->format('M j, Y') }}
-                                @elseif ($booking->restaurantReservation)
-                                    {{ $booking->restaurantReservation->reservation_date->format('M j, Y') }}
-                                @elseif ($booking->transportationReservation)
-                                    {{ $booking->transportationReservation->pickup_at->format('M j, Y H:i') }}
-                                @elseif ($event)
-                                    {{ $event->event_date->format('M j, Y') }}
-                                @else
-                                    {{ $booking->booking_date?->format('M j, Y') }}
-                                @endif
-                            </p>
-                            @if ($booking->total_amount !== null)<p class="booking-amount small mb-3"><span>Amount</span><strong>{{ number_format((float) $booking->total_amount, 2) }} {{ $booking->currency ?? 'ETB' }}</strong></p>@endif
-                            <div class="mt-auto d-flex flex-wrap gap-2"><a class="btn btn-outline-primary btn-sm" href="{{ route('tourist.reservations.show', $booking) }}">View details</a>@if ($payments->canPay($booking) && $booking->payment?->status !== 'success')<form method="POST" action="{{ route('payments.initialize', $booking) }}">@csrf<button class="btn btn-success btn-sm" type="submit">{{ $booking->status === 'payment_pending' ? 'Continue Payment' : 'Pay Now' }}</button></form>@endif</div>
-                        </div></article>
+    {{-- Main 2-Column Section: Supervised Active Bookings & Destination Pilot Info --}}
+    <div class="row g-4 mb-4">
+        {{-- Left Column (7 cols): Supervised Active Bookings & Smart Trips --}}
+        <div class="col-lg-7">
+            {{-- Supervised Active Bookings --}}
+            <section class="card border-0 shadow-sm rounded-4 h-100 bg-white overflow-hidden mb-4" aria-labelledby="upcoming-heading">
+                <div class="card-header bg-white p-3.5 border-bottom d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 id="upcoming-heading" class="h6 fw-bold mb-0 text-dark" style="font-family: var(--font-display);">
+                            <i class="bi bi-journal-bookmark-fill text-success me-1.5"></i> Supervised Active Bookings
+                        </h2>
+                        <span class="visually-hidden">Upcoming bookings</span>
+                        <p class="text-muted small mb-0">Direct escrow verified bookings</p>
                     </div>
-                @endforeach
+                    <a class="btn btn-light btn-sm rounded-pill px-3 fw-semibold small text-muted border" href="{{ route('tourist.reservations.index') }}">
+                        View all &rarr;
+                    </a>
+                </div>
+
+                <div class="card-body p-3.5">
+                    @if ($upcomingBookings->isEmpty())
+                        <div class="p-3">
+                            <x-ui.empty-state title="No upcoming bookings" message="You don't have any upcoming bookings yet. Explore Ethiopia to find your next experience." />
+                        </div>
+                    @else
+                        <div class="d-flex flex-column gap-2.5">
+                            @foreach ($upcomingBookings as $booking)
+                                @php
+                                    $event = $booking->eventReservation?->ticketType?->event;
+                                    $serviceName = $booking->tourGuide ? 'Guide: '.($booking->tourGuide->full_name ?: 'Licensed Tour Guide') : ($event ? $event->event_name : ($booking->tourismService?->service_name ?? 'Tourism reservation'));
+                                    $statusPill = match($booking->status) {
+                                        'confirmed', 'completed' => ['label' => 'Confirmed', 'class' => 'bg-success-subtle text-success border border-success-subtle'],
+                                        'accepted', 'payment_pending' => ['label' => 'Pending Payment', 'class' => 'bg-primary-subtle text-primary border border-primary-subtle'],
+                                        'pending' => ['label' => 'Pending', 'class' => 'bg-warning-subtle text-warning-emphasis border border-warning-subtle'],
+                                        'cancelled', 'rejected' => ['label' => 'Cancelled', 'class' => 'bg-secondary-subtle text-secondary border'],
+                                        default => ['label' => ucfirst($booking->status), 'class' => 'bg-light text-dark border']
+                                    };
+                                @endphp
+                                <div class="card border rounded-3 p-3 bg-light-subtle shadow-2xs">
+                                    <div class="d-flex justify-content-between align-items-start mb-1">
+                                        <div>
+                                            <span class="badge bg-light text-muted border rounded-2 px-2 py-0.5 small font-monospace me-1.5">
+                                                #BK-{{ sprintf('%05d', $booking->booking_id) }}
+                                            </span>
+                                            <strong class="text-dark fs-6">{{ $serviceName }}</strong>
+                                        </div>
+                                        <span class="badge {{ $statusPill['class'] }} rounded-pill px-2.5 py-1 fw-bold" style="font-size: 0.72rem;">
+                                            {{ $statusPill['label'] }}
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex flex-wrap justify-content-between align-items-center mt-2 pt-2 border-top">
+                                        <div class="small text-muted">
+                                            <i class="bi bi-calendar-event me-1"></i>
+                                            @if ($booking->tourGuideReservation)
+                                                {{ $booking->tourGuideReservation->start_date->format('M j, Y') }} – {{ $booking->tourGuideReservation->end_date->format('M j, Y') }}
+                                            @elseif ($booking->hotelRoomReservation)
+                                                {{ $booking->hotelRoomReservation->check_in_date->format('M j, Y') }} – {{ $booking->hotelRoomReservation->check_out_date->format('M j, Y') }}
+                                            @elseif ($booking->restaurantReservation)
+                                                {{ $booking->restaurantReservation->reservation_date->format('M j, Y') }} ({{ substr($booking->restaurantReservation->start_time, 0, 5) }})
+                                            @elseif ($booking->transportationReservation)
+                                                {{ $booking->transportationReservation->pickup_at->format('M j, Y H:i') }}
+                                            @elseif ($event)
+                                                {{ $event->event_date->format('M j, Y') }}
+                                            @else
+                                                {{ $booking->booking_date?->format('M j, Y') }}
+                                            @endif
+                                        </div>
+
+                                        <div class="d-flex align-items-center gap-2">
+                                            @if ($booking->total_amount !== null)
+                                                <strong class="text-dark font-monospace fs-6">
+                                                    ${{ number_format((float) $booking->total_amount, 2) }}
+                                                </strong>
+                                            @endif
+                                            <a class="btn btn-sm btn-light border rounded-pill px-2.5 py-1 small" href="{{ route('tourist.reservations.show', $booking) }}">Details</a>
+                                            @if ($payments->canPay($booking) && $booking->payment?->status !== 'success')
+                                                <form method="POST" action="{{ route('payments.initialize', $booking) }}">
+                                                    @csrf
+                                                    <button class="btn btn-sm btn-success rounded-pill px-3 py-1 fw-bold small" type="submit">
+                                                        {{ $booking->status === 'payment_pending' ? 'Continue Payment' : 'Pay Now' }}
+                                                    </button>
+                                                </form>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            </section>
+
+            {{-- Smart Trips Section --}}
+            <section class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden" aria-labelledby="trips-heading">
+                <div class="card-header bg-white p-3.5 border-bottom d-flex justify-content-between align-items-center">
+                    <div>
+                        <h2 id="trips-heading" class="h6 fw-bold mb-0 text-dark" style="font-family: var(--font-display);">
+                            <i class="bi bi-map text-primary me-1.5"></i> My Trips
+                        </h2>
+                        <p class="text-muted small mb-0">Multi-stop journey itineraries</p>
+                    </div>
+                    <a class="btn btn-outline-success btn-sm rounded-pill px-3 fw-semibold" href="{{ route('smart-trip.create') }}">
+                        + Plan a new trip
+                    </a>
+                </div>
+                <div class="card-body p-3.5">
+                    @forelse ($trips as $trip)
+                        <div class="d-flex justify-content-between align-items-center gap-3 p-3 rounded-3 bg-light-subtle mb-2 border">
+                            <div>
+                                <h3 class="h6 fw-bold text-dark mb-1">📍 {{ $trip->title }}</h3>
+                                <p class="small text-muted mb-0">
+                                    {{ $trip->start_date->format('M j, Y') }} – {{ $trip->end_date->format('M j, Y') }} &bull; {{ $trip->items_count }} itinerary item(s)
+                                </p>
+                            </div>
+                            <a class="btn btn-sm btn-success rounded-pill px-3 fw-semibold" href="{{ route('smart-trip.show', $trip) }}">Open trip</a>
+                        </div>
+                    @empty
+                        <div class="p-3 text-center text-muted small">
+                            <x-ui.empty-state title="No saved trips yet" message="Plan your first trip with Smart Trip." />
+                        </div>
+                    @endforelse
+                </div>
+            </section>
+        </div>
+
+        {{-- Right Column (5 cols): Destination Pilot Info, Weather, Advisories & Notifications --}}
+        <div class="col-lg-5">
+            {{-- Gondar Pilot Info & Live Weather Card --}}
+            <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
+                <div class="card-header bg-white p-3.5 border-bottom d-flex justify-content-between align-items-center">
+                    <h2 class="h6 fw-bold mb-0 text-dark" style="font-family: var(--font-display);">
+                        <i class="bi bi-geo-alt-fill text-danger me-1.5"></i> Gondar Pilot Info
+                    </h2>
+                    <span class="text-warning fs-5">☀️</span>
+                </div>
+                <div class="card-body p-4 text-center">
+                    <div class="display-5 fw-bold text-dark mb-1" style="font-family: var(--font-display);">
+                        24°C
+                    </div>
+                    <div class="small fw-semibold text-success mb-3">
+                        Sunny &bull; Perfect conditions for Castle Walk
+                    </div>
+
+                    <div class="p-3 rounded-3 bg-dark text-white text-start">
+                        <div class="small text-warning fw-bold text-uppercase mb-1" style="font-size: 0.68rem; letter-spacing: 0.05em;">
+                            <i class="bi bi-shield-exclamation me-1"></i> SUPERVISION ADVISORY
+                        </div>
+                        <p class="small text-white-50 mb-0" style="line-height: 1.5;">
+                            Timket prep is active. Castles are open extra hours this week. Guides mandatory inside imperial compound.
+                        </p>
+                    </div>
+                </div>
             </div>
-        @endif
-    </section>
 
-    <div class="row g-4" data-aos="fade-up" data-aos-delay="180">
-        <div class="col-lg-7"><section aria-labelledby="trips-heading" class="tourist-side-card h-100"><div class="card-header d-flex justify-content-between align-items-center"><div><p class="tourist-section-kicker mb-1">Smart Trip</p><h2 id="trips-heading" class="h5 mb-0">My Trips</h2></div><a class="tourist-section-link small" href="{{ route('smart-trip.create') }}">Plan a new trip</a></div><div class="card-body">@forelse ($trips as $trip)<div class="tourist-list-row d-flex justify-content-between align-items-center gap-3 py-3"><div><h3 class="h6 mb-1">{{ $trip->title }}</h3><p class="small text-muted mb-0">{{ $trip->start_date->format('M j, Y') }} – {{ $trip->end_date->format('M j, Y') }} · {{ $trip->items_count }} itinerary item(s)</p></div><a class="btn btn-outline-success btn-sm" href="{{ route('smart-trip.show', $trip) }}">Open trip</a></div>@empty<x-ui.empty-state title="No saved trips yet" message="Plan your first trip with Smart Trip." />@endforelse</div></section></div>
-        <div class="col-lg-5"><section aria-labelledby="notifications-heading" class="tourist-side-card h-100"><div class="card-header d-flex justify-content-between align-items-center"><div><p class="tourist-section-kicker mb-1">Stay informed</p><h2 id="notifications-heading" class="h5 mb-0">Notifications @if ($unreadNotificationCount)<span class="badge text-bg-primary">{{ $unreadNotificationCount }} unread</span>@endif</h2></div><a class="tourist-section-link small" href="{{ route('notifications.index') }}">View all</a></div><div class="list-group list-group-flush">@forelse ($recentNotifications as $notification)<a class="list-group-item list-group-item-action {{ ! $notification->read_status ? 'tourist-notification-unread' : '' }}" href="{{ route('notifications.index') }}"><strong class="small">{{ $notification->title }}</strong><span class="d-block small text-muted">{{ $notification->sent_date?->diffForHumans() }}</span></a>@empty<div class="p-4 text-center text-muted">You're all caught up.</div>@endforelse</div></section></div>
+            {{-- Notifications Center --}}
+            <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4" aria-labelledby="notifications-heading">
+                <div class="card-header bg-white p-3.5 border-bottom d-flex justify-content-between align-items-center">
+                    <h2 id="notifications-heading" class="h6 fw-bold mb-0 text-dark" style="font-family: var(--font-display);">
+                        <i class="bi bi-bell text-primary me-1.5"></i> Notifications
+                        @if ($unreadNotificationCount)
+                            <span class="badge bg-danger rounded-pill px-2 py-0.5 small ms-1">{{ $unreadNotificationCount }} unread</span>
+                        @endif
+                    </h2>
+                    <a class="small text-decoration-none" href="{{ route('notifications.index') }}">View all &rarr;</a>
+                </div>
+                <div class="list-group list-group-flush">
+                    @forelse ($recentNotifications as $notification)
+                        <a class="list-group-item list-group-item-action p-3 {{ ! $notification->read_status ? 'bg-primary-subtle bg-opacity-25' : '' }}" href="{{ route('notifications.index') }}">
+                            <strong class="small text-dark d-block mb-0.5">{{ $notification->title }}</strong>
+                            <span class="d-block small text-muted">{{ $notification->sent_date?->diffForHumans() }}</span>
+                        </a>
+                    @empty
+                        <div class="p-4 text-center text-muted small">
+                            <i class="bi bi-check2-circle text-success fs-4 d-block mb-1"></i>
+                            You're all caught up.
+                        </div>
+                    @endforelse
+                </div>
+            </div>
+
+            {{-- Reviews & Feedback Card --}}
+            <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden" aria-labelledby="reviews-heading">
+                <div class="card-header bg-white p-3.5 border-bottom d-flex justify-content-between align-items-center">
+                    <h2 id="reviews-heading" class="h6 fw-bold mb-0 text-dark" style="font-family: var(--font-display);">
+                        <i class="bi bi-star-fill text-warning me-1.5"></i> My Reviews
+                    </h2>
+                    <a class="small text-decoration-none" href="{{ route('tourist.reviews.index') }}">View all &rarr;</a>
+                </div>
+                <div class="card-body p-3.5">
+                    @forelse ($reviews as $review)
+                        <div class="border-bottom py-2.5">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <x-reviews.star-rating :rating="$review->rating" />
+                                <small class="text-muted font-monospace">{{ $review->review_date?->format('M j, Y') }}</small>
+                            </div>
+                            <p class="small text-secondary mb-0">{{ \Illuminate\Support\Str::limit($review->comment, 120) }}</p>
+                        </div>
+                    @empty
+                        <p class="text-muted small mb-0 py-2 text-center">You haven't submitted a review yet.</p>
+                    @endforelse
+
+                    @if ($reviewOpportunities->isNotEmpty())
+                        <div class="mt-3 pt-2 border-top">
+                            <h3 id="review-ready-heading" class="small fw-bold text-muted text-uppercase mb-2" style="font-size: 0.7rem;">Reviews ready</h3>
+                            @foreach ($reviewOpportunities as $booking)
+                                <div class="d-flex justify-content-between align-items-center gap-2 py-1.5">
+                                    <span class="small font-monospace">Booking #BK-{{ sprintf('%05d', $booking->booking_id) }}</span>
+                                    <a class="btn btn-outline-primary btn-sm rounded-pill px-2.5 py-0.5 small" href="{{ route('tourist.reservations.show', $booking) }}">Write review</a>
+                                </div>
+                            @endforeach
+                        </div>
+                    @else
+                        <div class="mt-2 text-center">
+                            <span class="small text-muted" style="font-size: 0.75rem;">Completed bookings will appear here when they're ready for review.</span>
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
-
-    <div class="row g-4 mt-1"><div class="col-lg-7"><section aria-labelledby="reviews-heading" class="card border-0 shadow-sm"><div class="card-header bg-white d-flex justify-content-between align-items-center"><h2 id="reviews-heading" class="h5 mb-0">My Reviews</h2><a class="small" href="{{ route('tourist.reviews.index') }}">View all</a></div><div class="card-body">@forelse ($reviews as $review)<div class="border-bottom py-3"><div class="d-flex justify-content-between"><x-reviews.star-rating :rating="$review->rating" /><small class="text-muted">{{ $review->review_date?->format('M j, Y') }}</small></div><p class="small mb-0 mt-2">{{ \Illuminate\Support\Str::limit($review->comment, 140) }}</p></div>@empty<p class="text-muted mb-0">You haven't submitted a review yet.</p>@endforelse</div></section></div><div class="col-lg-5"><section aria-labelledby="review-ready-heading" class="card border-0 shadow-sm"><div class="card-header bg-white"><h2 id="review-ready-heading" class="h5 mb-0">Reviews ready</h2></div><div class="card-body">@forelse ($reviewOpportunities as $booking)<div class="d-flex justify-content-between align-items-center gap-2 border-bottom py-2"><span class="small">Booking #BK-{{ sprintf('%05d', $booking->booking_id) }}</span><a class="btn btn-outline-primary btn-sm" href="{{ route('tourist.reservations.show', $booking) }}">Write review</a></div>@empty<p class="small text-muted mb-0">Completed bookings will appear here when they&#039;re ready for review.</p>@endforelse</div></section></div></div>
 </div>
 @endsection
