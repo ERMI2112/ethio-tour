@@ -110,6 +110,11 @@
                 @else
                     <a class="nav-link" href="{{ route('provider.status') }}" @class(['active' => request()->routeIs('provider.status')])><i class="bi bi-hourglass-split"></i><span>Application status</span></a>
                     <a class="nav-link" href="{{ route('provider.profile.edit') }}" @class(['active' => request()->routeIs('provider.profile.*')])><i class="bi bi-pencil-square"></i><span>Business profile</span></a>
+                    <a class="nav-link px-2 text-muted d-flex align-items-center gap-2 small mt-2" href="{{ route('account') }}"><i class="bi bi-gear"></i><span>Account settings</span></a>
+                    <div class="mt-3 p-2.5 rounded-3 bg-warning-subtle border border-warning-subtle text-start d-none d-lg-block">
+                        <div class="small fw-bold text-dark d-flex align-items-center gap-1" style="font-size: 0.72rem;"><i class="bi bi-info-circle-fill text-warning"></i> ONBOARDING</div>
+                        <div class="text-muted" style="font-size: 0.68rem; line-height: 1.4;">Complete your Business Profile to proceed with Bureau verification.</div>
+                    </div>
                 @endif
             @elseif ($workspaceRole === 'tourist')
                 <a class="nav-link" href="{{ route('tourist.dashboard') }}" @class(['active' => request()->routeIs('tourist.dashboard')])><i class="bi bi-grid"></i><span>Dashboard</span></a>
