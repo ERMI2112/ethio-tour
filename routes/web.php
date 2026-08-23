@@ -237,6 +237,8 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/profile', [RestaurantProviderController::class, 'show'])->name('profile');
         Route::get('/profile/edit', [RestaurantProviderController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [RestaurantProviderController::class, 'update'])->name('profile.update');
+        Route::get('/reviews', [RestaurantProviderController::class, 'reviews'])->name('reviews.index');
+        Route::get('/revenue', [RestaurantProviderController::class, 'revenue'])->name('revenue.index');
         Route::resource('services', RestaurantServiceController::class)->except(['show'])->parameters(['services' => 'tourismService']);
         Route::resource('tables', RestaurantTableController::class)->except(['show'])->parameters(['tables' => 'restaurantTable']);
         Route::get('/reservations', [RestaurantReservationController::class, 'index'])->name('reservations.index');

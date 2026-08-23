@@ -78,13 +78,18 @@
                     <a class="nav-link d-flex justify-content-between align-items-center" href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])><span class="d-flex align-items-center gap-2"><i class="bi bi-bell"></i><span>Notifications</span></span>@if($hotelUnreadNotifications)<span class="badge bg-danger rounded-pill">{{ $hotelUnreadNotifications }}</span>@endif</a>
                 @elseif ($operational && $providerType === 'restaurant')
                     <a class="nav-link" href="{{ route('restaurant.dashboard') }}" @class(['active' => request()->routeIs('restaurant.dashboard')])><i class="bi bi-grid"></i><span>Dashboard</span></a>
-                    <a class="nav-link" href="{{ route('restaurant.profile') }}" @class(['active' => request()->routeIs('restaurant.profile*')])><i class="bi bi-shop"></i><span>Profile</span></a>
-                    <a class="nav-link" href="{{ route('restaurant.services.index') }}" @class(['active' => request()->routeIs('restaurant.services.*')])><i class="bi bi-egg-fried"></i><span>Menu and services</span></a>
-                    <a class="nav-link" href="{{ route('restaurant.tables.index') }}" @class(['active' => request()->routeIs('restaurant.tables.*')])><i class="bi bi-layout-three-columns"></i><span>Tables</span></a>
+                    <a class="nav-link" href="{{ route('restaurant.services.index') }}" @class(['active' => request()->routeIs('restaurant.services.*')])><i class="bi bi-egg-fried"></i><span>Menu and service offerings</span></a>
                     <a class="nav-link" href="{{ route('restaurant.reservations.index') }}" @class(['active' => request()->routeIs('restaurant.reservations.*')])><i class="bi bi-calendar-check"></i><span>Reservations</span></a>
+                    <a class="nav-link" href="{{ route('restaurant.tables.index') }}" @class(['active' => request()->routeIs('restaurant.tables.*')])><i class="bi bi-layout-three-columns"></i><span>Table inventory</span></a>
+                    <a class="nav-link" href="{{ route('restaurant.reviews.index') }}" @class(['active' => request()->routeIs('restaurant.reviews.*')])><i class="bi bi-star"></i><span>Guest feedback</span></a>
+                    <a class="nav-link" href="{{ route('restaurant.revenue.index') }}" @class(['active' => request()->routeIs('restaurant.revenue.*')])><i class="bi bi-cash-stack"></i><span>Revenue</span></a>
                     <a class="nav-link" href="{{ route('provider.reports') }}" @class(['active' => request()->routeIs('provider.reports')])><i class="bi bi-graph-up"></i><span>Reports</span></a>
                     @php($restaurantUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
                     <a class="nav-link d-flex justify-content-between align-items-center" href="{{ route('notifications.index') }}" @class(['active' => request()->routeIs('notifications.*')])><span class="d-flex align-items-center gap-2"><i class="bi bi-bell"></i><span>Notifications</span></span>@if($restaurantUnreadNotifications)<span class="badge bg-danger rounded-pill">{{ $restaurantUnreadNotifications }}</span>@endif</a>
+                    <div class="mt-3 p-2.5 rounded-3 bg-light border text-start d-none d-lg-block">
+                        <div class="small fw-bold text-dark" style="font-size: 0.72rem; letter-spacing: 0.05em;">GONDAR PILOT</div>
+                        <div class="text-muted" style="font-size: 0.68rem; line-height: 1.3;">Government Supervision Integrated Gateway</div>
+                    </div>
                 @elseif ($operational && $providerType === 'transportation_car_rental')
                     <a class="nav-link" href="{{ route('transportation.dashboard') }}" @class(['active' => request()->routeIs('transportation.dashboard')])><i class="bi bi-grid"></i><span>Dashboard</span></a>
                     <a class="nav-link" href="{{ route('transportation.profile') }}" @class(['active' => request()->routeIs('transportation.profile*')])><i class="bi bi-truck"></i><span>Profile</span></a>
