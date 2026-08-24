@@ -8,7 +8,7 @@
 
 @section('content')
     <main class="landing-page">
-        <section class="landing-hero landing-hero--image landing-v2-hero" style="--landing-hero-image: url('{{ asset('images/destinations/hero-ethiopia.jpg') }}');">
+        <section class="landing-hero landing-hero--image" style="--landing-hero-image: url('{{ asset('images/destinations/hero-ethiopia.jpg') }}');">
             <div class="container py-5 position-relative" style="z-index: 1;">
                 <div class="row align-items-center g-4 g-xl-5 py-lg-4">
                     <div class="col-lg-7">
@@ -16,7 +16,6 @@
                             <span class="badge bg-warning text-dark fw-bold px-3 py-2 text-uppercase">Land of Origins</span>
                             <span class="landing-kicker mb-0">A practical guide to Ethiopia</span>
                         </div>
-                        <p class="landing-v2-overline mb-3">Land of origins · made for curious travellers</p>
                         <h1 class="display-3 fw-bold text-white mb-3 landing-hero-title">Find your next story in Ethiopia.</h1>
                         <p class="lead text-white-50 mb-4 landing-hero-copy">Discover Ethiopia beyond the itinerary: find the places, people, food, stays, transport, and events that make each journey unforgettable.</p>
                         <form action="{{ route('search') }}" method="GET" class="landing-search mb-4" role="search">
@@ -29,7 +28,7 @@
                     <div class="col-lg-5">
                         <aside class="landing-quick-panel shadow-lg" aria-label="Ethio Tour at a glance">
                             <div class="d-flex justify-content-between align-items-start gap-3 mb-4"><div><p class="landing-eyebrow mb-1">Start here</p><h2 class="h3 text-white mb-0">Build a trip that feels like yours.</h2></div><span class="landing-quick-icon" aria-hidden="true">✦</span></div>
-                            <div class="row g-3 mb-4"><div class="col-6"><div class="landing-quick-stat"><strong>{{ $publishedDestinationCount }}</strong><span>destinations</span></div></div><div class="col-6"><div class="landing-quick-stat"><strong>{{ $operationalProviderCount }}</strong><span>verified services</span></div></div><div class="col-6"><div class="landing-quick-stat"><strong>{{ $verifiedGuideCount }}</strong><span>trusted guides</span></div></div><div class="col-6"><div class="landing-quick-stat"><strong>{{ $publishedEventCount }}</strong><span>upcoming events</span></div></div></div>
+                            <div class="row g-3 mb-4"><div class="col-6"><div class="landing-quick-stat"><strong>{{ $publishedDestinationCount }}</strong><span>destinations</span></div></div><div class="col-6"><div class="landing-quick-stat"><strong>{{ $operationalProviderCount }}</strong><span>public operators</span></div></div><div class="col-6"><div class="landing-quick-stat"><strong>{{ $verifiedGuideCount }}</strong><span>verified guides</span></div></div><div class="col-6"><div class="landing-quick-stat"><strong>{{ $publishedEventCount }}</strong><span>upcoming events</span></div></div></div>
                             <div class="border-top border-light border-opacity-25 pt-3"><p class="small text-white-50 mb-2">Popular starting points</p><div class="d-flex flex-wrap gap-2"><a class="landing-quick-link" href="{{ route('destinations.index') }}">Destinations</a><a class="landing-quick-link" href="{{ route('tour-guides.index') }}">Tour guides</a><a class="landing-quick-link" href="{{ route('events.index') }}">Events</a><a class="landing-quick-link" href="{{ route('map') }}">Map</a></div></div>
                         </aside>
                     </div>
@@ -37,7 +36,7 @@
             </div>
         </section>
 
-        <section class="landing-trust landing-v2-trust" aria-label="Current public records"><div class="container"><div class="row g-3 text-center text-md-start"><div class="col-6 col-lg-3"><div class="landing-trust-item"><strong>{{ $publishedDestinationCount }}</strong><span>Published destinations</span></div></div><div class="col-6 col-lg-3"><div class="landing-trust-item"><strong>{{ $operationalProviderCount }}</strong><span>Verified local services</span></div></div><div class="col-6 col-lg-3"><div class="landing-trust-item"><strong>{{ $verifiedGuideCount }}</strong><span>Trusted tour guides</span></div></div><div class="col-6 col-lg-3"><div class="landing-trust-item"><strong>{{ $publishedEventCount }}</strong><span>Upcoming cultural events</span></div></div></div></div></section>
+        <section class="landing-trust" aria-label="Current public records"><div class="container"><div class="row g-3 text-center text-md-start"><div class="col-6 col-lg-3"><div class="landing-trust-item"><strong>{{ $publishedDestinationCount }}</strong><span>Published destinations</span></div></div><div class="col-6 col-lg-3"><div class="landing-trust-item"><strong>{{ $operationalProviderCount }}</strong><span>Verified public operators</span></div></div><div class="col-6 col-lg-3"><div class="landing-trust-item"><strong>{{ $verifiedGuideCount }}</strong><span>Verified tour guides</span></div></div><div class="col-6 col-lg-3"><div class="landing-trust-item"><strong>{{ $publishedEventCount }}</strong><span>Upcoming public events</span></div></div></div></div></section>
 
         <div class="container">
             <section class="landing-section" aria-labelledby="destinations-heading">
@@ -48,7 +47,7 @@
                     <div class="row g-4">
                         @foreach ($destinations->take(3) as $destination)
                             @php $mediaKey = $destination->slug ?: str($destination->name)->slug(); $heroPath = $destination->hero_image ?: ('/images/destinations/' . $mediaKey . '-hero.jpg'); $hasHeroFile = is_string($heroPath) && $heroPath !== '' && file_exists(public_path(ltrim($heroPath, '/'))); @endphp
-                            <div class="col-md-6 col-lg-4"><article class="landing-card landing-destination-card landing-v2-card h-100 overflow-hidden p-0"><div class="landing-card-media position-relative">@if ($hasHeroFile)<img src="{{ asset(ltrim($heroPath, '/')) }}" alt="{{ $destination->name }}" loading="lazy">@else<div class="landing-card-placeholder" aria-hidden="true">{{ str($destination->name)->substr(0, 1)->upper() }}</div>@endif @if ($destination->location)<span class="position-absolute top-0 start-0 m-3 badge bg-dark bg-opacity-75 text-white">{{ $destination->location }}</span>@endif</div><div class="p-4 d-flex flex-column flex-grow-1"><h3 class="h4 mb-2"><a class="landing-card-title" href="{{ route('destinations.show', $destination) }}">{{ $destination->name }}</a></h3>@if ($destination->tagline)<p class="text-muted small fw-semibold mb-2">{{ $destination->tagline }}</p>@endif<p class="text-secondary small flex-grow-1 mb-3 line-clamp-3">{{ \Illuminate\Support\Str::words($destination->description, 26, '...') }}</p><a class="landing-section-link small" href="{{ route('destinations.show', $destination) }}">Explore {{ $destination->name }} <span aria-hidden="true">→</span></a></div></article></div>
+                            <div class="col-md-6 col-lg-4"><article class="landing-card landing-destination-card h-100 overflow-hidden p-0"><div class="landing-card-media position-relative">@if ($hasHeroFile)<img src="{{ asset(ltrim($heroPath, '/')) }}" alt="{{ $destination->name }}" loading="lazy">@else<div class="landing-card-placeholder" aria-hidden="true">{{ str($destination->name)->substr(0, 1)->upper() }}</div>@endif @if ($destination->location)<span class="position-absolute top-0 start-0 m-3 badge bg-dark bg-opacity-75 text-white">{{ $destination->location }}</span>@endif</div><div class="p-4 d-flex flex-column flex-grow-1"><h3 class="h4 mb-2"><a class="landing-card-title" href="{{ route('destinations.show', $destination) }}">{{ $destination->name }}</a></h3>@if ($destination->tagline)<p class="text-muted small fw-semibold mb-2">{{ $destination->tagline }}</p>@endif<p class="text-secondary small flex-grow-1 mb-3 line-clamp-3">{{ \Illuminate\Support\Str::words($destination->description, 26, '...') }}</p><a class="landing-section-link small" href="{{ route('destinations.show', $destination) }}">Explore {{ $destination->name }} <span aria-hidden="true">→</span></a></div></article></div>
                         @endforeach
                     </div>
                 @endif
