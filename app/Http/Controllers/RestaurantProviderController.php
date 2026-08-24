@@ -23,7 +23,7 @@ class RestaurantProviderController extends Controller
 
         $pendingReservations = Booking::whereIn('service_id', $serviceIds)->where('status', 'pending')->count();
         $upcomingReservations = Booking::whereIn('service_id', $serviceIds)->whereIn('status', ['accepted', 'payment_pending', 'confirmed'])->count();
-        
+
         $today = now()->toDateString();
         $todayReservations = Booking::whereIn('service_id', $serviceIds)
             ->whereHas('restaurantReservation', function ($q) use ($today) {
@@ -57,9 +57,10 @@ class RestaurantProviderController extends Controller
             ->get();
 
         $maxOrders = max(1, $dishes->max('bookings_count') ?: 1);
-        $dishPerformance = $dishes->map(function ($dish, $idx) use ($maxOrders) {
+        $dishPerformance = $dishes->map(function ($dish, $idx) {
             $orders = $dish->bookings_count > 0 ? $dish->bookings_count : (120 - ($idx * 25));
             $pct = round(($orders / max($orders, 120)) * 100);
+
             return [
                 'service_id' => $dish->service_id,
                 'name' => $dish->service_name,

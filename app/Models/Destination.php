@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class Destination extends Model
@@ -68,11 +69,11 @@ class Destination extends Model
     protected static function booted(): void
     {
         static::creating(function (Destination $dest) {
-            $baseSlug = !empty($dest->slug) ? $dest->slug : Str::slug($dest->name);
+            $baseSlug = ! empty($dest->slug) ? $dest->slug : Str::slug($dest->name);
             $slug = $baseSlug;
             $i = 2;
             while (static::where('slug', $slug)->exists()) {
-                $slug = $baseSlug . '-' . $i++;
+                $slug = $baseSlug.'-'.$i++;
             }
             $dest->slug = $slug;
         });
@@ -80,21 +81,21 @@ class Destination extends Model
 
     public function heroImageUrl(): string
     {
-        if (!empty($this->hero_image)) {
+        if (! empty($this->hero_image)) {
             if (str_starts_with($this->hero_image, 'http://') || str_starts_with($this->hero_image, 'https://')) {
                 return $this->hero_image;
             }
             if (str_starts_with($this->hero_image, '/images/') || str_starts_with($this->hero_image, 'images/')) {
                 return asset(ltrim($this->hero_image, '/'));
             }
-            if (\Illuminate\Support\Facades\Storage::disk('public')->exists($this->hero_image)) {
-                return asset('storage/' . ltrim($this->hero_image, '/'));
+            if (Storage::disk('public')->exists($this->hero_image)) {
+                return asset('storage/'.ltrim($this->hero_image, '/'));
             }
         }
 
         // Slug based file lookup fallback
         $mediaKey = $this->slug ?: Str::slug($this->name);
-        $localPath = 'images/destinations/' . $mediaKey . '-hero.jpg';
+        $localPath = 'images/destinations/'.$mediaKey.'-hero.jpg';
         if (file_exists(public_path($localPath))) {
             return asset($localPath);
         }

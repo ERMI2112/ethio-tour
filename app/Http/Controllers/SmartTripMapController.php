@@ -6,6 +6,7 @@ use App\Models\Trip;
 use App\Services\TripItemTargetResolver;
 use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -75,7 +76,7 @@ class SmartTripMapController extends Controller
     /**
      * Calculate route segments, driving distance, and travel time across sequential waypoints.
      *
-     * @param \Illuminate\Support\Collection<int, array> $mappedItems
+     * @param  Collection<int, array>  $mappedItems
      */
     private function buildRouteMetrics(Trip $trip, $mappedItems): array
     {
@@ -114,7 +115,7 @@ class SmartTripMapController extends Controller
                 'to_title' => $to['title'],
                 'to_coords' => [$lat2, $lon2],
                 'distance_km' => $drivingKm,
-                'formatted_distance' => number_format($drivingKm, 1) . ' km',
+                'formatted_distance' => number_format($drivingKm, 1).' km',
                 'duration_minutes' => $minutes,
                 'formatted_duration' => $this->formatDuration($minutes),
                 'polyline' => [
@@ -127,7 +128,7 @@ class SmartTripMapController extends Controller
         return [
             'segments' => $segments,
             'total_distance_km' => round($totalDistanceKm, 1),
-            'formatted_total_distance' => number_format($totalDistanceKm, 1) . ' km',
+            'formatted_total_distance' => number_format($totalDistanceKm, 1).' km',
             'total_duration_minutes' => $totalMinutes,
             'formatted_total_duration' => $this->formatDuration($totalMinutes),
         ];
@@ -152,16 +153,16 @@ class SmartTripMapController extends Controller
     private function formatDuration(int $minutes): string
     {
         if ($minutes < 60) {
-            return $minutes . ' mins';
+            return $minutes.' mins';
         }
 
         $hours = floor($minutes / 60);
         $remainingMins = $minutes % 60;
 
         if ($remainingMins === 0) {
-            return $hours . ' hr' . ($hours > 1 ? 's' : '');
+            return $hours.' hr'.($hours > 1 ? 's' : '');
         }
 
-        return $hours . ' hr' . ($hours > 1 ? 's' : '') . ' ' . $remainingMins . ' min' . ($remainingMins > 1 ? 's' : '');
+        return $hours.' hr'.($hours > 1 ? 's' : '').' '.$remainingMins.' min'.($remainingMins > 1 ? 's' : '');
     }
 }

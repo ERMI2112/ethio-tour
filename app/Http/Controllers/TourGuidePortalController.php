@@ -22,7 +22,7 @@ class TourGuidePortalController extends Controller
         $pendingRequests = (clone $bookings)->where('status', 'pending')->count();
         $activeBookings = (clone $bookings)->whereIn('status', ['accepted', 'payment_pending', 'confirmed'])->count();
         $completedBookings = (clone $bookings)->where('status', 'completed')->count();
-        
+
         $totalEarnings = (float) ((clone $bookings)->where('status', 'completed')->sum('total_amount') ?? 0);
         $pendingEscrow = (float) ((clone $bookings)->whereIn('status', ['accepted', 'payment_pending', 'confirmed'])->sum('total_amount') ?? 0);
         $monthlyEarnings = (float) ((clone $bookings)->where('status', 'completed')->sum('total_amount') ?? 0);
@@ -46,12 +46,24 @@ class TourGuidePortalController extends Controller
 
         // Calculate profile completeness
         $score = 50;
-        if ($guide->full_name) $score += 10;
-        if ($guide->profile_image) $score += 10;
-        if ($guide->bio || $guide->expertise) $score += 10;
-        if ($guide->daily_rate) $score += 10;
-        if (!empty($guide->languages)) $score += 5;
-        if ($guide->phone_number) $score += 5;
+        if ($guide->full_name) {
+            $score += 10;
+        }
+        if ($guide->profile_image) {
+            $score += 10;
+        }
+        if ($guide->bio || $guide->expertise) {
+            $score += 10;
+        }
+        if ($guide->daily_rate) {
+            $score += 10;
+        }
+        if (! empty($guide->languages)) {
+            $score += 5;
+        }
+        if ($guide->phone_number) {
+            $score += 5;
+        }
         $profileCompleteness = min(100, $score);
 
         $reviewQuery = Review::query()->whereHas('booking', fn ($query) => $query->where('guide_id', $guide->guide_id));

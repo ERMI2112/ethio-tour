@@ -149,10 +149,10 @@ class TripItemTargetResolver
     public function priceHint(string $type, Model $target): ?string
     {
         return match ($type) {
-            'service' => $target->price ? number_format((float) $target->price, 2) . ' ETB' . ($target->serviceProvider?->provider_type === 'hotel' ? '/night' : ($target->serviceProvider?->provider_type === 'transportation_car_rental' ? '/day' : '')) : null,
-            'guide' => $target->daily_rate ? number_format((float) $target->daily_rate, 2) . ' ETB/day' : null,
-            'heritage_site' => $target->entrance_fee ? number_format((float) $target->entrance_fee, 2) . ' ETB' : null,
-            'event' => $target->ticketTypes?->min('price') ? 'From ' . number_format((float) $target->ticketTypes->min('price'), 2) . ' ETB' : null,
+            'service' => $target->price ? number_format((float) $target->price, 2).' ETB'.($target->serviceProvider?->provider_type === 'hotel' ? '/night' : ($target->serviceProvider?->provider_type === 'transportation_car_rental' ? '/day' : '')) : null,
+            'guide' => $target->daily_rate ? number_format((float) $target->daily_rate, 2).' ETB/day' : null,
+            'heritage_site' => $target->entrance_fee ? number_format((float) $target->entrance_fee, 2).' ETB' : null,
+            'event' => $target->ticketTypes?->min('price') ? 'From '.number_format((float) $target->ticketTypes->min('price'), 2).' ETB' : null,
             default => null,
         };
     }

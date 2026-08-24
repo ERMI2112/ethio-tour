@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Attraction;
 use App\Models\AuditLog;
 use App\Models\MuseumInformation;
 use App\Models\ServiceProvider;
@@ -18,7 +19,7 @@ class BureauDashboardController extends Controller
             'pendingProviders' => ServiceProvider::where('verification_status', 'pending')->count(),
             'approvedProviders' => ServiceProvider::where('verification_status', 'verified')->where('status', 'approved')->count(),
             'museumCount' => MuseumInformation::count(),
-            'attractionCount' => \App\Models\Attraction::count(),
+            'attractionCount' => Attraction::count(),
             'recentDecisions' => AuditLog::with('actor')->whereIn('action', ['guide_verification_decided', 'provider_verification_decided'])->latest()->limit(6)->get(),
         ]);
     }

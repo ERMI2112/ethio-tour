@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Destination;
-use App\Models\TourGuide;
 use App\Models\TourPackage;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -60,9 +59,9 @@ class TourPackageController extends Controller
 
         // Format itinerary JSON
         $itinerary = [];
-        if (!empty($validated['itinerary_days'])) {
+        if (! empty($validated['itinerary_days'])) {
             foreach ($validated['itinerary_days'] as $idx => $dayData) {
-                if (!empty($dayData['title'])) {
+                if (! empty($dayData['title'])) {
                     $itinerary[] = [
                         'day' => $idx + 1,
                         'title' => $dayData['title'],
@@ -73,18 +72,18 @@ class TourPackageController extends Controller
         }
 
         // Format included / excluded
-        $included = !empty($validated['included'])
-            ? array_filter(array_map('trim', explode("\n", str_replace("\r", "", $validated['included']))))
+        $included = ! empty($validated['included'])
+            ? array_filter(array_map('trim', explode("\n", str_replace("\r", '', $validated['included']))))
             : [];
-        $excluded = !empty($validated['excluded'])
-            ? array_filter(array_map('trim', explode("\n", str_replace("\r", "", $validated['excluded']))))
+        $excluded = ! empty($validated['excluded'])
+            ? array_filter(array_map('trim', explode("\n", str_replace("\r", '', $validated['excluded']))))
             : [];
 
         TourPackage::create([
             'guide_id' => $guide->guide_id,
             'destination_id' => $validated['destination_id'] ?? null,
             'title' => $validated['title'],
-            'slug' => Str::slug($validated['title']) . '-' . Str::random(5),
+            'slug' => Str::slug($validated['title']).'-'.Str::random(5),
             'duration_days' => $validated['duration_days'],
             'price' => $validated['price'],
             'max_group_size' => $validated['max_group_size'],
@@ -136,9 +135,9 @@ class TourPackageController extends Controller
         }
 
         $itinerary = [];
-        if (!empty($validated['itinerary_days'])) {
+        if (! empty($validated['itinerary_days'])) {
             foreach ($validated['itinerary_days'] as $idx => $dayData) {
-                if (!empty($dayData['title'])) {
+                if (! empty($dayData['title'])) {
                     $itinerary[] = [
                         'day' => $idx + 1,
                         'title' => $dayData['title'],
@@ -148,11 +147,11 @@ class TourPackageController extends Controller
             }
         }
 
-        $included = !empty($validated['included'])
-            ? array_filter(array_map('trim', explode("\n", str_replace("\r", "", $validated['included']))))
+        $included = ! empty($validated['included'])
+            ? array_filter(array_map('trim', explode("\n", str_replace("\r", '', $validated['included']))))
             : [];
-        $excluded = !empty($validated['excluded'])
-            ? array_filter(array_map('trim', explode("\n", str_replace("\r", "", $validated['excluded']))))
+        $excluded = ! empty($validated['excluded'])
+            ? array_filter(array_map('trim', explode("\n", str_replace("\r", '', $validated['excluded']))))
             : [];
 
         $package->update([

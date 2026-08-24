@@ -77,7 +77,7 @@ class BureauAttractionController extends Controller
                 'attribution' => 'Tourism Bureau Official Photography',
                 'is_primary' => true,
             ];
-        } elseif (!empty($validated['image_url'])) {
+        } elseif (! empty($validated['image_url'])) {
             $images[] = [
                 'path' => $validated['image_url'],
                 'alt' => $validated['name'],
@@ -89,7 +89,7 @@ class BureauAttractionController extends Controller
         Attraction::create([
             'destination_id' => $validated['destination_id'],
             'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']) . '-' . Str::random(5),
+            'slug' => Str::slug($validated['name']).'-'.Str::random(5),
             'category' => $validated['category'],
             'description' => $validated['description'],
             'location_address' => $validated['location_address'] ?? null,
@@ -98,7 +98,7 @@ class BureauAttractionController extends Controller
             'opening_hours' => $validated['opening_hours'] ?? null,
             'entry_fee' => $validated['entry_fee'] ?? null,
             'is_featured' => (bool) ($validated['is_featured'] ?? false),
-            'images' => !empty($images) ? $images : null,
+            'images' => ! empty($images) ? $images : null,
         ]);
 
         return redirect()->route('bureau.attractions.index')->with('success', 'Attraction created and published successfully.');
@@ -148,7 +148,7 @@ class BureauAttractionController extends Controller
                     'is_primary' => true,
                 ],
             ];
-        } elseif (!empty($validated['image_url'])) {
+        } elseif (! empty($validated['image_url'])) {
             $images = [
                 [
                     'path' => $validated['image_url'],
@@ -170,7 +170,7 @@ class BureauAttractionController extends Controller
             'opening_hours' => $validated['opening_hours'] ?? null,
             'entry_fee' => $validated['entry_fee'] ?? null,
             'is_featured' => (bool) ($validated['is_featured'] ?? false),
-            'images' => !empty($images) ? $images : $attraction->images,
+            'images' => ! empty($images) ? $images : $attraction->images,
         ]);
 
         return redirect()->route('bureau.attractions.index')->with('success', 'Attraction details updated successfully.');

@@ -128,6 +128,7 @@
                         <th class="py-3">Type</th>
                         <th class="py-3">Bureau verification</th>
                         <th class="py-3">Platform status</th>
+                        <th class="py-3">Commercial plan</th>
                         <th class="py-3">Account</th>
                         <th class="py-3">Registered</th>
                         <th class="pe-4 py-3 text-end"><span class="visually-hidden">Actions</span></th>
@@ -143,6 +144,7 @@
                                 'event_organizer' => 'bi-ticket-perforated-fill text-danger',
                                 default => 'bi-shop text-success'
                             };
+                            $plan = $provider->providerSubscriptions->where('status', 'active')->first()?->subscriptionPlan;
                         @endphp
                         <tr>
                             <td class="ps-4 py-3.5">
@@ -168,6 +170,15 @@
                                 <x-ui.status-badge :status="$provider->status" />
                             </td>
                             <td class="py-3.5">
+                                @if($plan)
+                                    <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1" style="font-size: 0.75rem;">
+                                        {{ $plan->plan }} ({{ $plan->commission_rate }}%)
+                                    </span>
+                                @else
+                                    <span class="text-muted small" style="font-size: 0.75rem;">Unassigned</span>
+                                @endif
+                            </td>
+                            <td class="py-3.5">
                                 @if($provider->user?->is_active)
                                     <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1" style="font-size: 0.75rem;">
                                         ● Active
@@ -189,7 +200,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="7" class="text-center text-muted py-5">
+                            <td colspan="8" class="text-center text-muted py-5">
                                 <div class="fs-1 mb-2">📋</div>
                                 <div class="fw-bold fs-6">No providers match these filters.</div>
                                 <div class="small">Try resetting your filters or adjusting your search term.</div>

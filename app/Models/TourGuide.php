@@ -85,7 +85,7 @@ class TourGuide extends Model
 
             // Stored in storage/app/public
             if (Storage::disk('public')->exists($this->profile_image)) {
-                return asset('storage/' . ltrim($this->profile_image, '/'));
+                return asset('storage/'.ltrim($this->profile_image, '/'));
             }
         }
 
@@ -103,7 +103,7 @@ class TourGuide extends Model
             return $this->languages;
         }
 
-        if (is_string($this->languages) && !empty($this->languages)) {
+        if (is_string($this->languages) && ! empty($this->languages)) {
             $decoded = json_decode($this->languages, true);
             if (is_array($decoded)) {
                 return $decoded;
@@ -121,7 +121,7 @@ class TourGuide extends Model
             return $this->specialties;
         }
 
-        if (is_string($this->specialties) && !empty($this->specialties)) {
+        if (is_string($this->specialties) && ! empty($this->specialties)) {
             $decoded = json_decode($this->specialties, true);
             if (is_array($decoded)) {
                 return $decoded;

@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\Destination;
 use App\Models\Review;
 use App\Models\TourGuide;
+use App\Models\TourismBureauOfficer;
 use App\Models\Tourist;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -24,7 +25,7 @@ class TourGuideProfessionalFeaturesTest extends TestCase
         /** @var User $user */
         $user = User::factory()->create(['role' => 'tour_guide']);
         $bureauUser = User::factory()->create(['role' => 'tourism_bureau_officer']);
-        $officer = \App\Models\TourismBureauOfficer::create(['user_id' => $bureauUser->user_id]);
+        $officer = TourismBureauOfficer::create(['user_id' => $bureauUser->user_id]);
         $destination = Destination::create([
             'officer_id' => $officer->officer_id,
             'name' => 'Gondar',

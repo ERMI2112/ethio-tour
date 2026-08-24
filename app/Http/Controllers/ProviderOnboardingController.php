@@ -33,7 +33,7 @@ class ProviderOnboardingController extends Controller
     {
         $provider = $request->user()->serviceProvider;
         $data = $request->validated();
-        
+
         // Track that application details have been filled
         $data['application_step'] = 2;
 

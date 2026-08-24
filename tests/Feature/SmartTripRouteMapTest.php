@@ -2,12 +2,8 @@
 
 namespace Tests\Feature;
 
-use App\Models\Attraction;
-use App\Models\Category;
 use App\Models\Destination;
-use App\Models\ServiceProvider;
 use App\Models\TourismBureauOfficer;
-use App\Models\TourismService;
 use App\Models\Tourist;
 use App\Models\Trip;
 use App\Models\TripItem;

@@ -4,6 +4,8 @@ namespace App\Models;
 
 use App\Models\Concerns\HasCoordinates;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class Attraction extends Model
 {
@@ -83,8 +85,8 @@ class Attraction extends Model
             return asset(ltrim($path, '/'));
         }
 
-        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
-            return asset('storage/' . ltrim($path, '/'));
+        if (Storage::disk('public')->exists($path)) {
+            return asset('storage/'.ltrim($path, '/'));
         }
 
         return asset('images/destinations/gondar-castles.jpg');
@@ -94,7 +96,7 @@ class Attraction extends Model
     {
         static::creating(function (Attraction $attraction) {
             if (empty($attraction->slug)) {
-                $attraction->slug = \Illuminate\Support\Str::slug($attraction->name) . '-' . \Illuminate\Support\Str::random(5);
+                $attraction->slug = Str::slug($attraction->name).'-'.Str::random(5);
             }
         });
     }

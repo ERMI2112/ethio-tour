@@ -3,8 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Destination;
-use App\Models\TourismBureauOfficer;
 use App\Models\TourGuide;
+use App\Models\TourismBureauOfficer;
 use App\Models\TourPackage;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;

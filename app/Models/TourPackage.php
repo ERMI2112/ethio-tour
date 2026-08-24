@@ -47,7 +47,7 @@ class TourPackage extends Model
     {
         static::creating(function (TourPackage $package) {
             if (empty($package->slug)) {
-                $package->slug = Str::slug($package->title) . '-' . Str::random(5);
+                $package->slug = Str::slug($package->title).'-'.Str::random(5);
             }
         });
     }
@@ -82,7 +82,7 @@ class TourPackage extends Model
         }
 
         if (Storage::disk('public')->exists($this->cover_image)) {
-            return asset('storage/' . ltrim($this->cover_image, '/'));
+            return asset('storage/'.ltrim($this->cover_image, '/'));
         }
 
         return asset('images/destinations/gondar-castles.jpg');
@@ -90,7 +90,7 @@ class TourPackage extends Model
 
     public function formattedPrice(): string
     {
-        return number_format((float) $this->price, 2) . ' ETB';
+        return number_format((float) $this->price, 2).' ETB';
     }
 
     public function itineraryList(): array
