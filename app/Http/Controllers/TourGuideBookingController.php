@@ -60,6 +60,9 @@ class TourGuideBookingController extends Controller
                 'start_date' => $validated['start_date'],
                 'end_date' => $validated['end_date'],
                 'number_of_tourists' => $validated['number_of_tourists'],
+                'special_interests' => $validated['special_interests'] ?? null,
+                'language_preference' => $validated['language_preference'] ?? null,
+                'notes' => $validated['notes'] ?? null,
             ]);
 
             return $booking;

@@ -4,13 +4,6 @@
 
 @section('content')
 <div class="container py-4 py-lg-5">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb small mb-2">
-            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-            <li class="breadcrumb-item"><a href="{{ route('tourist.reservations.index') }}">My Bookings</a></li>
-            <li class="breadcrumb-item active" aria-current="page">#BK-{{ sprintf('%05d', $booking->booking_id) }}</li>
-        </ol>
-    </nav>
 
     <div class="d-flex justify-content-between align-items-center mt-3 mb-4">
         <div>
@@ -72,12 +65,35 @@
                             </div>
                         </div>
 
-                        <div class="row g-3 p-3 bg-light rounded border">
+                        <div class="row g-3 p-3 bg-light rounded border mb-3">
                             <div class="col-sm-6"><span class="text-muted small d-block">Start Date</span><strong>{{ $booking->tourGuideReservation->start_date->format('F d, Y') }}</strong></div>
                             <div class="col-sm-6"><span class="text-muted small d-block">End Date</span><strong>{{ $booking->tourGuideReservation->end_date->format('F d, Y') }}</strong></div>
                             <div class="col-sm-6"><span class="text-muted small d-block">Party Size</span><strong>{{ $booking->tourGuideReservation->number_of_tourists }} tourist(s)</strong></div>
                             <div class="col-sm-6"><span class="text-muted small d-block">Booking total</span><strong>{{ $booking->total_amount !== null ? number_format((float) $booking->total_amount, 2).' '.($booking->currency ?? 'ETB') : 'Not available' }}</strong></div>
+                            @if($booking->tourGuideReservation->language_preference)
+                                <div class="col-sm-6"><span class="text-muted small d-block">Preferred Language</span><strong>🗣️ {{ $booking->tourGuideReservation->language_preference }}</strong></div>
+                            @endif
                         </div>
+
+                        @if($booking->tourGuideReservation->special_interests)
+                            <div class="p-3 bg-light rounded border mb-3">
+                                <span class="text-muted small d-block fw-bold text-uppercase mb-1" style="font-size: 0.72rem;">Selected Special Interests</span>
+                                <div class="d-flex flex-wrap gap-1.5">
+                                    @foreach(explode(',', $booking->tourGuideReservation->special_interests) as $interest)
+                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1 small">
+                                            ● {{ trim($interest) }}
+                                        </span>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        @if($booking->tourGuideReservation->notes)
+                            <div class="p-3 bg-light rounded border">
+                                <span class="text-muted small d-block fw-bold text-uppercase mb-1" style="font-size: 0.72rem;">Trip Goals &amp; Special Requests</span>
+                                <p class="small text-dark mb-0" style="line-height: 1.6; white-space: pre-line;">{{ $booking->tourGuideReservation->notes }}</p>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>

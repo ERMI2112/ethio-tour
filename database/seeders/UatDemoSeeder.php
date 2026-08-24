@@ -40,10 +40,17 @@ class UatDemoSeeder extends Seeder
         );
 
         $guideUser = $this->user('guide@test.com', 'tour_guide');
-        $guide = $this->guide($guideUser, 'TG-GDR-001', 'Historical & cultural heritage tours across Northern Ethiopia', 'verified', 'Yared Tadesse');
+        $guide = $this->guide($guideUser, 'TG-GDR-001', '17th Century Gondar Castles, Fasilides Bath & Imperial Religious Art', 'verified', 'Yared Tadesse', [
+            'bio' => 'Certified professional cultural historian with 8+ years leading deep-dive explorations through Fasil Ghebbi, Debre Berhan Selassie, and Kuskuam. Known for vivid storytelling of medieval Ethiopian royalty and traditional coffee rituals.',
+            'languages' => ['Amharic', 'English', 'French'],
+            'years_of_experience' => 8,
+            'specialties' => ['UNESCO Heritage', 'Fasil Ghebbi Castles', 'Orthodox Church Art', 'Coffee Ceremony'],
+            'daily_rate' => 2000,
+            'profile_image' => 'images/guides/tour-guide.jpg',
+        ]);
 
         $pendingGuideUser = $this->user('uat-guide-pending@test.com', 'tour_guide');
-        $this->guide($pendingGuideUser, 'TG-PENDING-002', 'Regional cultural guide (pending verification)', 'pending');
+        $this->guide($pendingGuideUser, 'TG-PENDING-002', 'Regional cultural guide (pending verification)', 'pending', 'Tewodros Kassahun');
 
         $hotelUser = $this->user('hotel@test.com', 'service_provider');
         $hotel = $this->provider($hotelUser, 'Goha Hotel Gondar', 'hotel', 'verified', 'approved');
@@ -83,8 +90,49 @@ class UatDemoSeeder extends Seeder
         $gondar = $this->destination($bureau, 'Gondar', 'Gondar, Amhara', 'Gondar served as the capital of the Ethiopian Empire from 1636 to 1855, earning it the nickname "The Camelot of Africa" for its medieval castles and royal compounds.');
         $guide->primary_destination_id = $gondar->destination_id;
         $guide->save();
-        $this->destination($bureau, 'Bahir Dar', 'Bahir Dar, Amhara', 'Gateway to Lake Tana\'s ancient island monasteries and the spectacular Blue Nile Falls.');
+
+        $bahirDar = $this->destination($bureau, 'Bahir Dar', 'Bahir Dar, Amhara', 'Gateway to Lake Tana\'s ancient island monasteries and the spectacular Blue Nile Falls.');
         $lalibela = $this->destination($bureau, 'Lalibela', 'Lalibela, Amhara', 'Home to eleven medieval monolithic rock-hewn churches, a UNESCO World Heritage Site.');
+
+        // Additional Rich Verified Guides for Multi-City Exploration
+        $simienGuideUser = $this->user('guide-simien@test.com', 'tour_guide');
+        $simienGuide = $this->guide($simienGuideUser, 'TG-SMN-042', 'High-Altitude Simien Mountains Wilderness Trekking & Endemic Wildlife Expeditions', 'verified', 'Kassahun Belay', [
+            'bio' => 'Veteran mountain guide and wilderness first responder with 12 years of expeditions across Ras Dashen, Geech plateau, and Chennek. Specialist in endemic Gelada baboon troop behavior and Walia ibex tracking.',
+            'languages' => ['Amharic', 'English', 'German'],
+            'years_of_experience' => 12,
+            'specialties' => ['Simien Trekking', 'Endemic Wildlife Tracking', 'Ras Dashen Summit', 'Wilderness Camping'],
+            'daily_rate' => 2800,
+            'profile_image' => 'images/guides/guide-simien.jpg',
+            'phone_number' => '+251 91 872 3144',
+        ]);
+        $simienGuide->primary_destination_id = $gondar->destination_id;
+        $simienGuide->save();
+
+        $lalibelaGuideUser = $this->user('guide-lalibela@test.com', 'tour_guide');
+        $lalibelaGuide = $this->guide($lalibelaGuideUser, 'TG-LAL-019', 'Lalibela Monolithic Rock-Hewn Churches, Ancient Ge\'ez Manuscripts & Liturgical History', 'verified', 'Marta Hailu', [
+            'bio' => 'Native Lalibela ecclesiastical historian and certified guide for over 9 years. Specializing in the underground labyrinths of Biete Giyorgis, Biete Medhane Alem, and medieval Ethiopian monastic heritage.',
+            'languages' => ['Amharic', 'English', 'Italian'],
+            'years_of_experience' => 9,
+            'specialties' => ['Rock-Hewn Churches', 'Ancient Ge\'ez Manuscripts', 'Pilgrimage Rituals', 'Ecclesiastical Architecture'],
+            'daily_rate' => 2200,
+            'profile_image' => 'images/guides/guide-marta.jpg',
+            'phone_number' => '+251 92 345 6789',
+        ]);
+        $lalibelaGuide->primary_destination_id = $lalibela->destination_id;
+        $lalibelaGuide->save();
+
+        $bahirDarGuideUser = $this->user('guide-bahirdar@test.com', 'tour_guide');
+        $bahirDarGuide = $this->guide($bahirDarGuideUser, 'TG-BHR-007', 'Lake Tana Island Monasteries Boat Safaris & Blue Nile Falls (Tis Abay) Expeditions', 'verified', 'Dawit Tefera', [
+            'bio' => 'Passionate nature and cultural guide with 6 years navigating Lake Tana\'s 14th-century island monasteries and Blue Nile Falls. Expert in wetland birdwatching, papyrus tankwa traditions, and local Amhara folklore.',
+            'languages' => ['Amharic', 'English', 'Spanish'],
+            'years_of_experience' => 6,
+            'specialties' => ['Lake Tana Boat Safaris', '14th Century Monasteries', 'Tis Abay Falls', 'Bird Watching'],
+            'daily_rate' => 1800,
+            'profile_image' => 'images/guides/guide-dawit.jpg',
+            'phone_number' => '+251 91 432 1098',
+        ]);
+        $bahirDarGuide->primary_destination_id = $bahirDar->destination_id;
+        $bahirDarGuide->save();
 
         $accommodation = $this->category('Accommodation');
         $dining = $this->category('Dining & Reservations');
@@ -215,20 +263,20 @@ class UatDemoSeeder extends Seeder
         return $user;
     }
 
-    private function guide(User $user, string $license, string $expertise, string $verification, ?string $fullName = null): TourGuide
+    private function guide(User $user, string $license, string $expertise, string $verification, ?string $fullName = null, array $options = []): TourGuide
     {
         $guide = TourGuide::firstOrNew(['user_id' => $user->user_id]);
         $guide->full_name = $fullName ?: 'Certified Tour Guide';
         $guide->license_number = $license;
         $guide->expertise = $expertise;
-        $guide->profile_image = 'images/guides/tour-guide.jpg';
-        $guide->bio = 'Certified professional cultural and trekking guide with over 8 years of experience leading historical expeditions across Gondar, the Simien Mountains National Park, and the ancient church circuits of Northern Ethiopia. Passionate about authentic cultural storytelling and traveler safety.';
-        $guide->phone_number = '+251 91 184 2901';
-        $guide->languages = ['Amharic', 'English', 'French'];
-        $guide->years_of_experience = 8;
-        $guide->specialties = ['UNESCO Heritage', 'Simien Trekking', 'Ecclesiastical History', 'Coffee Ceremony'];
-        $guide->availability_status = 'available';
-        $guide->daily_rate = 2000;
+        $guide->profile_image = $options['profile_image'] ?? 'images/guides/tour-guide.jpg';
+        $guide->bio = $options['bio'] ?? 'Certified professional cultural and trekking guide with over 8 years of experience leading historical expeditions across Gondar, the Simien Mountains National Park, and the ancient church circuits of Northern Ethiopia. Passionate about authentic cultural storytelling and traveler safety.';
+        $guide->phone_number = $options['phone_number'] ?? '+251 91 184 2901';
+        $guide->languages = $options['languages'] ?? ['Amharic', 'English', 'French'];
+        $guide->years_of_experience = $options['years_of_experience'] ?? 8;
+        $guide->specialties = $options['specialties'] ?? ['UNESCO Heritage', 'Simien Trekking', 'Ecclesiastical History', 'Coffee Ceremony'];
+        $guide->availability_status = $options['availability_status'] ?? 'available';
+        $guide->daily_rate = $options['daily_rate'] ?? 2000;
         $guide->verification_status = $verification;
         $guide->save();
 

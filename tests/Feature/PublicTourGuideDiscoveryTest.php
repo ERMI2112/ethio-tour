@@ -64,6 +64,9 @@ class PublicTourGuideDiscoveryTest extends TestCase
             'start_date' => '2026-09-10',
             'end_date' => '2026-09-12',
             'number_of_tourists' => 2,
+            'special_interests' => 'Castle & Imperial History, Wildlife Photography',
+            'language_preference' => 'French',
+            'notes' => 'We want to photograph the ceiling of Debre Berhan Selassie church.',
         ]);
 
         $response->assertRedirect();
@@ -73,9 +76,51 @@ class PublicTourGuideDiscoveryTest extends TestCase
             'service_id' => null,
             'status' => 'pending',
         ]);
+        $this->assertDatabaseHas('tour_guide_reservations', [
+            'special_interests' => 'Castle & Imperial History, Wildlife Photography',
+            'language_preference' => 'French',
+            'notes' => 'We want to photograph the ceiling of Debre Berhan Selassie church.',
+        ]);
         $this->assertDatabaseCount('bookings', 1);
         $this->assertDatabaseCount('tour_guide_reservations', 1);
         $this->actingAs($tourist['user'])->get(route('tourist.reservations.index'))->assertOk()->assertSee('Tour Guide');
+    }
+
+    public function test_public_search_finds_guides_by_name_language_and_specialties(): void
+    {
+        $gondarGuide = $this->guide('gondar-guide@example.com', 'verified');
+        $gondarGuide['guide']->update([
+            'full_name' => 'Yared Tadesse',
+            'expertise' => 'Gondar Imperial Castles',
+            'languages' => ['Amharic', 'English', 'French'],
+            'specialties' => ['Fasil Ghebbi Castles', 'Coffee Ceremony'],
+        ]);
+
+        $simienGuide = $this->guide('simien-guide@example.com', 'verified');
+        $simienGuide['guide']->update([
+            'full_name' => 'Kassahun Belay',
+            'expertise' => 'Simien Mountains High-Altitude Trekking',
+            'languages' => ['Amharic', 'English', 'German'],
+            'specialties' => ['Gelada Baboons', 'Ras Dashen'],
+        ]);
+
+        // Search by name
+        $this->get(route('tour-guides.index', ['q' => 'Yared']))
+            ->assertOk()
+            ->assertSee('Yared Tadesse')
+            ->assertDontSee('Kassahun Belay');
+
+        // Search by language
+        $this->get(route('tour-guides.index', ['language' => 'German']))
+            ->assertOk()
+            ->assertSee('Kassahun Belay')
+            ->assertDontSee('Yared Tadesse');
+
+        // Search by specialty
+        $this->get(route('tour-guides.index', ['q' => 'Ras Dashen']))
+            ->assertOk()
+            ->assertSee('Kassahun Belay')
+            ->assertDontSee('Yared Tadesse');
     }
 
     public function test_invalid_dates_conflicts_and_duplicate_requests_are_rejected(): void

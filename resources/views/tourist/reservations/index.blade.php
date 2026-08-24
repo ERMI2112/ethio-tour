@@ -4,12 +4,6 @@
 
 @section('content')
 <div class="container py-4 py-lg-5">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb small mb-2">
-            <li class="breadcrumb-item"><a href="{{ route('home') }}">Home</a></li>
-            <li class="breadcrumb-item active" aria-current="page">My Bookings</li>
-        </ol>
-    </nav>
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
             <h1 class="h3 mb-1">My Bookings</h1>

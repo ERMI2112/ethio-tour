@@ -10,7 +10,15 @@ class TourGuideReservation extends Model
 {
     protected $primaryKey = 'guide_reservation_id';
 
-    protected $fillable = ['booking_id', 'start_date', 'end_date', 'number_of_tourists'];
+    protected $fillable = [
+        'booking_id',
+        'start_date',
+        'end_date',
+        'number_of_tourists',
+        'special_interests',
+        'language_preference',
+        'notes',
+    ];
 
     protected function casts(): array
     {
