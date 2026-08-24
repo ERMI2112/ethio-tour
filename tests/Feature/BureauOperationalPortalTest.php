@@ -69,9 +69,9 @@ class BureauOperationalPortalTest extends TestCase
     public function test_public_guide_discovery_reflects_bureau_verification_decision(): void
     {
         $pending = $this->guide('pending');
-        $this->get(route('tour-guides.index'))->assertDontSee($pending->license_number);
+        $this->get(route('tour-guides.index'))->assertDontSee($pending->expertise);
         $pending->forceFill(['verification_status' => 'verified'])->save();
-        $this->get(route('tour-guides.index'))->assertSee($pending->license_number);
+        $this->get(route('tour-guides.index'))->assertSee($pending->expertise);
     }
 
     private function bureau(): User

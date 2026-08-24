@@ -26,12 +26,9 @@
                 </div>
                 <div class="col">
                     <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
-                        <span class="badge badge-verified">Verified</span>
-                        <span class="badge {{ $guide->availability_status === 'available' ? 'bg-success' : 'bg-secondary' }}">
-                            {{ ucfirst($guide->availability_status) }}
-                        </span>
-                        <span class="badge bg-white bg-opacity-20 text-white border border-white-subtle">
-                            License: {{ $guide->license_number }}
+                        <span class="badge bg-success text-white">🛡️ Verified Guide</span>
+                        <span class="badge {{ $guide->availability_status === 'available' ? 'bg-emerald-600 text-white' : 'bg-secondary text-white' }}" style="{{ $guide->availability_status === 'available' ? 'background-color: #059669;' : '' }}">
+                            ● {{ ucfirst($guide->availability_status) }}
                         </span>
                         @if($guide->destination)
                             <span class="badge bg-warning text-dark fw-semibold">

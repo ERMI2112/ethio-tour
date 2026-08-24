@@ -51,7 +51,7 @@
                             @endif
                             <div>
                                 <h3 class="h5 mb-1 text-dark fw-bold">{{ $guideName }}</h3>
-                                <div class="text-muted small">License: {{ $guideObj?->license_number ?? 'N/A' }}</div>
+                                <div class="text-muted small">🛡️ Certified Regional Guide{{ $guideObj?->destination ? ' · ' . $guideObj->destination->name : '' }}</div>
                                 @if($guideObj?->phone_number)
                                     <div class="text-muted small">📞 {{ $guideObj->phone_number }}</div>
                                 @endif

@@ -75,7 +75,10 @@
                                         </a>
                                     </td>
                                     @if ($isGuideBooking)
-                                        <td><div class="fw-bold">Tour Guide</div><div class="small text-muted">License {{ $booking->tourGuide->license_number }}</div></td>
+                                        <td>
+                                            <div class="fw-bold">{{ $booking->tourGuide->full_name ?? 'Tour Guide' }}</div>
+                                            <div class="small text-muted">Certified Guide{{ $booking->tourGuide->destination ? ' · ' . $booking->tourGuide->destination->name : '' }}</div>
+                                        </td>
                                         <td><div class="small fw-semibold">{{ $booking->tourGuideReservation->start_date->format('M d, Y') }}</div><div class="small text-muted">to {{ $booking->tourGuideReservation->end_date->format('M d, Y') }}</div></td>
                                         <td>{{ $booking->tourGuideReservation->number_of_tourists }}</td>
                                         <td>

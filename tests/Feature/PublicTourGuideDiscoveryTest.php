@@ -22,9 +22,9 @@ class PublicTourGuideDiscoveryTest extends TestCase
 
         $this->get(route('tour-guides.index'))
             ->assertOk()
-            ->assertSee($verified['guide']->license_number)
+            ->assertSee('verified@example.com')
             ->assertDontSee('pending@example.com')
-            ->assertDontSee($inactive['guide']->license_number);
+            ->assertDontSee('inactive@example.com');
     }
 
     public function test_verified_guide_detail_is_public_but_unverified_detail_is_hidden(): void

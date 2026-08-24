@@ -31,7 +31,9 @@
                                     <span class="badge bg-success text-white rounded-pill px-2.5 py-0.5" style="font-size: 0.7rem; font-weight: 700;">
                                         🛡️ Verified Guide
                                     </span>
-                                    <span class="text-muted small font-monospace">License {{ $guide->license_number }}</span>
+                                    @if($guide->destination)
+                                        <span class="text-muted small">📍 {{ $guide->destination->name }}</span>
+                                    @endif
                                 </div>
                                 <h1 class="h4 fw-bold text-dark mb-0" style="font-family: var(--font-display);">Request {{ $displayName }}</h1>
                                 <p class="text-secondary small mb-0">{{ $guide->expertise }}</p>

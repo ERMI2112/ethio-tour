@@ -160,11 +160,8 @@
                     </div>
 
                     <div class="vn-card-body d-flex flex-column flex-grow-1 p-3.5">
-                        {{-- Credentials Badges --}}
+                        {{-- Location & Experience Badges --}}
                         <div class="d-flex flex-wrap gap-1.5 mb-2">
-                            <span class="badge bg-light text-dark border small rounded-pill px-2.5 py-1 font-monospace">
-                                License: {{ $guide->license_number }}
-                            </span>
                             @if($guide->destination)
                                 <span class="badge bg-primary-subtle text-primary small rounded-pill px-2.5 py-1">
                                     📍 {{ $guide->destination->name }}
@@ -172,7 +169,7 @@
                             @endif
                             @if($guide->years_of_experience)
                                 <span class="badge bg-success-subtle text-success small rounded-pill px-2.5 py-1">
-                                    {{ $guide->years_of_experience }} yrs exp
+                                    {{ $guide->years_of_experience }} yrs experience
                                 </span>
                             @endif
                         </div>
