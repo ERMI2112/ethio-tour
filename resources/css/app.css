@@ -213,6 +213,29 @@ button:focus-visible {
     padding: 0.5rem 0;
 }
 
+/* Tighten the expanded navbar spacing on large tablets/small laptops so the
+   full nav (brand + links + Smart Trip + theme toggle + auth) fits without
+   collapsing to a hamburger at widths that still have room. */
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+    .main-navbar .nav-link {
+        font-size: 0.78rem;
+        letter-spacing: 0.04em;
+        padding: 0.55rem 0.45rem !important;
+    }
+
+    .main-navbar .navbar-brand {
+        font-size: 1.1rem;
+    }
+
+    .main-navbar .navbar-nav {
+        gap: 0.25rem !important;
+    }
+
+    .main-navbar .d-flex.align-items-center.gap-2 {
+        gap: 0.35rem !important;
+    }
+}
+
 /* Nav Dark/Light Mode Toggle Button */
 .nav-theme-toggle-btn {
     background: rgba(255, 255, 255, 0.1);
