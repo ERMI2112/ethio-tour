@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg main-navbar shadow-sm sticky-top" aria-label="Primary navigation">
+<nav class="navbar navbar-expand-xl main-navbar shadow-sm sticky-top" aria-label="Primary navigation">
     <div class="container d-flex align-items-center justify-content-between">
         {{-- Brand Logo with Ethiopian Land of Origins style icon --}}
         <a class="navbar-brand py-0" href="{{ route('home') }}">
