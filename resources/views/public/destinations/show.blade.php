@@ -7,6 +7,7 @@
     $destinationMediaKey = $destination->slug ?: \Illuminate\Support\Str::slug($destination->name);
     $destinationHeroPath = $destination->hero_image ?: '/images/destinations/'.$destinationMediaKey.'-hero.jpg';
     $destinationHeroExists = is_string($destinationHeroPath) && $destinationHeroPath !== '' && file_exists(public_path(ltrim($destinationHeroPath, '/')));
+    $destinationGallery = $destination->galleryImages();
     $destinationSections = collect([
         ['id' => 'attractions', 'label' => 'Highlights', 'count' => $attractions->count()],
         ['id' => 'heritage-sites', 'label' => 'Heritage', 'count' => $destination->heritageSites->count()],
@@ -79,6 +80,29 @@
     </div>
 </header>
 
+@if(count($destinationGallery) > 1)
+    <section class="container destination-gallery-section mb-5" aria-labelledby="destination-gallery-heading" data-aos="fade-up">
+        <div class="d-flex flex-wrap align-items-end justify-content-between gap-2 mb-3">
+            <div>
+                <span class="destination-section-kicker">See the destination</span>
+                <h2 id="destination-gallery-heading" class="h3 mb-1">A closer look at {{ $destination->name }}</h2>
+                <p class="text-muted mb-0">Explore verified photography from this destination.</p>
+            </div>
+            <span class="badge rounded-pill text-bg-light border">{{ count($destinationGallery) }} photographs</span>
+        </div>
+        <div class="destination-gallery" role="list">
+            @foreach($destinationGallery as $image)
+                <figure class="destination-gallery__item {{ $loop->first ? 'destination-gallery__item--lead' : '' }}" role="listitem">
+                    <img src="{{ $image['url'] }}" alt="{{ $image['alt'] ?? $destination->name }}" loading="{{ $loop->first ? 'eager' : 'lazy' }}">
+                    @if(!empty($image['attribution']))
+                        <figcaption>{{ $image['attribution'] }}</figcaption>
+                    @endif
+                </figure>
+            @endforeach
+        </div>
+    </section>
+@endif
+
 <div class="container destination-section-nav-wrap" id="destination-content" data-aos="fade-up">
     <nav class="destination-section-nav" aria-label="Destination sections">
         <span class="destination-section-nav__label">Quick Navigation</span>
@@ -130,14 +154,17 @@
                                                     @endif
                                                 </div>
                                             @endif
-                                        @php
-                                            $primaryImg = $attraction->primaryImage();
-                                            $imgPath = $primaryImg['path'] ?? null;
-                                            $hasImg = is_string($imgPath) && $imgPath !== '' && file_exists(public_path(ltrim($imgPath, '/')));
-                                        @endphp
-                                        @if($hasImg)
-                                            <div class="attraction-photo mb-3 rounded-3 overflow-hidden shadow-sm" style="height: 260px; background: #0c1e14;">
-                                                <img src="{{ asset(ltrim($imgPath, '/')) }}" alt="{{ $primaryImg['alt'] ?? $attraction->name }}" style="width: 100%; height: 100%; object-fit: cover;">
+                                        @php($attractionGallery = $attraction->galleryImages())
+                                        @if(count($attractionGallery) > 0)
+                                            <div class="attraction-gallery mb-4" role="list" aria-label="Photos of {{ $attraction->name }}">
+                                                @foreach($attractionGallery as $image)
+                                                    <figure class="attraction-gallery__item {{ $loop->first ? 'attraction-gallery__item--lead' : '' }}" role="listitem">
+                                                        <img src="{{ $image['url'] }}" alt="{{ $image['alt'] ?? $attraction->name }}" loading="{{ $loop->first ? 'eager' : 'lazy' }}">
+                                                        @if(!empty($image['attribution']))
+                                                            <figcaption>{{ $image['attribution'] }}</figcaption>
+                                                        @endif
+                                                    </figure>
+                                                @endforeach
                                             </div>
                                         @endif
 

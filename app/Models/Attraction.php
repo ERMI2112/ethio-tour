@@ -69,27 +69,55 @@ class Attraction extends Model
         return $this->images[0] ?? null;
     }
 
-    public function primaryImageUrl(): string
+    /**
+     * Return gallery records with a safe public URL and primary image first.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function galleryImages(): array
+    {
+        return collect($this->images ?? [])
+            ->filter(fn ($image) => is_array($image) && ! empty($image['path']))
+            ->map(function (array $image): ?array {
+                $url = $this->imageUrl($image['path']);
+
+                if ($url === null) {
+                    return null;
+                }
+
+                return array_merge($image, ['url' => $url]);
+            })
+            ->filter()
+            ->sortByDesc(fn (array $image) => (bool) ($image['is_primary'] ?? false))
+            ->values()
+            ->all();
+    }
+
+    public function primaryImageUrl(): ?string
     {
         $img = $this->primaryImage();
         if (! $img || empty($img['path'])) {
-            return asset('images/destinations/gondar-castles.jpg');
+            return null;
         }
 
-        $path = $img['path'];
+        return $this->imageUrl($img['path']);
+    }
+
+    private function imageUrl(string $path): ?string
+    {
         if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
             return $path;
         }
 
         if (str_starts_with($path, '/images/') || str_starts_with($path, 'images/')) {
-            return asset(ltrim($path, '/'));
+            return file_exists(public_path(ltrim($path, '/'))) ? asset(ltrim($path, '/')) : null;
         }
 
         if (Storage::disk('public')->exists($path)) {
             return asset('storage/'.ltrim($path, '/'));
         }
 
-        return asset('images/destinations/gondar-castles.jpg');
+        return null;
     }
 
     protected static function booted(): void

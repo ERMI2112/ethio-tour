@@ -92,6 +92,41 @@ class DestinationDiscoveryHubTest extends TestCase
             ->assertDontSee('href="#accommodations"', false);
     }
 
+    public function test_destination_and_attraction_galleries_render_real_attributable_photos(): void
+    {
+        $bureauUser = User::factory()->create(['role' => 'tourism_bureau_officer']);
+        $officer = TourismBureauOfficer::create(['user_id' => $bureauUser->user_id]);
+        $destination = Destination::create([
+            'officer_id' => $officer->officer_id,
+            'name' => 'Gondar',
+            'location' => 'Amhara Region',
+            'description' => 'Historic city of castles.',
+            'hero_image' => '/images/destinations/gondar-hero.jpg',
+            'gallery_images' => [
+                ['path' => '/images/destinations/gondar-hero.jpg', 'alt' => 'Gondar castle', 'attribution' => 'A. Savin / Wikimedia Commons', 'is_primary' => true],
+                ['path' => '/images/attractions/fasil-ghebbi-courtyard.jpg', 'alt' => 'Fasil Ghebbi courtyard', 'attribution' => 'Wikimedia Commons'],
+            ],
+        ]);
+        Attraction::create([
+            'destination_id' => $destination->destination_id,
+            'name' => 'Fasil Ghebbi',
+            'description' => 'A historic royal enclosure.',
+            'category' => 'palace',
+            'images' => [
+                ['path' => '/images/attractions/fasil-ghebbi.jpg', 'alt' => 'Fasil Ghebbi', 'is_primary' => true],
+                ['path' => '/images/attractions/fasil-ghebbi-courtyard.jpg', 'alt' => 'Fasil Ghebbi courtyard'],
+            ],
+        ]);
+
+        $response = $this->get(route('destinations.show', $destination));
+        $response->assertOk()
+            ->assertSee('A closer look at Gondar')
+            ->assertSee('2 photographs')
+            ->assertSee('/images/attractions/fasil-ghebbi-courtyard.jpg')
+            ->assertSee('Photos of Fasil Ghebbi')
+            ->assertSee('Wikimedia Commons');
+    }
+
     public function test_heritage_and_museum_sections_are_properly_integrated(): void
     {
         $bureauUser = User::factory()->create(['role' => 'tourism_bureau_officer']);

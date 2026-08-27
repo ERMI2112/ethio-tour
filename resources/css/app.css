@@ -2286,3 +2286,115 @@ button:focus-visible {
     color: var(--vn-text-muted);
 }
 
+/* Destination and attraction photography: a real, attributable gallery. */
+.destination-gallery-section {
+    padding: 1.5rem;
+    border: 1px solid rgba(12, 30, 20, .08);
+    border-radius: 1.25rem;
+    background: var(--vn-bg-light, #f7faf8);
+}
+
+.destination-section-kicker {
+    display: block;
+    margin-bottom: .35rem;
+    color: var(--vn-emerald, #087f5b);
+    font-size: .72rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+
+.destination-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: 150px;
+    gap: .75rem;
+}
+
+.destination-gallery__item,
+.attraction-gallery__item {
+    position: relative;
+    min-height: 0;
+    margin: 0;
+    overflow: hidden;
+    border-radius: .85rem;
+    background: #dfe9e3;
+}
+
+.destination-gallery__item--lead {
+    grid-row: span 2;
+    grid-column: span 2;
+}
+
+.destination-gallery img,
+.attraction-gallery img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+    transition: transform .35s ease;
+}
+
+.destination-gallery__item:hover img,
+.attraction-gallery__item:hover img {
+    transform: scale(1.04);
+}
+
+.destination-gallery figcaption,
+.attraction-gallery figcaption {
+    position: absolute;
+    right: .5rem;
+    bottom: .45rem;
+    max-width: calc(100% - 1rem);
+    padding: .2rem .45rem;
+    border-radius: .35rem;
+    background: rgba(0, 0, 0, .62);
+    color: #fff;
+    font-size: .64rem;
+    line-height: 1.2;
+    opacity: 0;
+    transition: opacity .2s ease;
+}
+
+.destination-gallery__item:hover figcaption,
+.attraction-gallery__item:hover figcaption,
+.destination-gallery__item:focus-within figcaption,
+.attraction-gallery__item:focus-within figcaption {
+    opacity: 1;
+}
+
+.attraction-gallery {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-auto-rows: 82px;
+    gap: .5rem;
+}
+
+.attraction-gallery__item--lead {
+    grid-column: span 4;
+    grid-row: span 3;
+}
+
+@media (max-width: 767.98px) {
+    .destination-gallery {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-auto-rows: 120px;
+    }
+
+    .destination-gallery__item--lead {
+        grid-column: span 2;
+    }
+
+    .attraction-gallery {
+        grid-auto-rows: 72px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .destination-gallery img,
+    .attraction-gallery img,
+    .destination-gallery figcaption,
+    .attraction-gallery figcaption {
+        transition: none;
+    }
+}

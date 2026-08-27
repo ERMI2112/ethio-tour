@@ -52,6 +52,7 @@ class Destination extends Model
         'description',
         'tagline',
         'hero_image',
+        'gallery_images',
         'latitude',
         'longitude',
     ];
@@ -63,6 +64,7 @@ class Destination extends Model
             'longitude' => 'decimal:7',
             'is_featured' => 'boolean',
             'amenities' => 'array',
+            'gallery_images' => 'array',
         ];
     }
 
@@ -101,6 +103,60 @@ class Destination extends Model
         }
 
         return asset('images/destinations/gondar-hero.jpg');
+    }
+
+    /**
+     * Return only gallery records whose image asset can safely be displayed.
+     * Gallery metadata remains attributable instead of storing bare paths.
+     *
+     * @return array<int, array<string, mixed>>
+     */
+    public function galleryImages(): array
+    {
+        $images = collect($this->gallery_images ?? [])
+            ->filter(fn ($image) => is_array($image) && ! empty($image['path']))
+            ->map(function (array $image): ?array {
+                $url = $this->galleryImageUrl($image['path']);
+
+                if ($url === null) {
+                    return null;
+                }
+
+                return array_merge($image, ['url' => $url]);
+            })
+            ->filter()
+            ->sortByDesc(fn (array $image) => (bool) ($image['is_primary'] ?? false))
+            ->values();
+
+        if ($images->isNotEmpty()) {
+            return $images->all();
+        }
+
+        $heroUrl = ! empty($this->hero_image) ? $this->galleryImageUrl($this->hero_image) : null;
+
+        return $heroUrl ? [[
+            'path' => $this->hero_image,
+            'url' => $heroUrl,
+            'alt' => $this->name,
+            'is_primary' => true,
+        ]] : [];
+    }
+
+    private function galleryImageUrl(string $path): ?string
+    {
+        if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+            return $path;
+        }
+
+        if (str_starts_with($path, '/images/') || str_starts_with($path, 'images/')) {
+            return file_exists(public_path(ltrim($path, '/'))) ? asset(ltrim($path, '/')) : null;
+        }
+
+        if (Storage::disk('public')->exists($path)) {
+            return asset('storage/'.ltrim($path, '/'));
+        }
+
+        return null;
     }
 
     public function categoryLabel(): string
