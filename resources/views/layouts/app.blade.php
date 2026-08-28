@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', config('app.name')) | {{ config('app.name') }}</title>
+    <meta name="description" content="@yield('meta_description', 'Discover Ethiopia through verified destinations, heritage sites, local services, cultural events, and practical trip planning with Ethio Tour.')">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="{{ config('app.name') }}">
+    <meta property="og:title" content="@yield('title', config('app.name')) | {{ config('app.name') }}">
+    <meta property="og:description" content="@yield('meta_description', 'Discover Ethiopia through verified destinations, heritage sites, local services, cultural events, and practical trip planning with Ethio Tour.')">
+    <meta property="og:image" content="@yield('meta_image', asset('images/destinations/hero-ethiopia.jpg'))">
+    <meta property="og:url" content="{{ url()->current() }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="@yield('title', config('app.name')) | {{ config('app.name') }}">
+    <meta name="twitter:description" content="@yield('meta_description', 'Discover Ethiopia through verified destinations, heritage sites, local services, cultural events, and practical trip planning with Ethio Tour.')">
+    <meta name="twitter:image" content="@yield('meta_image', asset('images/destinations/hero-ethiopia.jpg'))">
+    <link rel="icon" href="{{ asset('favicon.ico') }}" sizes="32x32">
+    <link rel="icon" type="image/svg+xml" href="{{ asset('favicon.svg') }}">
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
     @yield('meta')
     <script>
         (function() {

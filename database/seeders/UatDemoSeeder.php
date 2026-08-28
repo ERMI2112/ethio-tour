@@ -176,8 +176,11 @@ class UatDemoSeeder extends Seeder
 
         $festivalService = $this->service($eventOrganizer, $culturalEvents, $gondar, 'Timkat Gondar Epiphany & Cultural Festival', 0, 'Annual baptism and epiphany festival celebration with sacred tabot procession at Fasilides Bath.');
         $heritageService = $this->service($eventOrganizer, $heritage, $lalibela, 'Lalibela Meskel Cultural Celebration', 0, 'Ancient festival of the Finding of the True Cross celebrated with torchlight processions.');
-        $festival = $this->event($eventOrganizer, $festivalService, 'Timkat Gondar Epiphany & Cultural Festival', $gondar, 45);
-        $heritageEvent = $this->event($eventOrganizer, $heritageService, 'Lalibela Meskel Cultural Celebration', $lalibela, 60);
+        // Real Ethiopian festival dates: Timkat falls on 19 January (Tir 11),
+        // Meskel on 27 September (Meskerem 17). Always seed the NEXT
+        // occurrence so the events stay in the "upcoming" public catalog.
+        $festival = $this->event($eventOrganizer, $festivalService, 'Timkat Gondar Epiphany & Cultural Festival', $gondar, self::nextOccurrence(1, 19));
+        $heritageEvent = $this->event($eventOrganizer, $heritageService, 'Lalibela Meskel Cultural Celebration', $lalibela, self::nextOccurrence(9, 27));
         $this->ticket($festival, 'General Admission', 250, 100);
         $this->ticket($festival, 'VIP Admission', 600, 25);
         $this->ticket($heritageEvent, 'Standard Admission', 200, 80);
@@ -321,12 +324,26 @@ class UatDemoSeeder extends Seeder
         );
     }
 
-    private function event(ServiceProvider $provider, TourismService $service, string $name, Destination $destination, int $days): CulturalEvent
+    private function event(ServiceProvider $provider, TourismService $service, string $name, Destination $destination, string $eventDate): CulturalEvent
     {
         return CulturalEvent::updateOrCreate(
             ['provider_id' => $provider->provider_id, 'event_name' => $name],
-            ['destination_id' => $destination->destination_id, 'service_id' => $service->service_id, 'description' => $service->description, 'event_date' => now()->addDays($days)->toDateString(), 'start_time' => '18:00', 'end_time' => '20:00', 'venue' => $destination->name.' Cultural Hall', 'status' => 'published'],
+            ['destination_id' => $destination->destination_id, 'service_id' => $service->service_id, 'description' => $service->description, 'event_date' => $eventDate, 'start_time' => '18:00', 'end_time' => '20:00', 'venue' => $destination->name.' Cultural Hall', 'status' => 'published'],
         );
+    }
+
+    /**
+     * Next future calendar date (>= today) for a fixed annual festival day.
+     */
+    private static function nextOccurrence(int $month, int $day): string
+    {
+        $candidate = now()->setDate((int) now()->year, $month, $day)->startOfDay();
+
+        if ($candidate->isBefore(today())) {
+            $candidate = $candidate->addYear();
+        }
+
+        return $candidate->toDateString();
     }
 
     private function ticket(CulturalEvent $event, string $name, float $price, int $quantity): EventTicketType

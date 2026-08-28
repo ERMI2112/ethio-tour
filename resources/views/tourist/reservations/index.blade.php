@@ -45,9 +45,11 @@
         </div>
         <div class="card-body p-0">
             @if ($bookings->isEmpty())
-                <div class="p-5 text-center text-muted">
-                    <p class="mb-2 fs-5">No reservations found.</p>
-                    <p class="small mb-0">Browse published tourism experiences to plan your next stay, meal, journey, tour, or event.</p>
+                <div class="p-4">
+                    <x-ui.empty-state icon="bi-calendar2-heart" title="No reservations found" message="Browse published tourism experiences to plan your next stay, meal, journey, tour, or event.">
+                        <a class="btn btn-success px-4" href="{{ route('tourism-services.index') }}">Browse experiences</a>
+                        <a class="btn btn-outline-success ms-2" href="{{ route('destinations.index') }}">Explore destinations</a>
+                    </x-ui.empty-state>
                 </div>
             @else
                 <div class="table-responsive">

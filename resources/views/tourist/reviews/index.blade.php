@@ -24,7 +24,9 @@
                             <a class="small" href="{{ route('tourist.reservations.show', $review->booking) }}">View booking</a>
                         </article>
                     @empty
-                        <x-ui.empty-state title="No reviews yet" message="Your submitted reviews will appear here." />
+                        <x-ui.empty-state icon="bi-star" title="No reviews yet" message="Completed trips become reviewable here — your feedback helps other travelers choose with confidence.">
+                            <a class="btn btn-outline-success" href="{{ route('tourist.reservations.index') }}">View my bookings</a>
+                        </x-ui.empty-state>
                     @endforelse
                     @if ($reviews->hasPages())
                         <div class="pt-3">{{ $reviews->links() }}</div>
