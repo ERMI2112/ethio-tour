@@ -203,13 +203,13 @@
                         @endif
                     </div>
 
-                    <div class="d-flex align-items-center gap-3">
+                    <div class="destination-toolbar d-flex flex-wrap align-items-center gap-3">
                         <a class="btn btn-outline-success btn-sm fw-semibold d-inline-flex align-items-center gap-1 rounded-3" href="{{ route('map', ['category' => 'destinations']) }}">
                             <i class="bi bi-geo-alt-fill"></i>
                             <span>Show on the map</span>
                         </a>
 
-                        <div class="d-flex align-items-center gap-2">
+                        <div class="d-flex flex-wrap align-items-center gap-2">
                             <label class="small text-muted fw-semibold text-nowrap" for="sort-dropdown">Sort by:</label>
                             <select id="sort-dropdown" class="form-select form-select-sm rounded-3" style="width: auto;" onchange="location.href='{{ route('destinations.index', array_filter(['q' => $search, 'category' => $category, 'region' => $region, 'amenity' => $amenity])) }}' + (this.value ? '&sort=' + this.value : '')">
                                 <option value="recommended" @selected($sort === 'recommended')>Recommended</option>

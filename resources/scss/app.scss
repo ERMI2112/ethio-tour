@@ -751,6 +751,36 @@ body.workspace-body .list-group-item {
 }
 
 @media (max-width: 575.98px) {
+    .destinations-hero-section .d-flex > div:first-child {
+        min-width: 0;
+        max-width: 100%;
+    }
+
+    .destinations-hero-section h1 {
+        overflow-wrap: anywhere;
+    }
+
+    .destinations-hero-section .badge {
+        white-space: normal;
+        max-width: 100%;
+    }
+
+    .destination-toolbar {
+        width: 100%;
+    }
+
+    .destination-toolbar > .d-flex:last-child {
+        flex: 1 1 100%;
+        justify-content: space-between;
+        min-width: 0;
+    }
+
+    .destination-toolbar #sort-dropdown {
+        min-width: 0;
+        width: auto !important;
+        max-width: 100%;
+    }
+
     .workspace-header {
         height: 64px !important;
     }
