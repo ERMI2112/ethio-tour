@@ -42,39 +42,39 @@ class HotelProviderController extends Controller
             ->whereHas('hotelRoomReservation', fn ($query) => $query->whereDate('check_in_date', '>=', now()->toDateString()))
             ->count();
 
-        $totalRoomsCount = $rooms->count() ?: 12;
-        $activeRoomsCount = $rooms->where('status', 'active')->count() ?: 11;
-        $activeBookedSuites = $reservationCounts['confirmed'] + $reservationCounts['accepted'] + $upcomingStays;
-        if ($activeBookedSuites === 0) {
-            $activeBookedSuites = min(32, $totalRoomsCount);
-        }
+        $totalRoomsCount = $rooms->count();
+        $activeRoomsCount = $rooms->where('status', 'active')->count();
+        $activeBookedSuites = Booking::query()
+            ->whereIn('service_id', $serviceIds)
+            ->whereIn('status', HotelAvailabilityService::INVENTORY_RESERVING_STATUSES)
+            ->whereHas('hotelRoomReservation', fn ($query) => $query
+                ->whereDate('check_in_date', '<=', now()->toDateString())
+                ->whereDate('check_out_date', '>', now()->toDateString()))
+            ->count();
         $pendingCheckins = $reservationCounts['pending'] + $reservationCounts['payment_pending'];
-        if ($pendingCheckins === 0) {
-            $pendingCheckins = 9;
-        }
-        $availableRooms = max(1, $totalRoomsCount - $activeBookedSuites);
-        $occupancyRate = round(($activeBookedSuites / max(1, $totalRoomsCount + 10)) * 100);
-        if ($occupancyRate === 0 || $occupancyRate > 100) {
-            $occupancyRate = 78;
-        }
+        $availableRooms = max(0, $activeRoomsCount - $activeBookedSuites);
+        $occupancyRate = $activeRoomsCount > 0 ? round(min(100, ($activeBookedSuites / $activeRoomsCount) * 100)) : null;
 
-        // 7-Day Revenue Data
+        // 7-day revenue data from confirmed/completed bookings.
+        $weekStart = now()->copy()->subDays(6)->startOfDay();
+        $weekEnd = now()->copy()->endOfDay();
         $weeklyRevenue = (float) Booking::whereIn('service_id', $serviceIds)
             ->whereIn('status', ['confirmed', 'completed'])
+            ->whereBetween('booking_date', [$weekStart, $weekEnd])
             ->sum('total_amount');
-        if ($weeklyRevenue == 0) {
-            $weeklyRevenue = 8490.00;
-        }
+        $dailyRevenue = Booking::whereIn('service_id', $serviceIds)
+            ->whereIn('status', ['confirmed', 'completed'])
+            ->whereBetween('booking_date', [$weekStart, $weekEnd])
+            ->selectRaw('DATE(booking_date) as day, SUM(total_amount) as amount')
+            ->groupByRaw('DATE(booking_date)')
+            ->pluck('amount', 'day');
+        $maxDailyRevenue = max(0, (float) $dailyRevenue->max());
+        $weeklyChartDays = collect(range(6, 0))->map(function (int $daysAgo) use ($dailyRevenue, $maxDailyRevenue): array {
+            $date = now()->copy()->subDays($daysAgo);
+            $amount = (float) ($dailyRevenue[$date->toDateString()] ?? 0);
 
-        $weeklyChartDays = [
-            ['day' => 'Mon', 'amount' => round($weeklyRevenue * 0.12), 'height' => 50],
-            ['day' => 'Tue', 'amount' => round($weeklyRevenue * 0.15), 'height' => 65],
-            ['day' => 'Wed', 'amount' => round($weeklyRevenue * 0.10), 'height' => 45],
-            ['day' => 'Thu', 'amount' => round($weeklyRevenue * 0.18), 'height' => 75],
-            ['day' => 'Fri', 'amount' => round($weeklyRevenue * 0.22), 'height' => 90],
-            ['day' => 'Sat', 'amount' => round($weeklyRevenue * 0.28), 'height' => 100],
-            ['day' => 'Sun', 'amount' => round($weeklyRevenue * 0.16), 'height' => 70],
-        ];
+            return ['day' => $date->format('D'), 'amount' => $amount, 'height' => $maxDailyRevenue > 0 ? round(($amount / $maxDailyRevenue) * 100) : 0];
+        })->all();
 
         // Recent Bookings Feed
         $recentBookings = Booking::whereIn('service_id', $serviceIds)
@@ -91,8 +91,8 @@ class HotelProviderController extends Controller
             'reservations' => $reservationCounts,
             'upcomingStays' => $upcomingStays,
             'pendingAttention' => $reservationCounts['pending'],
-            'reviewAverage' => (clone $reviewQuery)->avg('rating') ?: 4.9,
-            'reviewCount' => (clone $reviewQuery)->count() ?: 38,
+            'reviewAverage' => (clone $reviewQuery)->avg('rating'),
+            'reviewCount' => (clone $reviewQuery)->count(),
             'occupancyRate' => $occupancyRate,
             'activeBookedSuites' => $activeBookedSuites,
             'pendingCheckins' => $pendingCheckins,

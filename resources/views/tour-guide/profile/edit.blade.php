@@ -197,11 +197,26 @@
                         </div>
 
                         {{-- Action Buttons --}}
-                        <div class="d-flex gap-2 pt-2 border-top">
+                        <div class="d-flex gap-2 pt-2 border-top mb-4">
                             <button class="btn btn-primary px-4" type="submit">Save profile changes</button>
                             <a class="btn btn-outline-secondary px-3" href="{{ route('tour-guide.profile') }}">Cancel</a>
                         </div>
                     </form>
+
+                        <div class="card border rounded-3 mb-4">
+                            <div class="card-header bg-white"><h2 class="h6 mb-0">Verification documents</h2></div>
+                            <div class="card-body">
+                                <p class="small text-muted">Upload a readable license and identity document. Files are stored privately and reviewed by the Tourism Bureau.</p>
+                                <form method="POST" action="{{ route('tour-guide.verification-documents.store') }}" enctype="multipart/form-data" class="row g-3 align-items-end mb-3">
+                                    @csrf
+                                    <div class="col-md-4"><label class="form-label" for="guide_document_type">Document type</label><select class="form-select" id="guide_document_type" name="document_type" required><option value="license">Professional license</option><option value="identity">Identity document</option><option value="other">Other</option></select></div>
+                                    <div class="col-md-5"><label class="form-label" for="guide_document">File</label><input class="form-control" id="guide_document" type="file" name="document" accept="application/pdf,image/jpeg,image/png,image/webp" required></div>
+                                    <div class="col-md-3"><button class="btn btn-outline-primary w-100" type="submit">Upload document</button></div>
+                                </form>
+                                @forelse($guide->verificationDocuments as $document)<div class="d-flex justify-content-between align-items-center border-top py-2"><span class="small">{{ ucfirst(str_replace('_', ' ', $document->document_type)) }} · {{ $document->original_name }}</span><x-ui.status-badge :status="$document->status" /></div>@empty<div class="small text-muted">No documents uploaded yet.</div>@endforelse
+                            </div>
+                        </div>
+
                 </div>
             </div>
         </div>

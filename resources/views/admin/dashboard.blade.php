@@ -63,6 +63,19 @@
             </div>
         @endif
 
+        @if ($pendingFinalGuides > 0)
+            <div class="card border-0 shadow-sm rounded-3 mb-3 overflow-hidden bg-white" style="border-left: 4px solid #7c3aed !important;">
+                <div class="card-body p-3.5 d-flex flex-wrap justify-content-between align-items-center gap-3">
+                    <div>
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2 py-0.5 mb-1" style="font-size: 0.68rem;">Final guide review</span>
+                        <h3 class="h6 fw-bold text-dark mb-1">{{ $pendingFinalGuides }} guide{{ $pendingFinalGuides === 1 ? '' : 's' }} awaiting final approval</h3>
+                        <p class="text-secondary small mb-0">These guides passed Tourism Bureau verification and require Administrator approval.</p>
+                    </div>
+                    <a class="btn btn-outline-primary btn-sm fw-semibold rounded-3 px-3" href="{{ route('admin.guides.index') }}">Review guide queue</a>
+                </div>
+            </div>
+        @endif
+
         <div class="card border-0 shadow-sm rounded-3 bg-white" style="border-left: 4px solid #0284c7 !important;">
             <div class="card-body p-3.5 d-flex flex-wrap justify-content-between align-items-center gap-3">
                 <div>
@@ -93,8 +106,8 @@
                 ['Total users', $totalUsers, route('admin.users.index'), 'bi-people'],
                 ['Active users', $activeUsers, route('admin.users.index', ['active' => '1']), 'bi-person-check'],
                 ['Active providers', $activeProviders, route('admin.providers.index'), 'bi-building-check'],
-                ['Verified guides', $verifiedGuides, route('admin.users.index', ['role' => 'tour_guide']), 'bi-person-badge'],
-                ['Active bookings', $bookings, route('admin.reports.index'), 'bi-journal-check'],
+                ['Approved guides', $approvedGuides, route('admin.guides.index', ['status' => 'approved']), 'bi-person-badge'],
+                ['All bookings', $bookings, route('admin.reports.index'), 'bi-journal-check'],
                 ['Reviews', $reviewCount, route('admin.reviews.index'), 'bi-star'],
             ] as [$label, $value, $targetUrl, $icon])
                 <div class="col-6 col-md-4 col-xl-2">
@@ -199,7 +212,7 @@
                     </a>
                 </div>
                 <div class="card-footer bg-light-subtle small text-muted p-3 border-top">
-                    <i class="bi bi-info-circle me-1"></i> Payment and revenue reporting remain unavailable until the centralized payment phase.
+                    <i class="bi bi-info-circle me-1"></i> Chapa payment confirmation is active; this overview does not include payment reconciliation details.
                 </div>
             </div>
         </section>

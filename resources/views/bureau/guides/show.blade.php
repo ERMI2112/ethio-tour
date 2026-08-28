@@ -51,7 +51,7 @@
                         <dd class="col-sm-8">{{ $guide->created_at?->format('Y-m-d') }}</dd>
 
                         <dt class="col-sm-4 text-muted small text-uppercase">Primary Region</dt>
-                        <dd class="col-sm-8">{{ $guide->destination?->name ?? 'Northern Ethiopia Circuit' }}</dd>
+                        <dd class="col-sm-8">{{ $guide->destination?->name ?? 'Not provided' }}</dd>
                     </dl>
                 </div>
             </div>
@@ -141,6 +141,27 @@
                             This guide has already received a Bureau verification decision.
                         </div>
                     @endif
+                </div>
+            </div>
+
+            <div class="card border-0 shadow-sm mt-4">
+                <div class="card-header bg-white py-3"><h2 class="h5 mb-0 fw-bold">Verification documents</h2></div>
+                <div class="list-group list-group-flush">
+                    @forelse($guide->verificationDocuments as $document)
+                        <div class="list-group-item">
+                            <div class="d-flex justify-content-between align-items-center gap-3">
+                                <div><strong>{{ ucfirst(str_replace('_', ' ', $document->document_type)) }}</strong><small class="d-block text-muted">{{ $document->original_name }} · {{ number_format($document->size_bytes / 1024, 1) }} KB</small></div>
+                                <div class="d-flex align-items-center gap-2"><x-ui.status-badge :status="$document->status" /><a class="btn btn-sm btn-outline-secondary" href="{{ route('bureau.guides.documents.download', [$guide, $document]) }}">Download</a></div>
+                            </div>
+                            @if($document->status === 'pending')
+                                <form method="POST" action="{{ route('bureau.guides.documents.decide', [$guide, $document]) }}" class="d-flex gap-2 mt-3">@csrf @method('PATCH')<input class="form-control" name="review_notes" placeholder="Review notes"><button class="btn btn-success" name="decision" value="approved">Approve</button><button class="btn btn-outline-danger" name="decision" value="rejected">Reject</button></form>
+                            @elseif($document->review_notes)
+                                <small class="d-block text-muted mt-2">Review notes: {{ $document->review_notes }}</small>
+                            @endif
+                        </div>
+                    @empty
+                        <div class="list-group-item text-muted">No verification documents uploaded yet.</div>
+                    @endforelse
                 </div>
             </div>
         </div>

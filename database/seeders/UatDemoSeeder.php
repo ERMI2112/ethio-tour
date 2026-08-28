@@ -278,6 +278,11 @@ class UatDemoSeeder extends Seeder
         $guide->availability_status = $options['availability_status'] ?? 'available';
         $guide->daily_rate = $options['daily_rate'] ?? 2000;
         $guide->verification_status = $verification;
+        $guide->admin_approval_status = $verification === 'verified' ? 'approved' : 'pending';
+        $guide->admin_approved_at = $verification === 'verified' ? now() : null;
+        $guide->admin_approved_by = $verification === 'verified'
+            ? User::where('role', 'administrator')->where('is_active', true)->value('user_id')
+            : null;
         $guide->save();
 
         return $guide;

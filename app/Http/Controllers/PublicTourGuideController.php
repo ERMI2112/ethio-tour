@@ -21,6 +21,7 @@ class PublicTourGuideController extends Controller
         $guides = TourGuide::query()
             ->with(['user', 'destination'])
             ->where('verification_status', 'verified')
+            ->where('admin_approval_status', 'approved')
             ->whereHas('user', fn ($query) => $query->where('is_active', true))
             ->when($search !== '', function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
@@ -81,7 +82,7 @@ class PublicTourGuideController extends Controller
     {
         $guide->loadMissing('user');
 
-        abort_unless($guide->verification_status === 'verified' && $guide->user?->is_active, 404);
+        abort_unless($guide->isPubliclyApproved(), 404);
     }
 
     private function attachRatings($guides): void

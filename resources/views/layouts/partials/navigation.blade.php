@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-xl main-navbar shadow-sm sticky-top" aria-label="Primary navigation">
+<nav class="navbar navbar-expand-lg main-navbar shadow-sm sticky-top" aria-label="Primary navigation">
     <div class="container d-flex align-items-center justify-content-between">
         {{-- Brand Logo with Ethiopian Land of Origins style icon --}}
         <a class="navbar-brand py-0" href="{{ route('home') }}">
@@ -29,7 +29,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Plan Your Trip</a>
                     <ul class="dropdown-menu">
-                        <li><h6 class="dropdown-header text-uppercase small">Plan with real public services</h6></li>
+                        <li><div class="dropdown-header text-uppercase small">Plan with real public services</div></li>
                         <li><a class="dropdown-item" href="{{ route('tour-guides.index') }}">Tour Guides</a></li>
                         <li><a class="dropdown-item" href="{{ route('tourism-services.index', ['provider_type' => 'hotel']) }}">Hotels</a></li>
                         <li><a class="dropdown-item" href="{{ route('tourism-services.index', ['provider_type' => 'restaurant']) }}">Restaurants</a></li>
@@ -43,7 +43,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Events</a>
                     <ul class="dropdown-menu">
-                        <li><h6 class="dropdown-header text-uppercase small">Celebrations &amp; Gatherings</h6></li>
+                        <li><div class="dropdown-header text-uppercase small">Celebrations &amp; Gatherings</div></li>
                         <li><a class="dropdown-item" href="{{ route('events.index') }}">Cultural Events</a></li>
                         <li><a class="dropdown-item" href="{{ route('events.index') }}">Festivals / Upcoming Events</a></li>
                     </ul>
@@ -53,7 +53,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Things to Do</a>
                     <ul class="dropdown-menu">
-                        <li><h6 class="dropdown-header text-uppercase small">Experiences</h6></li>
+                        <li><div class="dropdown-header text-uppercase small">Experiences</div></li>
                         <li><a class="dropdown-item" href="{{ route('heritage-sites.index') }}">Culture &amp; Heritage</a></li>
                         <li><a class="dropdown-item" href="{{ route('map', ['category' => 'destinations']) }}">Highlands &amp; Nature</a></li>
                         <li><a class="dropdown-item" href="{{ route('tourism-services.index', ['provider_type' => 'restaurant']) }}">Food &amp; Dining</a></li>
@@ -64,7 +64,7 @@
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Smart Trip</a>
                     <ul class="dropdown-menu">
-                        <li><h6 class="dropdown-header text-uppercase small">Itinerary &amp; Planning</h6></li>
+                        <li><div class="dropdown-header text-uppercase small">Itinerary &amp; Planning</div></li>
                         <li><a class="dropdown-item" href="{{ auth()->user()?->role === 'tourist' ? route('smart-trip.create') : route('smart-trip.index') }}">Plan a Trip</a></li>
                         @auth
                             @if (auth()->user()->role === 'tourist')
@@ -72,7 +72,7 @@
                             @endif
                         @endauth
                         <li><hr class="dropdown-divider"></li>
-                        <li><h6 class="dropdown-header text-uppercase small">Explore &amp; Discover</h6></li>
+                        <li><div class="dropdown-header text-uppercase small">Explore &amp; Discover</div></li>
                         <li>
                             <a class="dropdown-item d-flex align-items-center gap-2" href="{{ route('search') }}">
                                 <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/></svg>

@@ -575,7 +575,10 @@ class DestinationDiscoveryHubTest extends TestCase
             ->assertSee('Debre Berhan Selassie Church')
             ->assertSee('Church &amp; Monastery', false)
             ->assertSee('Get Directions')
-            ->assertSee('200.00 ETB');
+            ->assertSee('200.00 ETB')
+            ->assertSee('Paid at the site')
+            ->assertSee('Ethio Tour does not currently process this admission fee')
+            ->assertDontSee('Est. Admission');
     }
 
     public function test_attractions_count_renders_on_destinations_index(): void

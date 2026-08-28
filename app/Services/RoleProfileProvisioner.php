@@ -37,6 +37,7 @@ class RoleProfileProvisioner
                     'license_number' => $attributes['license_number'],
                     'expertise' => $attributes['expertise'],
                     'availability_status' => 'unavailable',
+                    'admin_approval_status' => 'pending',
                 ]),
                 'service_provider' => ServiceProvider::create([
                     'user_id' => $user->user_id,

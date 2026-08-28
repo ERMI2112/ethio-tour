@@ -182,7 +182,7 @@ class TripItemTargetResolver
     {
         return match ($type) {
             'service' => $target->serviceProvider?->isOperational() === true,
-            'guide' => $target->verification_status === 'verified' && $target->user?->is_active === true,
+            'guide' => $target->isPubliclyApproved(),
             'event' => $target->status === 'published'
                 && ($target->event_date?->isFuture() || $target->event_date?->isToday())
                 && $target->serviceProvider?->isOperational() === true,

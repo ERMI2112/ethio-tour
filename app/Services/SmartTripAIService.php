@@ -534,7 +534,7 @@ class SmartTripAIService
         if ($type === 'event' && ! CulturalEvent::query()->whereKey($id)->where('status', 'published')->whereDate('event_date', '>=', today())->whereHas('serviceProvider', fn ($query) => $query->publiclyOperational())->exists()) {
             return ['error' => 'Event is not public.'];
         }
-        if ($type === 'guide' && ! TourGuide::query()->whereKey($id)->where('verification_status', 'verified')->whereHas('user', fn ($query) => $query->where('is_active', true))->exists()) {
+        if ($type === 'guide' && ! TourGuide::query()->whereKey($id)->where('verification_status', 'verified')->where('admin_approval_status', 'approved')->whereHas('user', fn ($query) => $query->where('is_active', true))->exists()) {
             return ['error' => 'Guide is not public.'];
         }
 
@@ -600,7 +600,7 @@ class SmartTripAIService
     /** @param array<string,mixed> $arguments */
     private function toolGuideAvailability(array $arguments): array
     {
-        $guide = TourGuide::query()->whereKey((int) ($arguments['guide_id'] ?? 0))->where('verification_status', 'verified')->whereHas('user', fn ($query) => $query->where('is_active', true))->first();
+        $guide = TourGuide::query()->whereKey((int) ($arguments['guide_id'] ?? 0))->where('verification_status', 'verified')->where('admin_approval_status', 'approved')->whereHas('user', fn ($query) => $query->where('is_active', true))->first();
         if (! $guide) {
             return ['available' => false, 'reason' => 'Guide is not public.'];
         }

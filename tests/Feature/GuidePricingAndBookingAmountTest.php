@@ -135,7 +135,7 @@ class GuidePricingAndBookingAmountTest extends TestCase
             'expertise' => 'History',
             'availability_status' => 'available',
         ]);
-        $guide->forceFill(['verification_status' => 'verified', 'daily_rate' => 1000])->save();
+        $guide->forceFill(['verification_status' => 'verified', 'admin_approval_status' => 'approved', 'daily_rate' => 1000])->save();
 
         return compact('user', 'guide');
     }

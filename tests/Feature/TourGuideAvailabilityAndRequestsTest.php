@@ -140,7 +140,10 @@ class TourGuideAvailabilityAndRequestsTest extends TestCase
             'expertise' => 'Historical tours',
             'availability_status' => 'available',
         ]);
-        $guide->forceFill(['verification_status' => $verificationStatus])->save();
+        $guide->forceFill([
+            'verification_status' => $verificationStatus,
+            'admin_approval_status' => $verificationStatus === 'verified' ? 'approved' : 'pending',
+        ])->save();
 
         return compact('user', 'guide');
     }

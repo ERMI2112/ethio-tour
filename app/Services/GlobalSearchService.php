@@ -131,6 +131,7 @@ class GlobalSearchService
             $items = TourGuide::query()
                 ->with('user')
                 ->where('verification_status', 'verified')
+                ->where('admin_approval_status', 'approved')
                 ->whereHas('user', fn ($query) => $query->where('is_active', true))
                 ->when($term, fn ($query) => $query->where(function ($query) use ($term): void {
                     $query->where('expertise', 'like', "%{$term}%")

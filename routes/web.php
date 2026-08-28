@@ -3,6 +3,7 @@
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminAuditController;
 use App\Http\Controllers\AdminDashboardController;
+use App\Http\Controllers\AdminGuideApprovalController;
 use App\Http\Controllers\AdminProviderController;
 use App\Http\Controllers\AdminReportsController;
 use App\Http\Controllers\AdminReviewController;
@@ -19,6 +20,7 @@ use App\Http\Controllers\BureauGuideVerificationController;
 use App\Http\Controllers\BureauMuseumController;
 use App\Http\Controllers\BureauProviderVerificationController;
 use App\Http\Controllers\BureauReportsController;
+use App\Http\Controllers\BureauVerificationDocumentController;
 use App\Http\Controllers\CulturalEventController;
 use App\Http\Controllers\EventOrganizerController;
 use App\Http\Controllers\EventReservationController;
@@ -67,6 +69,7 @@ use App\Http\Controllers\TransportationReservationController;
 use App\Http\Controllers\TransportationServiceController;
 use App\Http\Controllers\TransportationTouristReservationController;
 use App\Http\Controllers\TransportationVehicleController;
+use App\Http\Controllers\VerificationDocumentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', PublicLandingController::class)->name('home');
@@ -127,6 +130,10 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/', AdminDashboardController::class)->name('dashboard');
         Route::get('/providers', [AdminProviderController::class, 'index'])->name('providers.index');
         Route::get('/providers/{serviceProvider}', [AdminProviderController::class, 'show'])->name('providers.show');
+        Route::get('/guides', [AdminGuideApprovalController::class, 'index'])->name('guides.index');
+        Route::get('/guides/{tourGuide}', [AdminGuideApprovalController::class, 'show'])->name('guides.show');
+        Route::get('/guides/{tourGuide}/documents/{verificationDocument}', [AdminGuideApprovalController::class, 'downloadDocument'])->name('guides.documents.download');
+        Route::patch('/guides/{tourGuide}/decision', [AdminGuideApprovalController::class, 'decide'])->name('guides.decide');
         Route::patch('/providers/{serviceProvider}/status', [AdminProviderController::class, 'updateStatus'])->name('providers.status');
         Route::post('/providers/{serviceProvider}/subscription', [AdminProviderController::class, 'assignSubscription'])->name('providers.subscription');
         Route::get('/users', [AdminUserController::class, 'index'])->name('users.index');
@@ -147,6 +154,8 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/profile', [TourGuidePortalController::class, 'showProfile'])->name('profile');
         Route::get('/profile/edit', [TourGuidePortalController::class, 'editProfile'])->name('profile.edit');
         Route::put('/profile', [TourGuidePortalController::class, 'updateProfile'])->name('profile.update');
+        Route::post('/verification-documents', [VerificationDocumentController::class, 'storeGuide'])->name('verification-documents.store');
+        Route::get('/verification-documents/{verificationDocument}', [VerificationDocumentController::class, 'downloadOwn'])->name('verification-documents.download');
         Route::get('/availability', [TourGuideBookingRequestController::class, 'availability'])->name('availability');
         Route::get('/requests', [TourGuideBookingRequestController::class, 'index'])->name('requests.index');
         Route::get('/requests/{booking}', [TourGuideBookingRequestController::class, 'show'])->name('requests.show');
@@ -210,6 +219,8 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/status', [ProviderOnboardingController::class, 'show'])->name('status');
         Route::get('/profile', [ProviderOnboardingController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [ProviderOnboardingController::class, 'update'])->name('profile.update');
+        Route::post('/verification-documents', [VerificationDocumentController::class, 'storeProvider'])->name('verification-documents.store');
+        Route::get('/verification-documents/{verificationDocument}', [VerificationDocumentController::class, 'downloadOwn'])->name('verification-documents.download');
         Route::get('/reports', [ProviderReportsController::class, 'index'])->name('reports');
     });
 
@@ -278,9 +289,13 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/guides', [BureauGuideVerificationController::class, 'index'])->name('guides.index');
         Route::get('/guides/{tourGuide}', [BureauGuideVerificationController::class, 'show'])->name('guides.show');
         Route::patch('/guides/{tourGuide}/decision', [BureauGuideVerificationController::class, 'decide'])->name('guides.decide');
+        Route::get('/guides/{tourGuide}/documents/{verificationDocument}', [BureauVerificationDocumentController::class, 'downloadForGuide'])->name('guides.documents.download');
+        Route::patch('/guides/{tourGuide}/documents/{verificationDocument}/decision', [BureauVerificationDocumentController::class, 'decideForGuide'])->name('guides.documents.decide');
         Route::get('/providers', [BureauProviderVerificationController::class, 'index'])->name('providers.index');
         Route::get('/providers/{serviceProvider}', [BureauProviderVerificationController::class, 'show'])->name('providers.show');
         Route::patch('/providers/{serviceProvider}/decision', [BureauProviderVerificationController::class, 'decide'])->name('providers.decide');
+        Route::get('/providers/{serviceProvider}/documents/{verificationDocument}', [BureauVerificationDocumentController::class, 'downloadForProvider'])->name('providers.documents.download');
+        Route::patch('/providers/{serviceProvider}/documents/{verificationDocument}/decision', [BureauVerificationDocumentController::class, 'decideForProvider'])->name('providers.documents.decide');
         Route::resource('museums', BureauMuseumController::class)->except(['show'])->parameters(['museums' => 'museumInformation']);
         Route::resource('attractions', BureauAttractionController::class)->except(['show'])->parameters(['attractions' => 'attraction']);
     });

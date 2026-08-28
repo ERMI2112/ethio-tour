@@ -35,11 +35,12 @@ class RestaurantProviderController extends Controller
 
         $todayBookedTables = $todayReservations->whereIn('status', ['accepted', 'payment_pending', 'confirmed', 'completed'])->count();
         $todayBookedSeats = $todayReservations->whereIn('status', ['accepted', 'payment_pending', 'confirmed', 'completed'])->sum(fn ($b) => $b->restaurantReservation?->guest_count ?? 0);
-        $peakCapacityPercentage = $tableCount > 0 ? min(100, round(($todayBookedTables / max(1, $tableCount)) * 100)) : ($totalSeatsCapacity > 0 ? min(100, round(($todayBookedSeats / max(1, $totalSeatsCapacity)) * 100)) : 80);
+        $peakCapacityPercentage = $tableCount > 0 ? min(100, round(($todayBookedTables / $tableCount) * 100)) : null;
 
         // Monthly dining revenue
         $monthlyRevenue = (float) Booking::whereIn('service_id', $serviceIds)
             ->whereIn('status', ['confirmed', 'completed'])
+            ->whereBetween('booking_date', [now()->startOfMonth(), now()->endOfMonth()])
             ->sum('total_amount');
 
         // Recent / Today's reservations feed
@@ -56,19 +57,19 @@ class RestaurantProviderController extends Controller
             ->orderByDesc('bookings_count')
             ->get();
 
-        $maxOrders = max(1, $dishes->max('bookings_count') ?: 1);
-        $dishPerformance = $dishes->map(function ($dish, $idx) {
-            $orders = $dish->bookings_count > 0 ? $dish->bookings_count : (120 - ($idx * 25));
-            $pct = round(($orders / max($orders, 120)) * 100);
+        $maxOrders = max(0, (int) $dishes->max('bookings_count'));
+        $dishPerformance = $dishes->map(function ($dish) use ($maxOrders) {
+            $orders = (int) $dish->bookings_count;
+            $pct = $maxOrders > 0 ? round(($orders / $maxOrders) * 100) : 0;
 
             return [
                 'service_id' => $dish->service_id,
                 'name' => $dish->service_name,
                 'orders' => $orders,
-                'rating' => number_format(5.0 - ($idx * 0.1), 1),
+                'rating' => null,
                 'price' => (float) $dish->price,
                 'category' => $dish->category?->category_name ?? 'Gastronomy',
-                'percentage' => max(35, min(100, $pct)),
+                'percentage' => min(100, $pct),
             ];
         });
 
@@ -76,15 +77,15 @@ class RestaurantProviderController extends Controller
             'serviceCount' => $serviceIds->count(),
             'tableCount' => $tableCount,
             'activeTables' => $activeTables,
-            'totalSeatsCapacity' => $totalSeatsCapacity ?: ($tableCount * 4),
-            'todayBookedTables' => $todayBookedTables ?: ($tableCount > 0 ? min($tableCount, 4) : 0),
-            'todayBookedSeats' => $todayBookedSeats ?: 18,
-            'peakCapacityPercentage' => $peakCapacityPercentage ?: 80,
-            'monthlyRevenue' => $monthlyRevenue ?: 6120.00,
+            'totalSeatsCapacity' => $totalSeatsCapacity,
+            'todayBookedTables' => $todayBookedTables,
+            'todayBookedSeats' => $todayBookedSeats,
+            'peakCapacityPercentage' => $peakCapacityPercentage,
+            'monthlyRevenue' => $monthlyRevenue,
             'pendingReservations' => $pendingReservations,
             'upcomingReservations' => $upcomingReservations,
-            'reviewAverage' => (clone $reviewQuery)->avg('rating') ?: 4.9,
-            'reviewCount' => (clone $reviewQuery)->count() ?: 45,
+            'reviewAverage' => (clone $reviewQuery)->avg('rating'),
+            'reviewCount' => (clone $reviewQuery)->count(),
         ];
 
         return view('restaurant.dashboard', compact('provider', 'stats', 'dishPerformance', 'recentReservations'));
@@ -99,7 +100,7 @@ class RestaurantProviderController extends Controller
             ->orderByDesc('review_date')
             ->paginate(15);
 
-        $averageRating = Review::whereHas('booking', fn ($query) => $query->whereIn('service_id', $serviceIds))->avg('rating') ?: 4.9;
+        $averageRating = Review::whereHas('booking', fn ($query) => $query->whereIn('service_id', $serviceIds))->avg('rating');
         $totalReviews = Review::whereHas('booking', fn ($query) => $query->whereIn('service_id', $serviceIds))->count();
 
         return view('restaurant.reviews.index', compact('provider', 'reviews', 'averageRating', 'totalReviews'));

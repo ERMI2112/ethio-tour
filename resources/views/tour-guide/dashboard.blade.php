@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Tour Guide Dashboard · ' . ($guide->full_name ?: 'Historian Workspace'))
+@section('title', 'Tour Guide Dashboard · ' . ($guide->full_name ?: 'Tour Guide'))
 
 @section('content')
 <div class="container py-4 py-lg-5">
@@ -25,7 +25,7 @@
                         </span>
                     </div>
                     <h1 class="h3 fw-bold mb-0 text-dark" style="font-family: var(--font-display); letter-spacing: -0.02em;">
-                        Selam, Guide {{ $guide->full_name ?: 'Historian' }}!
+                        Selam, Guide {{ $guide->full_name ?: 'Tour Guide' }}!
                     </h1>
                     <p class="text-secondary mb-0 small">
                         Gondar City Supervised Historian ID #GDR-{{ str_pad($guide->guide_id, 4, '0', STR_PAD_LEFT) }} &bull; {{ $guide->user?->email }}
@@ -38,9 +38,9 @@
                         <img src="{{ $guide->profileImageUrl() }}" alt="{{ $guide->full_name }}" class="rounded-circle border" style="width: 38px; height: 38px; object-fit: cover;">
                         <div class="text-start">
                             <div class="fw-bold text-dark lh-1" style="font-size: 0.85rem;">
-                                {{ $guide->full_name ?: 'Yohannes Worku' }}
+                                {{ $guide->full_name ?: ($guide->user?->email ?? 'Tour guide') }}
                             </div>
-                            <div class="text-muted small" style="font-size: 0.72rem;">Ethiopia Smart Passport</div>
+                            <div class="text-muted small" style="font-size: 0.72rem;">Tour guide account</div>
                         </div>
                     </div>
 
@@ -50,7 +50,11 @@
                 </div>
             </div>
 
-            {{-- Sovereign Registry Status Alert (Page 2 Banner) --}}
+            @php
+                $guideStatus = $guide->verification_status === 'verified' && $guide->admin_approval_status === 'pending'
+                    ? 'Bureau verified · awaiting Administrator approval'
+                    : ucfirst($guide->verification_status);
+            @endphp
             <div class="card border-0 shadow-sm rounded-4 mb-4 bg-white overflow-hidden" style="border-left: 4px solid #0b5e42 !important;">
                 <div class="card-body p-3.5 d-flex flex-wrap justify-content-between align-items-center gap-3">
                     <div class="d-flex align-items-center gap-3">
@@ -59,11 +63,11 @@
                         </div>
                         <div>
                             <h2 class="h6 fw-bold text-dark mb-0.5">Sovereign Registry Status</h2>
-                            <p class="text-muted small mb-0">Supervised guide license renewed through December 2026. Verification decisions are protected.</p>
+                            <p class="text-muted small mb-0">Your profile, verification documents, and booking availability are shown from current account data.</p>
                         </div>
                     </div>
                     <span class="badge bg-success text-white rounded-pill px-3 py-1.5 fw-bold shadow-sm" style="font-size: 0.78rem;">
-                        ✓ Verified Agent
+                        {{ $guideStatus }}
                     </span>
                 </div>
             </div>
@@ -101,12 +105,12 @@
                         <div>
                             <span class="text-muted small fw-bold text-uppercase d-block mb-1" style="font-size: 0.7rem;">This Month's Earnings</span>
                             <div class="h3 fw-bold text-dark mb-1 font-monospace" style="font-family: var(--font-display);">
-                                ${{ number_format($stats['monthlyEarnings'], 2) }}
+                                {{ number_format($stats['monthlyEarnings'], 2) }} ETB
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-2">
-                            <span class="badge bg-success-subtle text-success rounded-pill px-2 py-0.5 small">Active</span>
-                            <span class="small text-muted">{{ $stats['completedBookings'] ?: 12 }} completed tours</span>
+                            <span class="badge bg-success-subtle text-success rounded-pill px-2 py-0.5 small">{{ ucfirst($guide->availability_status ?? 'unavailable') }}</span>
+                            <span class="small text-muted">{{ $stats['completedBookings'] }} completed tours</span>
                         </div>
                     </div>
                 </div>
@@ -116,12 +120,12 @@
                         <div>
                             <span class="text-muted small fw-bold text-uppercase d-block mb-1" style="font-size: 0.7rem;">Pending Escrow</span>
                             <div class="h3 fw-bold text-dark mb-1 font-monospace" style="font-family: var(--font-display);">
-                                ${{ number_format($stats['pendingEscrow'], 2) }}
+                                {{ number_format($stats['pendingEscrow'], 2) }} ETB
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge bg-warning-subtle text-warning-emphasis rounded-pill px-2 py-0.5 small">Pending</span>
-                            <span class="small text-muted">{{ $stats['activeBookings'] ?: 3 }} active reservations</span>
+                            <span class="small text-muted">{{ $stats['activeBookings'] }} active reservations</span>
                         </div>
                     </div>
                 </div>
@@ -131,12 +135,12 @@
                         <div>
                             <span class="text-muted small fw-bold text-uppercase d-block mb-1" style="font-size: 0.7rem;">Total Lifetime Payout</span>
                             <div class="h3 fw-bold text-dark mb-1 font-monospace" style="font-family: var(--font-display);">
-                                ${{ number_format($stats['lifetimePayout'], 2) }}
+                                {{ number_format($stats['lifetimePayout'], 2) }} ETB
                             </div>
                         </div>
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge bg-primary-subtle text-primary rounded-pill px-2 py-0.5 small">Approved</span>
-                            <span class="small text-muted">Direct bank transfer</span>
+                            <span class="small text-muted">Completed tours recorded</span>
                         </div>
                     </div>
                 </div>
@@ -172,9 +176,9 @@
                                 <div class="card border rounded-3 p-3 mb-2.5 bg-light-subtle shadow-2xs">
                                     <div class="d-flex justify-content-between align-items-start mb-1">
                                         <div>
-                                            <h3 class="h6 fw-bold text-dark mb-0.5">{{ $booking->tourist->full_name ?? 'Sarah Jenkins (USA)' }}</h3>
+                                            <h3 class="h6 fw-bold text-dark mb-0.5">{{ $booking->tourist->full_name ?? $booking->tourist->user?->email ?? 'Tourist' }}</h3>
                                             <span class="small text-secondary">
-                                                {{ $guide->destination?->name ?? 'Fasil Ghebbi Castle Complex' }} &bull; Historical Detail
+                                                {{ $guide->destination?->name ?? 'Destination not specified' }}
                                             </span>
                                         </div>
                                         <span class="badge {{ $statusPill['class'] }} rounded-pill px-2.5 py-1 fw-bold" style="font-size: 0.72rem;">
@@ -182,32 +186,11 @@
                                         </span>
                                     </div>
                                     <div class="small text-muted mt-1 font-monospace">
-                                        <i class="bi bi-clock me-1"></i> {{ $booking->booking_date?->format('M d, Y (H:i)') ?: 'Jan 18, 2026 (09:00)' }}
+                                        <i class="bi bi-clock me-1"></i> {{ $booking->booking_date?->format('M d, Y (H:i)') ?: 'Date not specified' }}
                                     </div>
                                 </div>
                             @empty
-                                {{-- Fallback realistic demo journeys matching Page 2 of PDF --}}
-                                <div class="card border rounded-3 p-3 mb-2.5 bg-light-subtle shadow-2xs">
-                                    <div class="d-flex justify-content-between align-items-start mb-1">
-                                        <div>
-                                            <h3 class="h6 fw-bold text-dark mb-0.5">Sarah Jenkins (USA)</h3>
-                                            <span class="small text-secondary">Fasil Ghebbi Castle Complex &bull; Historical Detail</span>
-                                        </div>
-                                        <span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2.5 py-1 fw-bold" style="font-size: 0.72rem;">Active</span>
-                                    </div>
-                                    <div class="small text-muted mt-1 font-monospace"><i class="bi bi-clock me-1"></i> Jan 18, 2026 (09:00)</div>
-                                </div>
-
-                                <div class="card border rounded-3 p-3 mb-0 bg-light-subtle shadow-2xs">
-                                    <div class="d-flex justify-content-between align-items-start mb-1">
-                                        <div>
-                                            <h3 class="h6 fw-bold text-dark mb-0.5">Marcus Vane (UK)</h3>
-                                            <span class="small text-secondary">Debre Berhan Selassie Church &bull; Imperial History Tour</span>
-                                        </div>
-                                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill px-2.5 py-1 fw-bold" style="font-size: 0.72rem;">Approved</span>
-                                    </div>
-                                    <div class="small text-muted mt-1 font-monospace"><i class="bi bi-clock me-1"></i> Jan 20, 2026 (10:00)</div>
-                                </div>
+                                <x-ui.empty-state title="No scheduled journeys" message="Accepted and confirmed guide bookings will appear here." />
                             @endforelse
                         </div>
                     </div>
@@ -233,9 +216,13 @@
                         <div class="p-3 rounded-3 bg-light-subtle border">
                             <div class="small text-muted fw-bold text-uppercase mb-1" style="font-size: 0.68rem;">Average rating</div>
                             <div class="d-flex align-items-center gap-2">
-                                <span class="text-warning fs-5">★</span>
-                                <strong class="text-dark fs-6">{{ number_format($stats['averageRating'], 1) }}</strong>
-                                <span class="text-muted small">({{ $stats['reviewCount'] }} direct tourist verified audits)</span>
+                                @if($stats['reviewCount'] > 0)
+                                    <span class="text-warning fs-5">★</span>
+                                    <strong class="text-dark fs-6">{{ number_format($stats['averageRating'], 1) }}</strong>
+                                    <span class="text-muted small">({{ $stats['reviewCount'] }} tourist review{{ $stats['reviewCount'] === 1 ? '' : 's' }})</span>
+                                @else
+                                    <span class="text-muted small">No tourist reviews yet.</span>
+                                @endif
                             </div>
                         </div>
 

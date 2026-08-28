@@ -23,7 +23,7 @@ class ProviderOnboardingController extends Controller
     {
         abort_unless($request->user()?->role === 'service_provider' && $request->user()->serviceProvider, 403);
 
-        $provider = $request->user()->serviceProvider->load('destination');
+        $provider = $request->user()->serviceProvider->load(['destination', 'verificationDocuments']);
         $destinations = Destination::orderBy('name')->get();
 
         return view('provider.onboarding-profile', compact('provider', 'destinations'));

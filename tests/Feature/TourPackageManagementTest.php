@@ -35,7 +35,7 @@ class TourPackageManagementTest extends TestCase
             'availability_status' => 'available',
             'daily_rate' => 2000.00,
         ]);
-        $guide->forceFill(['verification_status' => 'verified'])->save();
+        $guide->forceFill(['verification_status' => 'verified', 'admin_approval_status' => 'approved'])->save();
 
         // Access catalog
         $this->actingAs($guideUser)->get(route('tour-guide.tours'))->assertOk();
@@ -87,7 +87,7 @@ class TourPackageManagementTest extends TestCase
             'expertise' => 'Highland hikes',
             'availability_status' => 'available',
         ]);
-        $guide->forceFill(['verification_status' => 'verified'])->save();
+        $guide->forceFill(['verification_status' => 'verified', 'admin_approval_status' => 'approved'])->save();
 
         $pkg = TourPackage::create([
             'guide_id' => $guide->guide_id,
@@ -168,7 +168,7 @@ class TourPackageManagementTest extends TestCase
             'availability_status' => 'available',
             'daily_rate' => 1800.00,
         ]);
-        $guide->forceFill(['verification_status' => 'verified'])->save();
+        $guide->forceFill(['verification_status' => 'verified', 'admin_approval_status' => 'approved'])->save();
 
         $pkg = TourPackage::create([
             'guide_id' => $guide->guide_id,

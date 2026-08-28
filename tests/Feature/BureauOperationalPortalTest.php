@@ -66,12 +66,12 @@ class BureauOperationalPortalTest extends TestCase
         $this->actingAs($bureau)->patch(route('bureau.providers.decide', $approved), ['decision' => 'reject', 'verification_notes' => 'No'])->assertStatus(422);
     }
 
-    public function test_public_guide_discovery_reflects_bureau_verification_decision(): void
+    public function test_public_guide_discovery_requires_final_administrator_approval(): void
     {
         $pending = $this->guide('pending');
         $this->get(route('tour-guides.index'))->assertDontSee($pending->expertise);
         $pending->forceFill(['verification_status' => 'verified'])->save();
-        $this->get(route('tour-guides.index'))->assertSee($pending->expertise);
+        $this->get(route('tour-guides.index'))->assertDontSee($pending->expertise);
     }
 
     private function bureau(): User

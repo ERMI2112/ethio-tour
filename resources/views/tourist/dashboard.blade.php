@@ -28,11 +28,11 @@
             {{-- Traveler Passport ID Badge --}}
             <div class="d-flex align-items-center gap-2.5 p-1.5 pe-3 bg-white border rounded-pill shadow-sm">
                 <div class="bg-primary text-white rounded-circle d-flex align-items-center justify-content-center fw-bold shadow-sm" style="width: 38px; height: 38px; font-size: 0.85rem;">
-                    {{ strtoupper(substr($tourist->full_name ?: 'Sarah Jenkins', 0, 2)) }}
+                    {{ strtoupper(substr($tourist->full_name ?: $tourist->user?->email ?: 'T', 0, 2)) }}
                 </div>
                 <div class="text-start">
                     <div class="fw-bold text-dark lh-1" style="font-size: 0.85rem;">
-                        {{ $tourist->full_name ?: 'Sarah Jenkins' }}
+                        {{ $tourist->full_name ?: ($tourist->user?->email ?: 'Tourist') }}
                     </div>
                     <div class="text-muted small" style="font-size: 0.72rem;">Ethiopia Smart Passport</div>
                 </div>
@@ -44,36 +44,37 @@
         </div>
     </div>
 
-    {{-- Active Journey Hero Card --}}
-    <div class="card border-0 rounded-4 shadow-sm mb-4 overflow-hidden text-white" style="background: linear-gradient(135deg, #062133 0%, #0b5e42 100%);">
-        <div class="card-body p-4 p-lg-4 d-flex flex-wrap justify-content-between align-items-center gap-4">
-            <div>
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <span class="badge bg-success text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size: 0.72rem;">
-                        ● Supervised Trip Active
-                    </span>
-                    <span class="badge bg-light bg-opacity-10 text-light border border-light border-opacity-25 rounded-pill px-2.5 py-1 font-monospace" style="font-size: 0.7rem;">
-                        SECURED VIA ESCROW
-                    </span>
+    {{-- Current account activity --}}
+    @if ($trips->isNotEmpty() || $upcomingBookings->isNotEmpty())
+        <div class="card border-0 rounded-4 shadow-sm mb-4 overflow-hidden text-white" style="background: linear-gradient(135deg, #062133 0%, #0b5e42 100%);">
+            <div class="card-body p-4 p-lg-4 d-flex flex-wrap justify-content-between align-items-center gap-4">
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="badge bg-success text-white rounded-pill px-2.5 py-1 fw-bold" style="font-size: 0.72rem;">Upcoming account activity</span>
+                        @if ($upcomingBookings->isNotEmpty())
+                            <span class="badge bg-light bg-opacity-10 text-light border border-light border-opacity-25 rounded-pill px-2.5 py-1 font-monospace" style="font-size: 0.7rem;">{{ $upcomingBookings->count() }} booking{{ $upcomingBookings->count() === 1 ? '' : 's' }}</span>
+                        @endif
+                    </div>
+                    <h2 class="h4 fw-bold mb-1 text-white" style="font-family: var(--font-display);">{{ $trips->first()?->title ?: 'Upcoming booking' }}</h2>
+                    <p class="text-white-50 small mb-0">Your saved trips and upcoming bookings are shown from your account records.</p>
                 </div>
-                <h2 class="h4 fw-bold mb-1 text-white" style="font-family: var(--font-display);">
-                    {{ $trips->first()?->title ?? 'Upcoming Gondar Pilgrimage' }}
-                </h2>
-                <p class="text-white-50 small mb-0">
-                    Your local guide, verified itinerary, and accommodation bookings are synced.
-                </p>
-            </div>
-            <div class="p-3 rounded-3 bg-white bg-opacity-10 border border-white border-opacity-25 text-center min-w-140">
-                <div class="small text-white-50 fw-bold text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.05em;">Digital Ticket</div>
-                <div class="h5 fw-bold text-white font-monospace mb-1">
-                    ETH-{{ $upcomingBookings->first() ? sprintf('%03d-GDR', $upcomingBookings->first()->booking_id) : '902-GDR' }}
-                </div>
-                <div class="badge bg-success text-white rounded-pill px-2 py-0.5" style="font-size: 0.65rem;">
-                    ✓ Verified Active
-                </div>
+                @if ($upcomingBookings->first())
+                    <div class="p-3 rounded-3 bg-white bg-opacity-10 border border-white border-opacity-25 text-center min-w-140">
+                        <div class="small text-white-50 fw-bold text-uppercase" style="font-size: 0.68rem; letter-spacing: 0.05em;">Booking</div>
+                        <div class="h5 fw-bold text-white font-monospace mb-1">#BK-{{ sprintf('%05d', $upcomingBookings->first()->booking_id) }}</div>
+                        <div class="badge bg-success text-white rounded-pill px-2 py-0.5" style="font-size: 0.65rem;">{{ ucfirst($upcomingBookings->first()->status) }}</div>
+                    </div>
+                @endif
             </div>
         </div>
-    </div>
+    @else
+        <div class="card border-0 rounded-4 shadow-sm mb-4 bg-light-subtle">
+            <div class="card-body p-4 d-flex flex-wrap justify-content-between align-items-center gap-3">
+                <div><h2 class="h5 mb-1">No active trip or upcoming booking</h2><p class="text-muted small mb-0">Your saved trips and bookings will appear here after you create or book one.</p></div>
+                <a class="btn btn-success btn-sm rounded-pill px-3" href="{{ route('smart-trip.create') }}">Plan a trip</a>
+            </div>
+        </div>
+    @endif
 
     {{-- Quick Action Shortcut Bar (3 Cards) --}}
     <div class="row g-3 mb-4">
@@ -228,7 +229,7 @@
                                         <div class="d-flex align-items-center gap-2">
                                             @if ($booking->total_amount !== null)
                                                 <strong class="text-dark font-monospace fs-6">
-                                                    ${{ number_format((float) $booking->total_amount, 2) }}
+                                                    {{ number_format((float) $booking->total_amount, 2) }} ETB
                                                 </strong>
                                             @endif
                                             <a class="btn btn-sm btn-light border rounded-pill px-2.5 py-1 small" href="{{ route('tourist.reservations.show', $booking) }}">Details</a>
@@ -282,33 +283,16 @@
             </section>
         </div>
 
-        {{-- Right Column (5 cols): Destination Pilot Info, Weather, Advisories & Notifications --}}
+        {{-- Right Column (5 cols): Notifications & Reviews --}}
         <div class="col-lg-5">
-            {{-- Gondar Pilot Info & Live Weather Card --}}
+            {{-- Account activity summary --}}
             <div class="card border-0 shadow-sm rounded-4 bg-white overflow-hidden mb-4">
                 <div class="card-header bg-white p-3.5 border-bottom d-flex justify-content-between align-items-center">
                     <h2 class="h6 fw-bold mb-0 text-dark" style="font-family: var(--font-display);">
-                        <i class="bi bi-geo-alt-fill text-danger me-1.5"></i> Gondar Pilot Info
+                        <i class="bi bi-activity text-success me-1.5"></i> Account activity
                     </h2>
-                    <span class="text-warning fs-5">☀️</span>
                 </div>
-                <div class="card-body p-4 text-center">
-                    <div class="display-5 fw-bold text-dark mb-1" style="font-family: var(--font-display);">
-                        24°C
-                    </div>
-                    <div class="small fw-semibold text-success mb-3">
-                        Sunny &bull; Perfect conditions for Castle Walk
-                    </div>
-
-                    <div class="p-3 rounded-3 bg-dark text-white text-start">
-                        <div class="small text-warning fw-bold text-uppercase mb-1" style="font-size: 0.68rem; letter-spacing: 0.05em;">
-                            <i class="bi bi-shield-exclamation me-1"></i> SUPERVISION ADVISORY
-                        </div>
-                        <p class="small text-white-50 mb-0" style="line-height: 1.5;">
-                            Timket prep is active. Castles are open extra hours this week. Guides mandatory inside imperial compound.
-                        </p>
-                    </div>
-                </div>
+                <div class="card-body p-4"><dl class="row mb-0 small"><dt class="col-8">Bookings shown</dt><dd class="col-4 text-end">{{ $upcomingBookings->count() }}</dd><dt class="col-8">Saved trips</dt><dd class="col-4 text-end">{{ $trips->count() }}</dd><dt class="col-8">Review opportunities</dt><dd class="col-4 text-end">{{ $reviewOpportunities->count() }}</dd></dl></div>
             </div>
 
             {{-- Notifications Center --}}

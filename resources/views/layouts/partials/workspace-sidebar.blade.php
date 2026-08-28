@@ -26,6 +26,10 @@
                     <i class="bi bi-shield-check"></i>
                     <span>Provider governance</span>
                 </a>
+                <a class="nav-link" href="{{ route('admin.guides.index') }}" @class(['active' => request()->routeIs('admin.guides.*')])>
+                    <i class="bi bi-person-badge"></i>
+                    <span>Final guide approval</span>
+                </a>
                 <a class="nav-link" href="{{ route('admin.users.index') }}" @class(['active' => request()->routeIs('admin.users.*')])>
                     <i class="bi bi-people"></i>
                     <span>Users</span>

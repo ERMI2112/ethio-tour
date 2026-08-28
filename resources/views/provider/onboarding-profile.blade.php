@@ -189,7 +189,7 @@
 
     @include('layouts.partials.flash-messages')
 
-    <form method="POST" action="{{ route('provider.profile.update') }}">
+    <form method="POST" action="{{ route('provider.profile.update') }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
 
@@ -380,20 +380,20 @@
                         <div class="row g-3 mb-4">
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold text-dark" for="capacity_count">{{ $config['capacity_label'] }}</label>
-                                <input type="number" min="1" max="50000" class="form-control rounded-3 font-monospace @error('capacity_count') is-invalid @enderror" id="capacity_count" name="capacity_count" value="{{ old('capacity_count', $provider->capacity_count ?: ($provider->total_rooms_count ?: 30)) }}">
+                                <input type="number" min="1" max="50000" class="form-control rounded-3 font-monospace @error('capacity_count') is-invalid @enderror" id="capacity_count" name="capacity_count" value="{{ old('capacity_count', $provider->capacity_count ?: $provider->total_rooms_count) }}">
                                 @error('capacity_count')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label small fw-bold text-dark" for="operating_hours">{{ $config['time_label'] }}</label>
-                                <input class="form-control rounded-3 font-monospace @error('operating_hours') is-invalid @enderror" id="operating_hours" name="operating_hours" value="{{ old('operating_hours', $provider->operating_hours ?: ($type === 'hotel' ? 'Check-in: 14:00 · Check-out: 11:00' : '07:00 – 23:00 daily')) }}" placeholder="e.g. 07:00 – 23:00 daily">
+                                <input class="form-control rounded-3 font-monospace @error('operating_hours') is-invalid @enderror" id="operating_hours" name="operating_hours" value="{{ old('operating_hours', $provider->operating_hours) }}" placeholder="e.g. 07:00 – 23:00 daily">
                                 @error('operating_hours')<div class="invalid-feedback">{{ $message }}</div>@enderror
                             </div>
                         </div>
 
                         <label class="form-label small fw-bold text-dark mb-2">{{ $config['amenities_heading'] }}</label>
                         @php
-                            $selectedAmenities = (array) old('amenities', $provider->amenities ?: array_slice(array_keys($config['amenities']), 0, 4));
+                            $selectedAmenities = (array) old('amenities', $provider->amenities ?: []);
                         @endphp
                         <div class="row g-2">
                             @foreach($config['amenities'] as $key => $item)
@@ -462,5 +462,19 @@
             </div>
         </div>
     </form>
+
+    <div class="card border rounded-3 mt-4">
+        <div class="card-header bg-white"><h2 class="h6 mb-0">Verification documents</h2></div>
+        <div class="card-body">
+            <p class="small text-muted">Upload readable legal, tax, identity, and permit documents. Files are stored privately for Bureau review.</p>
+            <form method="POST" action="{{ route('provider.verification-documents.store') }}" enctype="multipart/form-data" class="row g-3 align-items-end mb-3">
+                @csrf
+                <div class="col-md-4"><label class="form-label" for="provider_document_type">Document type</label><select class="form-select" id="provider_document_type" name="document_type" required><option value="tin">TIN document</option><option value="trade_license">Trade license</option><option value="permit">Operating permit</option><option value="identity">Identity document</option><option value="other">Other</option></select></div>
+                <div class="col-md-5"><label class="form-label" for="provider_document">File</label><input class="form-control" id="provider_document" type="file" name="document" accept="application/pdf,image/jpeg,image/png,image/webp" required></div>
+                <div class="col-md-3"><button class="btn btn-outline-primary w-100" type="submit">Upload document</button></div>
+            </form>
+            @forelse($provider->verificationDocuments as $document)<div class="d-flex justify-content-between align-items-center border-top py-2"><span class="small">{{ ucfirst(str_replace('_', ' ', $document->document_type)) }} · {{ $document->original_name }}</span><x-ui.status-badge :status="$document->status" /></div>@empty<div class="small text-muted">No documents uploaded yet.</div>@endforelse
+        </div>
+    </div>
 </div>
 @endsection

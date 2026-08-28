@@ -15,10 +15,12 @@ class BureauProviderVerificationController extends Controller
     public function index(Request $request): View
     {
         $status = $request->string('status')->trim()->value();
+        $platformStatus = $request->string('platform_status')->trim()->value();
         $search = $request->string('q')->trim()->value();
         $type = $request->string('type')->trim()->value();
         $providers = ServiceProvider::with('user')
             ->when(in_array($status, ['pending', 'verified', 'rejected'], true), fn ($q) => $q->where('verification_status', $status))
+            ->when(in_array($platformStatus, ['pending', 'approved', 'suspended', 'rejected'], true), fn ($q) => $q->where('status', $platformStatus))
             ->when($type !== '', fn ($q) => $q->where('provider_type', $type))
             ->when($search !== '', fn ($q) => $q->where(function ($query) use ($search) {
                 $query->where('business_name', 'like', "%{$search}%")
@@ -26,12 +28,12 @@ class BureauProviderVerificationController extends Controller
             }))
             ->orderBy('verification_status')->orderBy('business_name')->paginate(15)->withQueryString();
 
-        return view('bureau.providers.index', compact('providers', 'status', 'search', 'type'));
+        return view('bureau.providers.index', compact('providers', 'status', 'platformStatus', 'search', 'type'));
     }
 
     public function show(ServiceProvider $serviceProvider): View
     {
-        $serviceProvider->load('user');
+        $serviceProvider->load(['user', 'verificationDocuments']);
 
         return view('bureau.providers.show', ['provider' => $serviceProvider]);
     }

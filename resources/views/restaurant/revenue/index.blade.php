@@ -28,11 +28,11 @@
         <div class="d-flex align-items-center gap-3">
             <div class="p-2.5 px-3.5 bg-white border rounded-4 shadow-sm text-center">
                 <div class="small text-muted fw-bold text-uppercase" style="font-size: 0.68rem;">Total Cleared Revenue</div>
-                <div class="h4 fw-bold text-success mb-0 font-monospace">${{ number_format($totalRevenue ?: 6120.00, 2) }}</div>
+                <div class="h4 fw-bold text-success mb-0 font-monospace">{{ number_format($totalRevenue, 2) }} ETB</div>
             </div>
             <div class="p-2.5 px-3.5 bg-white border rounded-4 shadow-sm text-center">
                 <div class="small text-muted fw-bold text-uppercase" style="font-size: 0.68rem;">Completed Orders</div>
-                <div class="h4 fw-bold text-dark mb-0 font-monospace">{{ $completedCount ?: 48 }}</div>
+                <div class="h4 fw-bold text-dark mb-0 font-monospace">{{ $completedCount }}</div>
             </div>
         </div>
     </div>

@@ -16,7 +16,7 @@ class TourGuidePortalController extends Controller
     public function dashboard(Request $request): View
     {
         $guide = $request->user()->tourGuide;
-        $guide->load(['user', 'destination']);
+        $guide->load(['user', 'destination', 'verificationDocuments']);
         $bookings = Booking::query()->where('guide_id', $guide->guide_id);
 
         $pendingRequests = (clone $bookings)->where('status', 'pending')->count();
@@ -25,17 +25,10 @@ class TourGuidePortalController extends Controller
 
         $totalEarnings = (float) ((clone $bookings)->where('status', 'completed')->sum('total_amount') ?? 0);
         $pendingEscrow = (float) ((clone $bookings)->whereIn('status', ['accepted', 'payment_pending', 'confirmed'])->sum('total_amount') ?? 0);
-        $monthlyEarnings = (float) ((clone $bookings)->where('status', 'completed')->sum('total_amount') ?? 0);
-
-        if ($monthlyEarnings == 0) {
-            $monthlyEarnings = 1840.00;
-        }
-        if ($pendingEscrow == 0) {
-            $pendingEscrow = 420.00;
-        }
-        if ($totalEarnings == 0) {
-            $totalEarnings = 14950.00;
-        }
+        $monthlyEarnings = (float) ((clone $bookings)
+            ->where('status', 'completed')
+            ->whereBetween('booking_date', [now()->startOfMonth(), now()->endOfMonth()])
+            ->sum('total_amount') ?? 0);
 
         $escortedJourneys = Booking::query()
             ->where('guide_id', $guide->guide_id)
@@ -44,31 +37,20 @@ class TourGuidePortalController extends Controller
             ->take(6)
             ->get();
 
-        // Calculate profile completeness
-        $score = 50;
-        if ($guide->full_name) {
-            $score += 10;
-        }
-        if ($guide->profile_image) {
-            $score += 10;
-        }
-        if ($guide->bio || $guide->expertise) {
-            $score += 10;
-        }
-        if ($guide->daily_rate) {
-            $score += 10;
-        }
-        if (! empty($guide->languages)) {
-            $score += 5;
-        }
-        if ($guide->phone_number) {
-            $score += 5;
-        }
-        $profileCompleteness = min(100, $score);
+        // Profile completeness is derived only from fields currently stored for the guide.
+        $profileFields = [
+            $guide->full_name,
+            $guide->profile_image,
+            $guide->bio ?: $guide->expertise,
+            $guide->daily_rate,
+            $guide->languages,
+            $guide->phone_number,
+        ];
+        $profileCompleteness = (int) round(collect($profileFields)->filter(fn ($value): bool => filled($value))->count() / count($profileFields) * 100);
 
         $reviewQuery = Review::query()->whereHas('booking', fn ($query) => $query->where('guide_id', $guide->guide_id));
-        $averageRating = (clone $reviewQuery)->avg('rating') ?: 4.9;
-        $reviewCount = (clone $reviewQuery)->count() ?: 34;
+        $averageRating = (clone $reviewQuery)->avg('rating');
+        $reviewCount = (clone $reviewQuery)->count();
 
         $stats = [
             'pendingRequests' => $pendingRequests,
@@ -97,7 +79,7 @@ class TourGuidePortalController extends Controller
     public function editProfile(Request $request): View
     {
         $guide = $request->user()->tourGuide;
-        $guide->load('destination');
+        $guide->load(['destination', 'verificationDocuments']);
         $destinations = Destination::orderBy('name')->get();
 
         return view('tour-guide.profile.edit', compact('guide', 'destinations'));

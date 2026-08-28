@@ -148,23 +148,73 @@
                                                 <div class="text-end">
                                                     @if((float) $attraction->entry_fee > 0)
                                                         <span class="fw-bold text-dark fs-6">{{ number_format((float) $attraction->entry_fee, 2) }} ETB</span>
-                                                        <span class="text-muted small d-block">Est. Admission</span>
+                                                        <span class="badge bg-light text-secondary border d-block mt-0.5" style="font-size: 0.72rem;">Paid at the site</span>
                                                     @else
-                                                        <span class="badge bg-success text-white">Free Admission</span>
+                                                        <span class="badge bg-success-subtle text-success border border-success-subtle">Free Admission</span>
                                                     @endif
                                                 </div>
                                             @endif
+                                        </div>
+
                                         @php($attractionGallery = $attraction->galleryImages())
                                         @if(count($attractionGallery) > 0)
-                                            <div class="attraction-gallery mb-4" role="list" aria-label="Photos of {{ $attraction->name }}">
-                                                @foreach($attractionGallery as $image)
-                                                    <figure class="attraction-gallery__item {{ $loop->first ? 'attraction-gallery__item--lead' : '' }}" role="listitem">
-                                                        <img src="{{ $image['url'] }}" alt="{{ $image['alt'] ?? $attraction->name }}" loading="{{ $loop->first ? 'eager' : 'lazy' }}">
-                                                        @if(!empty($image['attribution']))
-                                                            <figcaption>{{ $image['attribution'] }}</figcaption>
-                                                        @endif
-                                                    </figure>
-                                                @endforeach
+                                            <div class="attraction-carousel position-relative mb-4 overflow-hidden rounded-4 shadow-sm"
+                                                 id="attraction-carousel-{{ $attraction->attraction_id }}"
+                                                 role="region"
+                                                 aria-roledescription="carousel"
+                                                 aria-label="Photos of {{ $attraction->name }}">
+                                                
+                                                {{-- Slides Container --}}
+                                                <div class="attraction-carousel__track position-relative" style="height: 290px; background: #0c1e14;">
+                                                    @foreach($attractionGallery as $index => $image)
+                                                        <figure class="attraction-carousel__slide position-absolute top-0 start-0 w-100 h-100 m-0 {{ $index === 0 ? 'active' : '' }}"
+                                                                data-slide-index="{{ $index }}"
+                                                                style="{{ $index === 0 ? 'opacity: 1; z-index: 2;' : 'opacity: 0; z-index: 1;' }} transition: opacity 0.35s ease-in-out;">
+                                                            <img src="{{ $image['url'] }}"
+                                                                 alt="{{ $image['alt'] ?? $attraction->name }}"
+                                                                 style="width: 100%; height: 100%; object-fit: cover;"
+                                                                 loading="{{ $index === 0 ? 'eager' : 'lazy' }}">
+                                                            
+                                                            @if(!empty($image['attribution']))
+                                                                <figcaption class="position-absolute bottom-0 start-0 m-3 px-2.5 py-1 rounded bg-dark bg-opacity-75 text-white small" style="font-size: 0.72rem; max-width: calc(100% - 120px);">
+                                                                    {{ $image['attribution'] }}
+                                                                </figcaption>
+                                                            @endif
+                                                        </figure>
+                                                    @endforeach
+                                                </div>
+
+                                                @if(count($attractionGallery) > 1)
+                                                    {{-- Navigation Buttons (< and >) --}}
+                                                    <button type="button"
+                                                            class="carousel-nav-btn carousel-nav-btn--prev position-absolute top-50 start-0 translate-middle-y ms-3"
+                                                            aria-label="Previous photo of {{ $attraction->name }}"
+                                                            onclick="rotateAttractionSlide('attraction-carousel-{{ $attraction->attraction_id }}', -1)">
+                                                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"/></svg>
+                                                    </button>
+                                                    <button type="button"
+                                                            class="carousel-nav-btn carousel-nav-btn--next position-absolute top-50 end-0 translate-middle-y me-3"
+                                                            aria-label="Next photo of {{ $attraction->name }}"
+                                                            onclick="rotateAttractionSlide('attraction-carousel-{{ $attraction->attraction_id }}', 1)">
+                                                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"/></svg>
+                                                    </button>
+
+                                                    {{-- Photo Counter Badge (e.g. 📷 1 / 3) --}}
+                                                    <div class="position-absolute top-0 end-0 m-3 px-2.5 py-1 rounded-pill bg-dark bg-opacity-75 text-white small fw-bold font-monospace shadow-sm" style="font-size: 0.75rem; z-index: 5;">
+                                                        <span class="slide-indicator-current">1</span> / {{ count($attractionGallery) }}
+                                                    </div>
+
+                                                    {{-- Dot Indicators --}}
+                                                    <div class="carousel-dots position-absolute bottom-0 end-0 m-3 d-flex gap-1.5 align-items-center" style="z-index: 5;">
+                                                        @foreach($attractionGallery as $index => $image)
+                                                            <button type="button"
+                                                                    class="carousel-dot {{ $index === 0 ? 'active' : '' }}"
+                                                                    data-dot-index="{{ $index }}"
+                                                                    aria-label="Go to photo {{ $index + 1 }}"
+                                                                    onclick="setAttractionSlide('attraction-carousel-{{ $attraction->attraction_id }}', {{ $index }})"></button>
+                                                        @endforeach
+                                                    </div>
+                                                @endif
                                             </div>
                                         @endif
 
@@ -184,12 +234,34 @@
                                             {{ $attraction->description }}
                                         </p>
 
-                                        @if($attraction->opening_hours)
-                                            <div class="p-2.5 rounded bg-light border mb-3 small d-flex flex-wrap align-items-center gap-2">
-                                                <strong class="text-dark">Visiting Hours:</strong>
-                                                <span class="text-muted">{{ $attraction->opening_hours }}</span>
+                                        <div class="attraction-visitor-info p-3 rounded-3 bg-light border mb-3 small">
+                                            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-2">
+                                                <div>
+                                                    <span class="fw-bold text-dark">Admission:</span>
+                                                    @if($attraction->entry_fee !== null && (float) $attraction->entry_fee > 0)
+                                                        <span class="text-dark fw-semibold">{{ number_format((float) $attraction->entry_fee, 2) }} ETB</span>
+                                                        <span class="text-muted">— paid at the site</span>
+                                                    @elseif($attraction->entry_fee !== null && (float) $attraction->entry_fee == 0)
+                                                        <span class="badge bg-success text-white">Free Admission</span>
+                                                    @else
+                                                        <span class="text-muted">Admission fee applies — paid at the site</span>
+                                                    @endif
+                                                </div>
+                                                @if($attraction->opening_hours)
+                                                    <div>
+                                                        <span class="fw-bold text-dark">Hours:</span>
+                                                        <span class="text-muted">{{ $attraction->opening_hours }}</span>
+                                                    </div>
+                                                @endif
                                             </div>
-                                        @endif
+                                            <div class="text-muted d-flex align-items-start gap-1.5" style="font-size: 0.78rem; line-height: 1.35;">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-info-circle flex-shrink-0 mt-0.5 text-primary" viewBox="0 0 16 16" aria-hidden="true">
+                                                    <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                                                    <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
+                                                </svg>
+                                                <span>Admission is paid at the attraction entrance. Ethio Tour does not currently process this admission fee.</span>
+                                            </div>
+                                        </div>
 
                                         <div class="d-flex flex-wrap gap-2 pt-2 border-top mt-3">
                                             @if($attraction->hasCoordinates())
@@ -243,7 +315,7 @@
                                         <div class="small text-muted mb-3 flex-grow-1">
                                             <div><strong>Hours:</strong> {{ $site->opening_hours }}</div>
                                             @if($site->entrance_fee > 0)
-                                                <div><strong>Fee:</strong> {{ number_format((float) $site->entrance_fee, 2) }} ETB</div>
+                                                <div><strong>Fee:</strong> {{ number_format((float) $site->entrance_fee, 2) }} ETB <span class="text-muted small">(Paid at site)</span></div>
                                             @else
                                                 <div class="text-success"><strong>Free Admission</strong></div>
                                             @endif
@@ -537,3 +609,46 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function rotateAttractionSlide(carouselId, direction) {
+    const carousel = document.getElementById(carouselId);
+    if (!carousel) return;
+    const slides = carousel.querySelectorAll('.attraction-carousel__slide');
+    if (!slides.length) return;
+    let currentIndex = 0;
+    slides.forEach((slide, idx) => {
+        if (slide.classList.contains('active')) {
+            currentIndex = idx;
+        }
+    });
+    const newIndex = (currentIndex + direction + slides.length) % slides.length;
+    setAttractionSlide(carouselId, newIndex);
+}
+
+function setAttractionSlide(carouselId, targetIndex) {
+    const carousel = document.getElementById(carouselId);
+    if (!carousel) return;
+    const slides = carousel.querySelectorAll('.attraction-carousel__slide');
+    const dots = carousel.querySelectorAll('.carousel-dot');
+    const counter = carousel.querySelector('.slide-indicator-current');
+
+    slides.forEach((slide, idx) => {
+        const isActive = idx === targetIndex;
+        slide.classList.toggle('active', isActive);
+        slide.style.opacity = isActive ? '1' : '0';
+        slide.style.zIndex = isActive ? '2' : '1';
+    });
+
+    dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === targetIndex);
+    });
+
+    if (counter) {
+        counter.textContent = targetIndex + 1;
+    }
+}
+</script>
+@endpush
+

@@ -40,7 +40,7 @@ class GlobalSearchTest extends TestCase
         MuseumInformation::create(['officer_id' => $officer->officer_id, 'museum_name' => 'Gondar Museum', 'description' => 'Castle history collection', 'location' => 'Gondar', 'opening_hours' => '09:00-17:00']);
         $guideUser = User::factory()->create(['role' => 'tour_guide']);
         $guide = TourGuide::create(['user_id' => $guideUser->user_id, 'license_number' => 'LIC-SEARCH', 'expertise' => 'Castle history', 'availability_status' => 'available', 'daily_rate' => 100]);
-        $guide->forceFill(['verification_status' => 'verified'])->save();
+        $guide->forceFill(['verification_status' => 'verified', 'admin_approval_status' => 'approved'])->save();
         $providerUser = User::factory()->create(['role' => 'service_provider']);
         $provider = ServiceProvider::create(['user_id' => $providerUser->user_id, 'business_name' => 'Culture Events', 'provider_type' => 'event_organizer', 'status' => 'approved']);
         CulturalEvent::create(['destination_id' => $destination->destination_id, 'provider_id' => $provider->provider_id, 'event_name' => 'Castle Festival', 'description' => 'Cultural celebration', 'event_date' => today()->addDays(10), 'venue' => 'Royal Castle', 'status' => 'published']);

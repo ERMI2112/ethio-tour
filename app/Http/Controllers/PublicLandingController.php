@@ -60,7 +60,7 @@ class PublicLandingController extends Controller
             : collect();
 
         $guides = Schema::hasTable('tour_guides') && Schema::hasTable('users')
-            ? TourGuide::query()->with('user')->where('verification_status', 'verified')->whereHas('user', fn ($query) => $query->where('is_active', true))->orderBy('guide_id')->limit(4)->get()
+            ? TourGuide::query()->with('user')->where('verification_status', 'verified')->where('admin_approval_status', 'approved')->whereHas('user', fn ($query) => $query->where('is_active', true))->orderBy('guide_id')->limit(4)->get()
             : collect();
 
         $attractions = $gondar && Schema::hasTable('attractions')
@@ -79,7 +79,7 @@ class PublicLandingController extends Controller
             ? Review::query()->with(['tourist', 'booking.tourismService.serviceProvider', 'booking.tourGuide.user'])
                 ->where(function ($query): void {
                     $query->whereHas('booking.tourismService', fn ($service) => $service->whereHas('serviceProvider', fn ($provider) => $provider->publiclyOperational()))
-                        ->orWhereHas('booking.tourGuide', fn ($guide) => $guide->where('verification_status', 'verified')->whereHas('user', fn ($user) => $user->where('is_active', true)));
+                        ->orWhereHas('booking.tourGuide', fn ($guide) => $guide->where('verification_status', 'verified')->where('admin_approval_status', 'approved')->whereHas('user', fn ($user) => $user->where('is_active', true)));
                 })
                 ->latest('review_date')
                 ->limit(3)
@@ -93,7 +93,7 @@ class PublicLandingController extends Controller
             ? ServiceProvider::query()->publiclyOperational()->count()
             : 0;
         $verifiedGuideCount = Schema::hasTable('tour_guides') && Schema::hasTable('users')
-            ? TourGuide::query()->where('verification_status', 'verified')->whereHas('user', fn ($query) => $query->where('is_active', true))->count()
+            ? TourGuide::query()->where('verification_status', 'verified')->where('admin_approval_status', 'approved')->whereHas('user', fn ($query) => $query->where('is_active', true))->count()
             : 0;
         $publishedEventCount = Schema::hasTable('cultural_events') && Schema::hasTable('service_providers')
             ? CulturalEvent::query()->where('status', 'published')->whereDate('event_date', '>=', today())->whereHas('serviceProvider', fn ($query) => $query->publiclyOperational())->count()

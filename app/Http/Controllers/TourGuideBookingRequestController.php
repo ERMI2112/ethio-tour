@@ -82,8 +82,8 @@ class TourGuideBookingRequestController extends Controller
                     throw new TourGuideAvailabilityException('This booking does not belong to the authenticated guide.');
                 }
 
-                if ($lockedGuide->verification_status !== 'verified') {
-                    throw new TourGuideAvailabilityException('Only verified tour guides can accept booking requests.');
+                if ($lockedGuide->verification_status !== 'verified' || $lockedGuide->admin_approval_status !== 'approved') {
+                    throw new TourGuideAvailabilityException('Only finally approved tour guides can accept booking requests.');
                 }
 
                 if ($lockedBooking->status !== 'pending') {

@@ -23,7 +23,13 @@
                             <dd>{{ $museum->opening_hours }}</dd>
                             @if ($museum->entrance_fee !== null)
                                 <dt>Entrance fee</dt>
-                                <dd>{{ $museum->entrance_fee }} ETB</dd>
+                                <dd>
+                                    @if((float) $museum->entrance_fee > 0)
+                                        {{ $museum->entrance_fee }} ETB <span class="text-muted small">— paid at the site</span>
+                                    @else
+                                        <span class="badge bg-success-subtle text-success border border-success-subtle">Free Admission</span>
+                                    @endif
+                                </dd>
                             @endif
                             @if ($museum->contact_information)
                                 <dt>Contact</dt>

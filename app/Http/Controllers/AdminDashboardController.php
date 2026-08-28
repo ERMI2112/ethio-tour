@@ -38,6 +38,8 @@ class AdminDashboardController extends Controller
             'suspendedProviders' => ServiceProvider::where('status', 'suspended')->count(),
             'rejectedProviders' => ServiceProvider::where('status', 'rejected')->count(),
             'verifiedGuides' => TourGuide::where('verification_status', 'verified')->count(),
+            'approvedGuides' => TourGuide::where('verification_status', 'verified')->where('admin_approval_status', 'approved')->count(),
+            'pendingFinalGuides' => TourGuide::where('verification_status', 'verified')->where('admin_approval_status', 'pending')->count(),
             'pendingGuides' => TourGuide::where('verification_status', 'pending')->count(),
             'bookings' => Booking::count(),
             'reviewCount' => Review::count(),

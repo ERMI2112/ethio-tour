@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Storage;
 
 class TourGuide extends Model
@@ -14,6 +15,7 @@ class TourGuide extends Model
 
     protected $attributes = [
         'verification_status' => 'pending',
+        'admin_approval_status' => 'pending',
     ];
 
     protected $fillable = [
@@ -31,6 +33,10 @@ class TourGuide extends Model
         'availability_status',
         'daily_rate',
         'verification_notes',
+        'admin_approval_status',
+        'admin_approval_notes',
+        'admin_approved_at',
+        'admin_approved_by',
     ];
 
     protected function casts(): array
@@ -56,6 +62,23 @@ class TourGuide extends Model
     public function bookings(): HasMany
     {
         return $this->hasMany(Booking::class, 'guide_id', 'guide_id');
+    }
+
+    public function verificationDocuments(): MorphMany
+    {
+        return $this->morphMany(VerificationDocument::class, 'documentable');
+    }
+
+    public function adminApprover(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'admin_approved_by', 'user_id');
+    }
+
+    public function isPubliclyApproved(): bool
+    {
+        return $this->verification_status === 'verified'
+            && $this->admin_approval_status === 'approved'
+            && $this->user?->is_active === true;
     }
 
     public function reviews(): HasManyThrough

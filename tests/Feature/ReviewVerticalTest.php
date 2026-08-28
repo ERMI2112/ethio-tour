@@ -79,7 +79,7 @@ class ReviewVerticalTest extends TestCase
         $user = User::factory()->create(['role' => 'tourist']);
         $tourist = Tourist::create(['user_id' => $user->user_id, 'full_name' => 'Test Tourist', 'nationality' => 'Ethiopian']);
         $guideUser = User::factory()->create(['role' => 'tour_guide']);
-        $guide = TourGuide::create(['user_id' => $guideUser->user_id, 'license_number' => fake()->unique()->bothify('LIC###'), 'expertise' => 'History', 'availability_status' => 'available', 'verification_status' => 'verified', 'daily_rate' => 100]);
+        $guide = TourGuide::create(['user_id' => $guideUser->user_id, 'license_number' => fake()->unique()->bothify('LIC###'), 'expertise' => 'History', 'availability_status' => 'available', 'verification_status' => 'verified', 'admin_approval_status' => 'approved', 'daily_rate' => 100]);
         $booking = Booking::create(['tourist_id' => $tourist->tourist_id, 'guide_id' => $guide->guide_id, 'service_id' => null, 'status' => $status, 'booking_date' => now()]);
         TourGuideReservation::create(['booking_id' => $booking->booking_id, 'start_date' => $start, 'end_date' => $end, 'number_of_tourists' => 1]);
 

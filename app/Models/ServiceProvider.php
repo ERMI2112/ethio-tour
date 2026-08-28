@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 
 class ServiceProvider extends Model
 {
@@ -111,6 +112,11 @@ class ServiceProvider extends Model
     public function events()
     {
         return $this->hasMany(CulturalEvent::class, 'provider_id', 'provider_id');
+    }
+
+    public function verificationDocuments(): MorphMany
+    {
+        return $this->morphMany(VerificationDocument::class, 'documentable');
     }
 
     public function restaurantTables()

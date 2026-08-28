@@ -138,19 +138,19 @@
                     <div class="row g-3">
                         <div class="col-sm-6">
                             <span class="text-muted small d-block" style="font-size: 0.72rem;">{{ $typeLabels['contact1'] }}</span>
-                            <strong class="text-dark">{{ $provider->manager_name ?: 'Ato Abnet Kebede (Demo)' }}</strong>
-                            <span class="text-muted small d-block">{{ $provider->manager_title ?: 'Executive Lead' }}</span>
+                            <strong class="text-dark">{{ $provider->manager_name ?: 'Not provided' }}</strong>
+                            <span class="text-muted small d-block">{{ $provider->manager_title ?: 'Title not provided' }}</span>
                         </div>
 
                         <div class="col-sm-6">
                             <span class="text-muted small d-block" style="font-size: 0.72rem;">{{ $typeLabels['contact2'] }}</span>
                             <strong class="text-dark">{{ $provider->secondary_contact_name ?: ($provider->contact_email ?: $provider->user?->email) }}</strong>
-                            <span class="text-muted small d-block">{{ $provider->secondary_contact_title ?: 'Operations Lead' }}</span>
+                            <span class="text-muted small d-block">{{ $provider->secondary_contact_title ?: 'Title not provided' }}</span>
                         </div>
 
                         <div class="col-sm-6">
                             <span class="text-muted small d-block" style="font-size: 0.72rem;">Direct Phone / WhatsApp</span>
-                            <strong class="text-dark font-monospace">{{ $provider->manager_phone ? '+251 '.$provider->manager_phone : '+251 91 876 5432' }}</strong>
+                            <strong class="text-dark font-monospace">{{ $provider->manager_phone ? '+251 '.$provider->manager_phone : 'Not provided' }}</strong>
                         </div>
 
                         <div class="col-sm-6">
@@ -161,19 +161,19 @@
                         <div class="col-sm-6">
                             <span class="text-muted small d-block" style="font-size: 0.72rem;">Destination Jurisdiction</span>
                             <strong class="text-dark">{{ $provider->destination?->name ?? 'Gondar' }}</strong>
-                            <span class="text-muted small d-block">{{ $provider->physical_address ?: 'Piazza Kebele 02, Gondar' }}</span>
+                            <span class="text-muted small d-block">{{ $provider->physical_address ?: 'Address not provided' }}</span>
                         </div>
 
                         <div class="col-sm-6">
                             <span class="text-muted small d-block" style="font-size: 0.72rem;">{{ $typeLabels['capacity'] }} &amp; Hours</span>
                             <strong class="text-dark">{{ $provider->capacity_count ?: ($provider->total_rooms_count ?: 30) }} Capacity</strong>
-                            <span class="text-muted small d-block">{{ $provider->operating_hours ?: 'Standard schedules' }}</span>
+                            <span class="text-muted small d-block">{{ $provider->operating_hours ?: 'Hours not provided' }}</span>
                         </div>
 
                         <div class="col-12">
                             <span class="text-muted small d-block mb-1" style="font-size: 0.72rem;">{{ $typeLabels['amenities'] }}</span>
                             <div class="d-flex flex-wrap gap-1.5">
-                                @forelse((array) ($provider->amenities ?: ['wifi', 'generator', 'security']) as $amenityKey)
+                                @forelse((array) $provider->amenities as $amenityKey)
                                     <span class="badge bg-light text-dark border rounded-pill px-2.5 py-1 small">
                                         ● {{ ucfirst(str_replace('_', ' ', $amenityKey)) }}
                                     </span>
@@ -286,7 +286,7 @@
                     {{-- Escrow Settlement Bank Details --}}
                     <div class="mt-3 pt-3 border-top">
                         <span class="text-muted small d-block" style="font-size: 0.72rem;">Escrow Settlement Bank</span>
-                        <strong class="text-dark small">{{ $provider->payout_bank_name ?: 'Commercial Bank of Ethiopia (CBE)' }}</strong>
+                        <strong class="text-dark small">{{ $provider->payout_bank_name ?: 'Not provided' }}</strong>
                         <span class="text-muted small d-block font-monospace">Acc: {{ $provider->payout_account_number ?: '1000192837482' }} ({{ $provider->payout_account_name ?: $provider->business_name }})</span>
                     </div>
                 </div>

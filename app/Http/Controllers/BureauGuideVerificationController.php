@@ -30,7 +30,7 @@ class BureauGuideVerificationController extends Controller
 
     public function show(TourGuide $tourGuide): View
     {
-        $tourGuide->load('user');
+        $tourGuide->load(['user', 'verificationDocuments']);
 
         return view('bureau.guides.show', ['guide' => $tourGuide]);
     }
@@ -44,6 +44,10 @@ class BureauGuideVerificationController extends Controller
         $tourGuide->forceFill([
             'verification_status' => $data['decision'] === 'approve' ? 'verified' : 'rejected',
             'verification_notes' => $data['verification_notes'] ?? null,
+            'admin_approval_status' => $data['decision'] === 'approve' ? 'pending' : 'rejected',
+            'admin_approval_notes' => null,
+            'admin_approved_at' => null,
+            'admin_approved_by' => null,
         ])->save();
         $audit->record($request->user(), 'guide_verification_decided', TourGuide::class, $tourGuide->guide_id, [
             'decision' => $data['decision'],
