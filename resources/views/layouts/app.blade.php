@@ -103,7 +103,7 @@
         </main>
     @endif
 
-    @include('layouts.partials.footer')
+    @include('layouts.partials.footer', ['workspaceRole' => $workspaceRole, 'workspaceLabel' => $workspaceLabel])
     @stack('scripts')
 </body>
 </html>

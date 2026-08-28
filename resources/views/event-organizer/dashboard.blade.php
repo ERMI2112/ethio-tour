@@ -8,10 +8,10 @@
     <h2 class="h5 mb-3">Needs attention</h2>
     @if($pendingEventBookings > 0)<div class="alert alert-warning">{{ $pendingEventBookings }} event booking request{{ $pendingEventBookings === 1 ? '' : 's' }} are waiting for review. <a href="{{ route('event-organizer.events.bookings') }}">Review bookings</a></div>@else<div class="alert alert-success">No event booking requests are waiting.</div>@endif
     <div class="row g-3 mb-4">
-        <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm rounded-4 h-100 p-3"><span class="small text-muted text-uppercase fw-bold">Confirmed registrations</span><strong class="h3 mt-2">{{ $stats['registrationsSecured'] }}</strong><span class="small text-muted">Tickets in accepted or paid bookings</span></div></div>
-        <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm rounded-4 h-100 p-3"><span class="small text-muted text-uppercase fw-bold">Confirmed ticket value</span><strong class="h3 mt-2">{{ number_format($stats['escrowVolume'], 2) }} ETB</strong><span class="small text-muted">Confirmed and completed bookings</span></div></div>
-        <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm rounded-4 h-100 p-3"><span class="small text-muted text-uppercase fw-bold">Published events</span><strong class="h3 mt-2">{{ $publishedCount }}</strong><span class="small text-muted">{{ $eventCount }} total event records</span></div></div>
-        <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm rounded-4 h-100 p-3"><span class="small text-muted text-uppercase fw-bold">Next event</span><strong class="h5 mt-2">{{ $stats['nextEvent']?->event_name ?: 'Not scheduled' }}</strong><span class="small text-muted">{{ $stats['daysToCelebration'] !== null ? $stats['daysToCelebration'].' day(s)' : 'No upcoming event date' }}</span></div></div>
+        <div class="col-6 col-xl-3"><x-ui.stat-card label="Confirmed registrations" icon="ticket-detailed" :value="$stats['registrationsSecured']" hint="Tickets in accepted or paid bookings" /></div>
+        <div class="col-6 col-xl-3"><x-ui.stat-card label="Confirmed ticket value" icon="cash-stack" :value="number_format($stats['escrowVolume'], 2).' ETB'" hint="Confirmed and completed bookings" /></div>
+        <div class="col-6 col-xl-3"><x-ui.stat-card label="Published events" icon="calendar-event" :value="$publishedCount" :hint="$eventCount.' total event records'" /></div>
+        <div class="col-6 col-xl-3"><x-ui.stat-card label="Next event" icon="clock" :value="$stats['nextEvent']?->event_name ?: 'Not scheduled'" :hint="$stats['daysToCelebration'] !== null ? $stats['daysToCelebration'].' day(s)' : 'No upcoming event date'" /></div>
     </div>
 
     <h2 class="h5 mb-3">Operational insights</h2>
