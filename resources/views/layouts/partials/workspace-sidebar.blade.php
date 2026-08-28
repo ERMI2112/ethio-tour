@@ -147,7 +147,7 @@
             @if ($workspaceRole === 'tourist')
                 <a class="nav-link px-2 text-muted d-flex align-items-center gap-2 small" href="{{ route('home') }}">
                     <i class="bi bi-compass"></i>
-                    <span>View public site</span>
+                    <span>View Public Site</span>
                 </a>
             @endif
         </div>
