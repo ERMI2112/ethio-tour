@@ -833,6 +833,42 @@ body.workspace-body .list-group-item {
     }
 }
 
+/* The public navigation needs the compact menu until the full desktop control
+   set has enough room. Bootstrap's lg breakpoint alone is too narrow once
+   authenticated actions are present at 1024px and 1280px. */
+@media (min-width: 992px) and (max-width: 1399.98px) {
+    .main-navbar .navbar-toggler {
+        display: block !important;
+    }
+
+    .main-navbar .navbar-collapse.collapse:not(.show) {
+        display: none !important;
+    }
+
+    .main-navbar .navbar-collapse.show {
+        display: block !important;
+        padding-top: .75rem;
+    }
+
+    .main-navbar .navbar-nav {
+        flex-direction: column;
+        align-items: stretch !important;
+        gap: .25rem !important;
+    }
+
+    .main-navbar .navbar-nav .nav-link,
+    .main-navbar .navbar-nav .dropdown-toggle {
+        width: 100%;
+    }
+
+    .main-navbar .navbar-nav .dropdown-menu {
+        position: static;
+        float: none;
+        width: auto;
+        margin-top: .25rem;
+    }
+}
+
 @media (max-width: 359.98px) {
     /* Keep the 320px header from becoming a row of clipped controls. Account
        remains available in the workspace drawer and the icon keeps logout
