@@ -163,7 +163,7 @@ class DestinationDiscoveryHubTest extends TestCase
         $response = $this->get(route('destinations.show', $gondar));
         $response->assertOk()
             ->assertSee('Fasilides Bath')
-            ->assertSee('150.00 ETB')
+            ->assertSee('Fee applies — paid at the site')
             ->assertDontSee('Great Stele of Axum')
             ->assertSee('Museums & Cultural Centers')
             ->assertSee(route('museums.index', ['q' => 'Gondar']));
@@ -575,8 +575,8 @@ class DestinationDiscoveryHubTest extends TestCase
             ->assertSee('Debre Berhan Selassie Church')
             ->assertSee('Church &amp; Monastery', false)
             ->assertSee('Get Directions')
-            ->assertSee('200.00 ETB')
-            ->assertSee('Paid at the site')
+            ->assertSee('Admission fee applies — paid at the site')
+            ->assertSee('Check locally for the current official rate')
             ->assertSee('Ethio Tour does not currently process this admission fee')
             ->assertDontSee('Est. Admission');
     }

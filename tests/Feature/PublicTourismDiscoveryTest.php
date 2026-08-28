@@ -34,7 +34,7 @@ class PublicTourismDiscoveryTest extends TestCase
         $this->get('/heritage-sites')->assertOk()->assertSee($heritageSite->heritage_type)->assertSee($destination->name);
         $this->get(route('heritage-sites.show', $heritageSite))->assertOk()
             ->assertSee($heritageSite->opening_hours)
-            ->assertSee(number_format($heritageSite->entrance_fee, 2))
+            ->assertSee('Admission fee applies — paid at the site')
             ->assertSee($destination->name);
     }
 

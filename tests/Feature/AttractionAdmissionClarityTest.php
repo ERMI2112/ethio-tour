@@ -82,8 +82,8 @@ class AttractionAdmissionClarityTest extends TestCase
 
         $response->assertOk()
             ->assertSee('Fasil Ghebbi (Royal Enclosure)')
-            ->assertSee('200.00 ETB')
-            ->assertSee('Paid at the site')
+            ->assertSee('Fee applies · Paid on site')
+            ->assertSee('Admission fee applies — paid at the site')
             ->assertSee('Free Admission');
     }
 
@@ -123,7 +123,7 @@ class AttractionAdmissionClarityTest extends TestCase
         $response = $this->get(route('destinations.show', $this->destination));
 
         $response->assertOk()
-            ->assertSee('Admission is paid at the attraction entrance. Ethio Tour does not currently process this admission fee.')
+            ->assertSee('Admission is paid at the attraction entrance. Check locally for the current official rate. Ethio Tour does not currently process this admission fee.')
             ->assertDontSee('Ethio Tour collects');
     }
 
@@ -135,8 +135,8 @@ class AttractionAdmissionClarityTest extends TestCase
         $response = $this->get(route('destinations.show', $this->destination));
 
         $response->assertOk()
-            ->assertSee('200.00 ETB')
-            ->assertSee('— paid at the site')
+            ->assertSee('Fee applies · Paid on site')
+            ->assertSee('Admission fee applies — paid at the site')
             ->assertDontSee('Est. Admission');
     }
 
@@ -243,8 +243,7 @@ class AttractionAdmissionClarityTest extends TestCase
         $response->assertOk()
             ->assertSee('Royal Enclosure Museum')
             ->assertSee('Museum collection')
-            ->assertSee('150.00 ETB')
-            ->assertSee('— paid at the site')
+            ->assertSee('Fee applies — paid at the site')
             ->assertDontSee('Pay Now')
             ->assertDontSee('Book Ticket');
     }

@@ -147,10 +147,9 @@
                                             @if($attraction->entry_fee !== null)
                                                 <div class="text-end">
                                                     @if((float) $attraction->entry_fee > 0)
-                                                        <span class="fw-bold text-dark fs-6">{{ number_format((float) $attraction->entry_fee, 2) }} ETB</span>
-                                                        <span class="badge bg-light text-secondary border d-block mt-0.5" style="font-size: 0.72rem;">Paid at the site</span>
+                                                        <span class="badge bg-light text-secondary border fw-medium px-2.5 py-1.5" style="font-size: 0.78rem;">Fee applies · Paid on site</span>
                                                     @else
-                                                        <span class="badge bg-success-subtle text-success border border-success-subtle">Free Admission</span>
+                                                        <span class="badge bg-success-subtle text-success border border-success-subtle fw-medium px-2.5 py-1.5">Free Admission</span>
                                                     @endif
                                                 </div>
                                             @endif
@@ -239,27 +238,26 @@
                                                 <div>
                                                     <span class="fw-bold text-dark">Admission:</span>
                                                     @if($attraction->entry_fee !== null && (float) $attraction->entry_fee > 0)
-                                                        <span class="text-dark fw-semibold">{{ number_format((float) $attraction->entry_fee, 2) }} ETB</span>
-                                                        <span class="text-muted">— paid at the site</span>
+                                                        <span class="text-secondary fw-semibold">Admission fee applies — paid at the site</span>
                                                     @elseif($attraction->entry_fee !== null && (float) $attraction->entry_fee == 0)
-                                                        <span class="badge bg-success text-white">Free Admission</span>
+                                                        <span class="badge bg-success-subtle text-success border border-success-subtle fw-medium">Free Admission</span>
                                                     @else
                                                         <span class="text-muted">Admission fee applies — paid at the site</span>
                                                     @endif
                                                 </div>
                                                 @if($attraction->opening_hours)
                                                     <div>
-                                                        <span class="fw-bold text-dark">Hours:</span>
+                                                        <span class="fw-bold text-dark">Visiting Hours:</span>
                                                         <span class="text-muted">{{ $attraction->opening_hours }}</span>
                                                     </div>
                                                 @endif
                                             </div>
-                                            <div class="text-muted d-flex align-items-start gap-1.5" style="font-size: 0.78rem; line-height: 1.35;">
+                                            <div class="text-muted d-flex align-items-start gap-1.5" style="font-size: 0.78rem; line-height: 1.4;">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" fill="currentColor" class="bi bi-info-circle flex-shrink-0 mt-0.5 text-primary" viewBox="0 0 16 16" aria-hidden="true">
                                                     <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                                                     <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0"/>
                                                 </svg>
-                                                <span>Admission is paid at the attraction entrance. Ethio Tour does not currently process this admission fee.</span>
+                                                <span>Admission is paid at the attraction entrance. Check locally for the current official rate. Ethio Tour does not currently process this admission fee.</span>
                                             </div>
                                         </div>
 
@@ -315,7 +313,7 @@
                                         <div class="small text-muted mb-3 flex-grow-1">
                                             <div><strong>Hours:</strong> {{ $site->opening_hours }}</div>
                                             @if($site->entrance_fee > 0)
-                                                <div><strong>Fee:</strong> {{ number_format((float) $site->entrance_fee, 2) }} ETB <span class="text-muted small">(Paid at site)</span></div>
+                                                <div><strong>Admission:</strong> Fee applies — paid at the site</div>
                                             @else
                                                 <div class="text-success"><strong>Free Admission</strong></div>
                                             @endif

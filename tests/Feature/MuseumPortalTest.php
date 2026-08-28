@@ -26,7 +26,7 @@ class MuseumPortalTest extends TestCase
         $this->get(route('museums.show', $museum))->assertOk()
             ->assertSee($museum->description)
             ->assertSee($museum->opening_hours)
-            ->assertSee('150.00 ETB');
+            ->assertSee('Fee applies — paid at the site');
     }
 
     public function test_bureau_officer_can_create_and_edit_owned_museum_information(): void
