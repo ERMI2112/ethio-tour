@@ -62,7 +62,7 @@
                 {{-- Logout --}}
                 <form method="POST" action="{{ route('logout') }}" class="d-inline m-0">
                     @csrf
-                    <button class="btn btn-sm btn-light border rounded-3 px-3 py-1.5 text-danger d-inline-flex align-items-center gap-1.5 small fw-semibold" type="submit">
+                    <button class="btn btn-sm btn-light border rounded-3 px-3 py-1.5 text-secondary d-inline-flex align-items-center gap-1.5 small fw-semibold" type="submit">
                         <i class="bi bi-box-arrow-right"></i>
                         <span>Log out</span>
                     </button>

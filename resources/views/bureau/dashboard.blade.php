@@ -17,7 +17,7 @@
             ['label' => 'Pending documents', 'value' => $pendingDocuments, 'note' => 'Documents awaiting review'],
             ['label' => 'Pending payment amount', 'value' => number_format($activeEscrowVolume, 2).' ETB', 'note' => 'Pending payment records'],
         ] as $metric)
-            <div class="col-6 col-xl-3"><div class="card border-0 shadow-sm rounded-4 h-100 bg-white p-3"><span class="text-muted small fw-bold text-uppercase d-block mb-1">{{ $metric['label'] }}</span><strong class="h3 mb-1 font-monospace">{{ $metric['value'] }}</strong><span class="small text-muted">{{ $metric['note'] }}</span></div></div>
+            <div class="col-6 col-xl-3"><x-ui.stat-card :label="$metric['label']" :icon="$metric['icon'] ?? null" :value="$metric['value']" :hint="$metric['note']" /></div>
         @endforeach
     </div>
 
@@ -38,7 +38,15 @@
         <div class="col-lg-5">
             <div class="card border-0 shadow-sm rounded-4 mb-4"><div class="card-header bg-white"><h2 class="h5 mb-0">Verification summary</h2></div><div class="card-body"><dl class="row mb-0"><dt class="col-8">Bureau-verified guides</dt><dd class="col-4 text-end">{{ $verifiedGuides }}</dd><dt class="col-8">Museums</dt><dd class="col-4 text-end">{{ $museumCount }}</dd><dt class="col-8">Attractions</dt><dd class="col-4 text-end">{{ $attractionCount }}</dd><dt class="col-8">Pending documents</dt><dd class="col-4 text-end">{{ $pendingDocuments }}</dd></dl></div></div>
             <div class="card border-0 shadow-sm rounded-4 mb-4"><div class="card-header bg-white"><h2 class="h5 mb-0">Museum / tourism operations</h2></div><div class="card-body small text-muted">{{ $museumCount }} museum record{{ $museumCount === 1 ? '' : 's' }} and {{ $attractionCount }} attraction record{{ $attractionCount === 1 ? '' : 's' }} are currently stored.</div></div>
-            <div class="card border-0 shadow-sm rounded-4"><div class="card-header bg-white"><h2 class="h5 mb-0">Workflow</h2></div><div class="card-body small text-muted"><p class="mb-0">Bureau officers verify guide profiles and documents. Administrators make the final guide approval decision from their guide queue.</p></div></div>
+            <div class="card border-0 shadow-sm rounded-4"><div class="card-body small">
+                <details class="workflow-details">
+                    <summary class="d-flex align-items-center justify-content-between fw-semibold" style="cursor: pointer; list-style: none;">
+                        <span><i class="bi bi-diagram-3 me-2 text-success" aria-hidden="true"></i>Workflow</span>
+                        <i class="bi bi-chevron-down text-muted" aria-hidden="true"></i>
+                    </summary>
+                    <p class="mb-0 mt-2 text-muted">Bureau officers verify guide profiles and documents. Administrators make the final guide approval decision from their guide queue.</p>
+                </details>
+            </div></div>
         </div>
     </div>
 </div>

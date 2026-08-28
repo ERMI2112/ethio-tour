@@ -2840,3 +2840,92 @@ button:focus-visible {
         padding: 2.25rem 1.5rem;
     }
 }
+
+/* --------------------------------------------------------------------------
+   Workspace coherence layer (Task #8)
+   One brand voice across every portal: emerald active states, gold accents,
+   consistent surfaces. Appended last so it wins the cascade.
+   -------------------------------------------------------------------------- */
+
+/* Sidebar: brand emerald active state instead of detached navy */
+.workspace-sidebar .nav-link.active {
+    background: var(--vn-emerald) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    box-shadow: 0 4px 12px rgba(11, 94, 66, 0.25) !important;
+}
+
+.workspace-sidebar .nav-link.active i {
+    color: var(--vn-gold) !important;
+}
+
+[data-bs-theme='dark'] .workspace-sidebar .nav-link.active {
+    background: var(--vn-emerald) !important;
+    color: #ffffff !important;
+}
+
+/* Slim workspace footer */
+.workspace-footer {
+    background: var(--vn-surface);
+    border-top: 1px solid var(--vn-border);
+    color: var(--vn-text-main);
+}
+
+/* Consistent attention/alert styling inside workspaces */
+.workspace-content .alert {
+    border-radius: var(--ethio-radius);
+    border-width: 1px;
+    box-shadow: var(--ethio-shadow-xs);
+}
+
+.workspace-content .alert a {
+    font-weight: 600;
+}
+
+/* Workspace card headers: consistent surface in both themes */
+.workspace-content .card-header.bg-white {
+    background-color: var(--vn-surface) !important;
+    border-bottom: 1px solid var(--vn-border);
+}
+
+/* KPI stat cards: uniform rhythm across dashboards */
+.workspace-content .card .text-uppercase.fw-bold {
+    letter-spacing: 0.06em;
+    font-size: 0.72rem;
+}
+
+/* Stat cards: consistent KPI presentation across all workspace dashboards */
+.stat-card-label {
+    letter-spacing: 0.06em;
+    font-size: 0.72rem;
+}
+
+.stat-card-icon {
+    width: 2rem;
+    height: 2rem;
+    background: var(--vn-emerald-subtle);
+    color: var(--vn-emerald);
+    font-size: 0.95rem;
+}
+
+.stat-card-value {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+}
+
+[data-bs-theme='dark'] .stat-card-icon {
+    background: rgba(11, 94, 66, 0.35);
+    color: #6ee7b7;
+}
+
+/* Brand CTA: one primary action style across workspaces */
+.workspace-content .btn-dark {
+    --bs-btn-bg: var(--vn-emerald);
+    --bs-btn-border-color: var(--vn-emerald);
+    --bs-btn-hover-bg: var(--vn-emerald-hover);
+    --bs-btn-hover-border-color: var(--vn-emerald-hover);
+    --bs-btn-active-bg: var(--vn-emerald-hover);
+    --bs-btn-active-border-color: var(--vn-emerald-hover);
+    --bs-btn-disabled-bg: var(--vn-emerald);
+    --bs-btn-disabled-border-color: var(--vn-emerald);
+}
