@@ -93,9 +93,9 @@ Route::get('/search', [GlobalSearchController::class, 'index'])->name('search');
 Route::get('/payments/chapa/callback', [PaymentController::class, 'callback'])->name('payments.chapa.callback');
 Route::post('/payments/chapa/webhook', [PaymentController::class, 'webhook'])->name('payments.chapa.webhook');
 Route::get('/smart-trip', [SmartTripController::class, 'index'])->name('smart-trip.index');
-Route::post('/transportation/{tourismService}/availability', [TransportationTouristReservationController::class, 'checkAvailability'])->name('transportation.availability');
-Route::post('/restaurants/{tourismService}/availability', [RestaurantTouristReservationController::class, 'checkAvailability'])->name('restaurants.availability');
-Route::post('/tourism-services/{tourismService}/check-availability', [HotelReservationController::class, 'checkAvailability'])->name('tourism-services.check-availability');
+Route::post('/transportation/{tourismService}/availability', [TransportationTouristReservationController::class, 'checkAvailability'])->middleware('throttle:30,1')->name('transportation.availability');
+Route::post('/restaurants/{tourismService}/availability', [RestaurantTouristReservationController::class, 'checkAvailability'])->middleware('throttle:30,1')->name('restaurants.availability');
+Route::post('/tourism-services/{tourismService}/check-availability', [HotelReservationController::class, 'checkAvailability'])->middleware('throttle:30,1')->name('tourism-services.check-availability');
 Route::get('/categories', [PublicCategoryController::class, 'index'])->name('categories.index');
 Route::get('/tour-guides', [PublicTourGuideController::class, 'index'])->name('tour-guides.index');
 Route::get('/tour-guides/{guide}', [PublicTourGuideController::class, 'show'])->name('tour-guides.show');
@@ -180,18 +180,18 @@ Route::middleware(['auth', 'active'])->group(function () {
         Route::get('/profile', [AccountController::class, 'showTouristProfile'])->name('profile');
         Route::get('/profile/edit', [AccountController::class, 'editTouristProfile'])->name('profile.edit');
         Route::put('/profile', [AccountController::class, 'updateTouristProfile'])->name('profile.update');
-        Route::post('/services/{tourismService}/reservations', [HotelReservationController::class, 'store'])->name('reservations.store');
+        Route::post('/services/{tourismService}/reservations', [HotelReservationController::class, 'store'])->middleware('throttle:10,1')->name('reservations.store');
         Route::get('/reservations', [TouristReservationController::class, 'index'])->name('reservations.index');
         Route::get('/reservations/{booking}', [TouristReservationController::class, 'show'])->name('reservations.show');
-        Route::post('/reservations/{booking}/reviews', [TouristReviewController::class, 'store'])->name('reservations.reviews.store');
+        Route::post('/reservations/{booking}/reviews', [TouristReviewController::class, 'store'])->middleware('throttle:10,1')->name('reservations.reviews.store');
         Route::patch('/reservations/{booking}/cancel', [TouristReservationController::class, 'cancel'])->name('reservations.cancel');
-        Route::post('/services/{tourismService}/restaurant-reservations', [RestaurantTouristReservationController::class, 'store'])->name('restaurant-reservations.store');
-        Route::post('/services/{tourismService}/transportation-reservations', [TransportationTouristReservationController::class, 'store'])->name('transportation-reservations.store');
-        Route::post('/events/{culturalEvent}/reservations', [EventTouristBookingController::class, 'store'])->name('event-reservations.store');
+        Route::post('/services/{tourismService}/restaurant-reservations', [RestaurantTouristReservationController::class, 'store'])->middleware('throttle:10,1')->name('restaurant-reservations.store');
+        Route::post('/services/{tourismService}/transportation-reservations', [TransportationTouristReservationController::class, 'store'])->middleware('throttle:10,1')->name('transportation-reservations.store');
+        Route::post('/events/{culturalEvent}/reservations', [EventTouristBookingController::class, 'store'])->middleware('throttle:10,1')->name('event-reservations.store');
     });
 
     Route::middleware('role:tourist')->group(function () {
-        Route::post('/payments/{booking}/chapa', [PaymentController::class, 'initialize'])->name('payments.initialize');
+        Route::post('/payments/{booking}/chapa', [PaymentController::class, 'initialize'])->middleware('throttle:6,1')->name('payments.initialize');
     });
 
     Route::middleware('role:tourist')->prefix('smart-trip')->name('smart-trip.')->group(function () {
@@ -226,7 +226,7 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::middleware('role:tourist')->prefix('tour-guides/{guide}')->name('tour-guides.')->group(function () {
         Route::get('/book', [TourGuideBookingController::class, 'create'])->name('book');
-        Route::post('/book', [TourGuideBookingController::class, 'store'])->name('book.store');
+        Route::post('/book', [TourGuideBookingController::class, 'store'])->middleware('throttle:10,1')->name('book.store');
     });
 
     Route::prefix('hotel')->name('hotel.')->middleware(['role:service_provider', 'hotel-provider'])->group(function () {

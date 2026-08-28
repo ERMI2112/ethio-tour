@@ -229,6 +229,9 @@ Additional UAT accounts (`uat-guide-pending@test.com`, `uat-provider-verified@te
 > These are **demo credentials for local evaluation only** — never reuse them in a
 > deployed environment.
 
+See [DEMO.md](DEMO.md) for a scripted 5-minute walkthrough of the seeded demo
+(click path, demo data reference, and offline fallback plan).
+
 ## Scheduled Tasks
 
 The Laravel scheduler (`bootstrap/app.php` → `withSchedule`) runs:
@@ -269,6 +272,8 @@ No production secrets are required for CI.
 
 - Role-based middleware guards every portal; the Chapa webhook is the only CSRF-exempt
   route and is authenticated via HMAC signature verification.
+- Booking, payment-initialization, review, and availability endpoints are
+  rate-limited; authentication endpoints are throttled against brute force.
 - Passwords are bcrypt-hashed; verification documents are stored on the private `local`
   disk.
 - A global middleware applies `X-Content-Type-Options: nosniff`,
@@ -292,17 +297,21 @@ No production secrets are required for CI.
 
 ## Screenshots
 
-> **Placeholders** — the repository does not currently store UI screenshots. Capture
-> these views after `php artisan migrate --seed` and place them under
-> `docs/screenshots/`:
+Captured from the seeded Gondar pilot environment (`php artisan migrate --seed`).
 
-- [ ] Landing page with destination search
-- [ ] Interactive map (Leaflet/OpenStreetMap)
-- [ ] Smart Trip AI planner
-- [ ] Tour guide profile with verification badge
-- [ ] Booking flow with Chapa checkout
-- [ ] Tourism Bureau verification queue
-- [ ] Administrator dashboard
+| Public experience | |
+|---|---|
+| ![Landing page with destination search](docs/screenshots/landing.png) | ![Interactive discovery map](docs/screenshots/map.png) |
+| ![Smart Trip AI planner](docs/screenshots/smart-trip.png) | ![Verified tour guide profile](docs/screenshots/guide-profile.png) |
+| ![Tour guide booking flow](docs/screenshots/booking.png) | |
+
+| Workspace portals | |
+|---|---|
+| ![Tourism Bureau guide verification queue](docs/screenshots/bureau-verification.png) | ![Administrator dashboard](docs/screenshots/admin-dashboard.png) |
+| ![Tour guide dashboard](docs/screenshots/guide-dashboard.png) | ![Hotel provider dashboard](docs/screenshots/hotel-dashboard.png) |
+
+Online payment continues from the booking flow into Chapa's hosted checkout;
+see [DEMO.md](DEMO.md) for the full scripted walkthrough.
 
 The platform's destination photography lives under `public/images/` — see
 `public/images/CREDITS.md` for the full attribution table (all images are Wikimedia
