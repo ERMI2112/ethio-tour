@@ -179,7 +179,7 @@
                 <div class="card-body p-3.5">
                     @if ($upcomingBookings->isEmpty())
                         <div class="p-3">
-                            <x-ui.empty-state title="No upcoming bookings" message="You don't have any upcoming bookings yet. Explore Ethiopia to find your next experience." />
+                            <x-ui.empty-state icon="bi-calendar2-heart" title="No upcoming bookings" message="You don't have any upcoming bookings yet. Explore Ethiopia to find your next experience." />
                         </div>
                     @else
                         <div class="d-flex flex-column gap-2.5">
@@ -276,7 +276,7 @@
                         </div>
                     @empty
                         <div class="p-3 text-center text-muted small">
-                            <x-ui.empty-state title="No saved trips yet" message="Plan your first trip with Smart Trip." />
+                            <x-ui.empty-state icon="bi-map" title="No saved trips yet" message="Plan your first trip with Smart Trip." />
                         </div>
                     @endforelse
                 </div>

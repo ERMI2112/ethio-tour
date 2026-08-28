@@ -11,7 +11,7 @@
         @endif
     </div>
     @if ($notifications->isEmpty())
-        <x-ui.empty-state title="No notifications yet" message="Updates about your bookings, applications, and verification decisions will appear here." />
+        <x-ui.empty-state icon="bi-bell" title="No notifications yet" message="Updates about your bookings, applications, and verification decisions will appear here." />
     @else
         <div class="list-group shadow-sm notification-list">
             @foreach ($notifications as $notification)

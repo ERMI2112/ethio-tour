@@ -2,9 +2,7 @@
 
 @section('title', 'Ethio Tour workspaces')
 
-@section('meta')
-    <meta name="description" content="Role-scoped Ethio Tour workspaces for travelers, tourism professionals, Bureau officers, and platform administrators.">
-@endsection
+@section('meta_description', 'Role-scoped Ethio Tour workspaces for travelers, tourism professionals, Bureau officers, and platform administrators.')
 
 @section('content')
 <div class="container py-5">

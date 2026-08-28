@@ -2,9 +2,7 @@
 
 @section('title', 'Discover Ethiopia | Ethio Tour')
 
-@section('meta')
-    <meta name="description" content="Discover Ethiopia through verified destinations, heritage, local services, cultural events, and practical trip planning with Ethio Tour.">
-@endsection
+@section('meta_description', 'Discover Ethiopia through verified destinations, heritage, local services, cultural events, and practical trip planning with Ethio Tour.')
 
 @section('content')
     <main class="landing-page">
@@ -36,7 +34,7 @@
             </div>
         </section>
 
-        <section class="landing-trust" aria-label="Current public records"><div class="container"><div class="row g-3 text-center text-md-start"><div class="col-6 col-lg-3"><div class="landing-trust-item"><strong>{{ $publishedDestinationCount }}</strong><span>Published destinations</span></div></div><div class="col-6 col-lg-3"><div class="landing-trust-item"><strong>{{ $operationalProviderCount }}</strong><span>Verified public operators</span></div></div><div class="col-6 col-lg-3"><div class="landing-trust-item"><strong>{{ $verifiedGuideCount }}</strong><span>Verified tour guides</span></div></div><div class="col-6 col-lg-3"><div class="landing-trust-item"><strong>{{ $publishedEventCount }}</strong><span>Upcoming public events</span></div></div></div></div></section>
+        <section class="landing-trust" aria-label="Why travelers trust Ethio Tour"><div class="container"><div class="row g-3 text-center text-md-start"><div class="col-6 col-lg-3"><div class="landing-trust-item"><i class="bi bi-shield-check" aria-hidden="true"></i><strong>{{ $operationalProviderCount }}</strong><span>Bureau-verified operators</span></div></div><div class="col-6 col-lg-3"><div class="landing-trust-item"><i class="bi bi-star-fill" aria-hidden="true"></i><strong>@if ($reviewAverage) {{ number_format($reviewAverage, 1) }}/5 @else &mdash; @endif</strong><span>@if ($reviewCount) From {{ $reviewCount }} verified traveler {{ Str::plural('review', $reviewCount) }} @else Verified traveler reviews @endif</span></div></div><div class="col-6 col-lg-3"><div class="landing-trust-item"><i class="bi bi-lock-fill" aria-hidden="true"></i><strong>Secure</strong><span>Chapa-protected payments</span></div></div><div class="col-6 col-lg-3"><div class="landing-trust-item"><i class="bi bi-bank" aria-hidden="true"></i><strong>Official</strong><span>Tourism Bureau oversight</span></div></div></div></div></section>
 
         <div class="container">
             <section class="landing-section" aria-labelledby="destinations-heading">
@@ -80,17 +78,7 @@
                         @foreach ($experiences->take(4) as $service)
                             @php
                                 $type = $service->serviceProvider?->provider_type ?? 'hotel';
-                                $serviceImg = asset('images/services/hotel-suite.jpg');
-                                $lowerName = strtolower($service->service_name);
-                                if (str_contains($lowerName, 'coffee') || str_contains($lowerName, 'breakfast') || $type === 'restaurant') {
-                                    $serviceImg = asset('images/services/coffee-tasting.jpg');
-                                } elseif (str_contains($lowerName, '4x4') || str_contains($lowerName, 'safari') || str_contains($lowerName, 'transport') || $type === 'transportation_car_rental') {
-                                    $serviceImg = asset('images/services/safari-4x4.jpg');
-                                } elseif (str_contains($lowerName, 'meskel') || str_contains($lowerName, 'festival') || str_contains($lowerName, 'celebration') || $type === 'event_organizer') {
-                                    $serviceImg = asset('images/events/meskel-festival.jpg');
-                                } elseif (str_contains($lowerName, 'suite') || str_contains($lowerName, 'room') || $type === 'hotel') {
-                                    $serviceImg = asset('images/services/hotel-suite.jpg');
-                                }
+                                $serviceImg = \App\Support\ServiceImage::assetFor($service);
                             @endphp
                             <div class="col-md-6 col-xl-3">
                                 <article class="landing-card landing-destination-card h-100 overflow-hidden p-0 d-flex flex-column">

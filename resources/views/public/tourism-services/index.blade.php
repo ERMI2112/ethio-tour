@@ -32,16 +32,7 @@
                 @foreach($services as $service)
                     @php
                         $serviceType = str($service->serviceProvider?->provider_type ?? 'service')->replace('_', ' ')->title();
-                        $type = $service->serviceProvider?->provider_type ?? 'hotel';
-                        $lowerName = strtolower($service->service_name);
-                        $serviceImg = asset('images/services/hotel-suite.jpg');
-                        if (str_contains($lowerName, 'coffee') || str_contains($lowerName, 'breakfast') || str_contains($lowerName, 'dining') || $type === 'restaurant') {
-                            $serviceImg = asset('images/services/coffee-tasting.jpg');
-                        } elseif (str_contains($lowerName, '4x4') || str_contains($lowerName, 'safari') || str_contains($lowerName, 'transport') || $type === 'transportation_car_rental') {
-                            $serviceImg = asset('images/services/safari-4x4.jpg');
-                        } elseif (str_contains($lowerName, 'suite') || str_contains($lowerName, 'room') || $type === 'hotel') {
-                            $serviceImg = asset('images/services/hotel-suite.jpg');
-                        }
+                        $serviceImg = \App\Support\ServiceImage::assetFor($service);
                     @endphp
                     <div class="col-md-6 col-xl-4" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 3) * 70 }}">
                         <article class="public-catalog-card h-100 overflow-hidden">

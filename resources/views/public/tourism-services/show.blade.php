@@ -11,15 +11,7 @@
             <article class="public-catalog-card h-100 overflow-hidden" data-aos="fade-up">
                 @php
                     $type = $tourismService->serviceProvider?->provider_type ?? 'hotel';
-                    $lowerName = strtolower($tourismService->service_name);
-                    $serviceImg = asset('images/services/hotel-suite.jpg');
-                    if (str_contains($lowerName, 'coffee') || str_contains($lowerName, 'breakfast') || str_contains($lowerName, 'dining') || $type === 'restaurant') {
-                        $serviceImg = asset('images/services/coffee-tasting.jpg');
-                    } elseif (str_contains($lowerName, '4x4') || str_contains($lowerName, 'safari') || str_contains($lowerName, 'transport') || $type === 'transportation_car_rental') {
-                        $serviceImg = asset('images/services/safari-4x4.jpg');
-                    } elseif (str_contains($lowerName, 'suite') || str_contains($lowerName, 'room') || $type === 'hotel') {
-                        $serviceImg = asset('images/services/hotel-suite.jpg');
-                    }
+                    $serviceImg = \App\Support\ServiceImage::assetFor($tourismService);
                 @endphp
                 <div class="public-catalog-card__media position-relative" style="height: 240px; overflow: hidden; background: #0d3824;">
                     <img src="{{ $serviceImg }}" alt="{{ $tourismService->service_name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">

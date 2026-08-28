@@ -99,6 +99,14 @@ class PublicLandingController extends Controller
             ? CulturalEvent::query()->where('status', 'published')->whereDate('event_date', '>=', today())->whereHas('serviceProvider', fn ($query) => $query->publiclyOperational())->count()
             : 0;
 
+        $publicReviewStats = Schema::hasTable('reviews') && Schema::hasTable('bookings')
+            ? Review::query()->whereHas('booking', fn ($query) => $query->where('status', 'completed'))
+                ->selectRaw('COUNT(*) as total, AVG(rating) as average')
+                ->first()
+            : null;
+        $reviewCount = (int) ($publicReviewStats?->total ?? 0);
+        $reviewAverage = $reviewCount > 0 ? round((float) $publicReviewStats->average, 1) : null;
+
         $portals = PortalCatalog::all();
 
         return view('welcome', compact(
@@ -120,6 +128,8 @@ class PublicLandingController extends Controller
             'operationalProviderCount',
             'verifiedGuideCount',
             'publishedEventCount',
+            'reviewCount',
+            'reviewAverage',
             'portals',
         ));
     }

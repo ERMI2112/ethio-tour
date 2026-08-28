@@ -29,3 +29,8 @@ copies are maintained locally by `database/download_images.php`.
 | Lalibela gallery: rock-hewn church detail | [Rock-Hewn Churches, Lalibela Ethiopia (6)](https://commons.wikimedia.org/wiki/File:Rock-Hewn_Churches,_Lalibela_Ethiopia_(6).jpg) | Radosław Botev | CC BY 3.0 pl |
 | Timkat | [01 - Priests dancing for Timkat](https://commons.wikimedia.org/wiki/File:01_-_Priests_dancing_for_Timkat.jpg) | Jean Rebiffé | CC BY 4.0 |
 | Meskel | [Meskel, Efiopiya bayramı 26-Sep-2024 05](https://commons.wikimedia.org/wiki/File:Meskel,_Efiopiya_bayram%C4%B1_26-Sep-2024_05.jpg) | Mamed077 | CC0 |
+| Service card: Ethiopian feast | [Ethiopian fasting platter](https://commons.wikimedia.org/wiki/File:Ethiopian_fasting_platter.jpg) | Jbinthecity | CC0 |
+| Service card: traditional injera | [Injera, Ethiopian's traditional food](https://commons.wikimedia.org/wiki/File:Injera,_Ethiopian%27s_traditional_food.JPG) | Shiefrallo | CC BY-SA 4.0 |
+| Service card: classic hotel room | [Siena - hotel room - 2012-5](https://commons.wikimedia.org/wiki/File:Siena_-_hotel_room_-_2012-5.jpg) | Thomas Duesing | CC BY 2.0 |
+| Service card: deluxe hotel room | [Hotel bed with lit lamp at Hotel Esplanade in October 2023](https://commons.wikimedia.org/wiki/File:Hotel_bed_with_lit_lamp_at_Hotel_Esplanade_in_October_2023.jpg) | JIP | CC BY-SA 4.0 |
+| Service card: 4x4 expedition | [DTR6846 FZS car in Bale](https://commons.wikimedia.org/wiki/File:DTR6846_FZS_car_in_Bale.jpg) | Daniel Rosengren | CC BY-SA 4.0 |

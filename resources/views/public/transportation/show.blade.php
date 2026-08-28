@@ -9,7 +9,7 @@
         <div class="col-lg-7" data-aos="fade-up">
             <div class="public-catalog-card overflow-hidden">
                 <div class="public-catalog-card__media position-relative" style="height: 240px; overflow: hidden; background: #0d3824;">
-                    <img src="{{ asset('images/services/safari-4x4.jpg') }}" alt="{{ $service->service_name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                    <img src="{{ \App\Support\ServiceImage::assetFor($service) }}" alt="{{ $service->service_name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                     <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);"></div>
                     <div class="position-absolute bottom-0 start-0 m-4 text-white">
                         <div class="public-catalog-card__media-kicker text-warning">Transportation &amp; Car Rental</div>

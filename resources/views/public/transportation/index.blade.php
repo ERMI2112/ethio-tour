@@ -22,7 +22,7 @@
                     <div class="col-md-6 col-xl-4" data-aos="fade-up" data-aos-delay="{{ ($loop->index % 3) * 70 }}">
                         <article class="public-catalog-card h-100 overflow-hidden">
                             <div class="public-catalog-card__media position-relative" style="height: 180px; overflow: hidden; background: #0d3824;">
-                                <img src="{{ asset('images/services/safari-4x4.jpg') }}" alt="{{ $service->service_name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
+                                <img src="{{ \App\Support\ServiceImage::assetFor($service) }}" alt="{{ $service->service_name }}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy">
                                 <div class="position-absolute top-0 start-0 w-100 h-100" style="background: linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.7) 100%);"></div>
                                 <div class="position-absolute bottom-0 start-0 m-3 text-white">
                                     <div class="public-catalog-card__media-kicker text-warning">Car rental &amp; transport</div>
