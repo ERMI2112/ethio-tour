@@ -3,7 +3,7 @@
 @section('title', 'Route Map & Driving Distance · '.$trip->title)
 
 @section('content')
-<div class="container-fluid py-4 py-lg-5">
+<div class="container-fluid py-4 py-lg-5 smart-trip-map-page">
     <div class="container">
         <!-- Breadcrumbs & Navigation -->
         <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
@@ -21,7 +21,7 @@
                 </p>
             </div>
             <div class="d-flex gap-2">
-                <a class="btn btn-outline-secondary btn-sm" href="{{ route('smart-trip.print', $trip) }}" target="_blank">
+                <a class="btn btn-outline-secondary btn-sm" href="{{ route('smart-trip.print', $trip) }}" target="_blank" rel="noopener">
                     <i class="bi bi-printer me-1"></i> Print Itinerary
                 </a>
                 <a class="btn btn-success btn-sm fw-bold" href="{{ route('smart-trip.show', $trip) }}">
@@ -135,10 +135,9 @@
             <div class="col-lg-8">
                 <div class="card border-0 shadow-sm rounded-4 overflow-hidden h-100">
                     <div id="map-status" class="alert alert-info d-none m-3" role="status"></div>
-                    <div class="map-shell position-relative" style="min-height: 600px; height: 100%;">
+                    <div class="map-shell smart-trip-route-map position-relative" style="min-height: 600px; height: 100%;">
                         <div id="tourism-map"
-                             class="w-100 h-100"
-                             style="min-height: 600px;"
+                             class="w-100 h-100 smart-trip-route-map-canvas"
                              data-endpoint="{{ route('smart-trip.map.data', $trip) }}"
                              data-is-route-map="true"
                              aria-label="Smart Trip Multi-Stop Route Map"></div>

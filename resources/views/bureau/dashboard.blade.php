@@ -4,8 +4,8 @@
 
 @section('content')
 <div class="container-fluid py-4 py-lg-5 px-3 px-lg-5">
-    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4 pb-3 border-bottom">
-        <div><p class="text-uppercase text-muted small fw-semibold mb-1">Bureau oversight</p><h1 class="h3 mb-1">Regulatory dashboard</h1><p class="text-secondary mb-0">Current verification, document, booking, and provider data.</p></div>
+    <div class="ws-page-header workspace-page-header mb-4 pb-3 border-bottom">
+        <div><span class="ws-eyebrow"><span class="ws-eye-dot" aria-hidden="true"></span>Bureau oversight</span><h1 class="ws-title mb-1">Regulatory dashboard</h1><p class="ws-lead mb-0">Current verification, document, booking, and provider data.</p></div>
         <div class="d-flex gap-2"><span class="badge bg-light text-dark border align-self-center">{{ auth()->user()->email }}</span><a class="btn btn-dark btn-sm" href="{{ route('bureau.reports.index') }}">Audit reports</a></div>
     </div>
     @include('layouts.partials.flash-messages')

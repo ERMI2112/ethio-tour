@@ -3,11 +3,9 @@
         <div class="d-flex align-items-center justify-content-between h-100 gap-3">
             {{-- Brand & Workspace Label --}}
             <div class="d-flex align-items-center gap-2.5">
-                @if (!isset($workspaceUsesLegacyGuideSidebar) || ! $workspaceUsesLegacyGuideSidebar)
-                    <button class="btn btn-sm btn-light border d-lg-none rounded-2 p-1.5" type="button" data-bs-toggle="offcanvas" data-bs-target="#workspace-sidebar" aria-controls="workspace-sidebar" aria-label="Open workspace navigation">
-                        <i class="bi bi-list fs-5"></i>
-                    </button>
-                @endif
+                <button class="btn btn-sm btn-light border d-lg-none rounded-2 p-1.5" type="button" data-bs-toggle="offcanvas" data-bs-target="#workspace-sidebar" aria-controls="workspace-sidebar" aria-label="Open workspace navigation">
+                    <i class="bi bi-list fs-5"></i>
+                </button>
 
                 <a class="navbar-brand d-flex align-items-center gap-2 text-decoration-none m-0" href="{{ route($workspaceDashboardRoute) }}" aria-label="{{ $workspaceLabel }} home">
                     <svg width="24" height="24" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -49,12 +47,18 @@
                     @endif
                 </a>
 
+                {{-- Account access stays visible in every workspace, including on compact screens. --}}
+                <a class="workspace-account-link btn btn-sm btn-light border rounded-3 px-2 px-sm-3 py-1.5 text-secondary d-inline-flex align-items-center justify-content-center gap-1.5 small fw-semibold" href="{{ route('account') }}" aria-label="Account settings" style="min-height: 36px;">
+                    <i class="bi bi-person"></i>
+                    <span class="d-none d-sm-inline">Account</span>
+                </a>
+
                 {{-- Logout --}}
                 <form method="POST" action="{{ route('logout') }}" class="d-inline m-0">
                     @csrf
-                    <button class="btn btn-sm btn-light border rounded-3 px-3 py-1.5 text-secondary d-inline-flex align-items-center gap-1.5 small fw-semibold" type="submit">
+                    <button class="btn btn-sm btn-light border rounded-3 px-2 px-sm-3 py-1.5 text-secondary d-inline-flex align-items-center justify-content-center gap-1.5 small fw-semibold" type="submit" aria-label="Log out">
                         <i class="bi bi-box-arrow-right"></i>
-                        <span>Log out</span>
+                        <span class="d-none d-sm-inline">Log out</span>
                     </button>
                 </form>
             </div>

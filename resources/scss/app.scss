@@ -433,3 +433,449 @@ body.workspace-body .badge {
         transition: none;
     }
 }
+
+/* ==========================================================================
+   EthioTour professionalization layer
+   --------------------------------------------------------------------------
+   Small, shared refinements layered over the existing Bootstrap/Blade
+   surfaces. These rules improve hierarchy and compact-screen behavior while
+   leaving route, form, booking, and authorization markup intact.
+   ========================================================================== */
+:root {
+    --ethio-imperial-red: #A21C26;
+    --ethio-imperial-red-hover: #861720;
+    --ethio-brand-gold: #D4AF37;
+    --ethio-ink: #102a3a;
+    --ethio-surface-muted: #f7faf9;
+    --ethio-focus-ring: rgba(212, 175, 55, .58);
+}
+
+body {
+    overflow-x: hidden;
+}
+
+a {
+    text-underline-offset: .16em;
+}
+
+.form-label {
+    color: var(--bs-emphasis-color);
+    font-size: .875rem;
+    font-weight: 650;
+}
+
+.form-control,
+.form-select {
+    min-height: 2.75rem;
+    border-color: rgba(16, 42, 58, .18);
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--vn-emerald);
+    box-shadow: 0 0 0 .2rem rgba(11, 94, 66, .14);
+}
+
+.btn {
+    min-height: 2.5rem;
+    font-weight: 600;
+}
+
+.btn-primary,
+.btn-success {
+    --bs-btn-bg: var(--vn-emerald);
+    --bs-btn-border-color: var(--vn-emerald);
+    --bs-btn-hover-bg: var(--vn-emerald-hover);
+    --bs-btn-hover-border-color: var(--vn-emerald-hover);
+    --bs-btn-active-bg: var(--vn-emerald-hover);
+    --bs-btn-active-border-color: var(--vn-emerald-hover);
+}
+
+.btn-warning {
+    --bs-btn-bg: var(--ethio-brand-gold);
+    --bs-btn-border-color: var(--ethio-brand-gold);
+    --bs-btn-hover-bg: #b99325;
+    --bs-btn-hover-border-color: #b99325;
+}
+
+.btn-danger {
+    --bs-btn-bg: var(--ethio-imperial-red);
+    --bs-btn-border-color: var(--ethio-imperial-red);
+    --bs-btn-hover-bg: var(--ethio-imperial-red-hover);
+    --bs-btn-hover-border-color: var(--ethio-imperial-red-hover);
+}
+
+.btn-outline-danger {
+    --bs-btn-color: var(--ethio-imperial-red);
+    --bs-btn-border-color: var(--ethio-imperial-red);
+    --bs-btn-hover-bg: var(--ethio-imperial-red);
+    --bs-btn-hover-border-color: var(--ethio-imperial-red);
+}
+
+.workspace-content {
+    overflow-x: clip;
+}
+
+.map-shell {
+    border: 1px solid var(--landing-card-border);
+    border-radius: 1rem;
+    box-shadow: var(--ethio-shadow-sm);
+    background: var(--landing-subtle-bg);
+}
+
+.map-shell #tourism-map {
+    min-height: clamp(26rem, 58vh, 38rem);
+}
+
+.map-shell .leaflet-control-zoom a {
+    min-height: 2.5rem;
+    min-width: 2.5rem;
+    line-height: 2.5rem;
+}
+
+.map-popup {
+    max-width: min(18rem, calc(100vw - 3rem));
+}
+
+.map-popup .btn {
+    min-height: 2.5rem;
+}
+
+.workspace-header .workspace-account-link,
+.workspace-header form .btn {
+    white-space: nowrap;
+}
+
+.workspace-header .btn:focus-visible,
+.workspace-sidebar .nav-link:focus-visible,
+.tour-guide-sidebar .list-group-item:focus-visible {
+    outline: 3px solid var(--ethio-focus-ring);
+    outline-offset: 2px;
+}
+
+.workspace-sidebar .offcanvas-body {
+    overflow-y: auto;
+}
+
+.workspace-sidebar .nav-link,
+.tour-guide-sidebar .list-group-item {
+    min-height: 2.75rem;
+}
+
+.workspace-sidebar-heading {
+    color: var(--bs-secondary-color);
+}
+
+body.workspace-body .card {
+    background-color: var(--vn-surface);
+}
+
+body.workspace-body .card-header,
+body.workspace-body .card-footer {
+    background-color: var(--vn-surface);
+}
+
+body.workspace-body .table-responsive {
+    border-radius: var(--ethio-ws-radius-sm, .75rem);
+}
+
+body.workspace-body .table > :not(caption) > * > * {
+    padding: .85rem .9rem;
+}
+
+body.workspace-body .table thead th {
+    white-space: nowrap;
+}
+
+body.workspace-body .alert {
+    padding: 1rem 1.1rem;
+}
+
+body.workspace-body .card-header.d-flex,
+body.workspace-body .card-footer.d-flex {
+    flex-wrap: wrap;
+    gap: .65rem;
+}
+
+body.workspace-body .list-group-item {
+    padding: .95rem 1.1rem;
+}
+
+.notification-list {
+    border-radius: var(--ethio-ws-radius, 1rem);
+    overflow: hidden;
+}
+
+.notification-list .list-group-item {
+    min-height: 4.5rem;
+}
+
+.pagination {
+    flex-wrap: wrap;
+    gap: .25rem;
+}
+
+.pagination .page-link {
+    min-width: 2.5rem;
+    min-height: 2.5rem;
+    text-align: center;
+}
+
+.stat-card {
+    min-height: 8.75rem;
+}
+
+.stat-card-value {
+    line-height: 1.1;
+    overflow-wrap: anywhere;
+}
+
+.stat-card-hint {
+    line-height: 1.35;
+}
+
+/* The guide portal still owns a guide-specific navigation partial. Give it
+   the same interaction language as the shared workspace sidebar without
+   changing its established page structure. */
+.tour-guide-sidebar {
+    background: var(--vn-surface);
+    border: 1px solid var(--ethio-ws-edge, rgba(15, 81, 50, .12)) !important;
+    border-radius: var(--ethio-ws-radius, 1rem) !important;
+    overflow: hidden;
+}
+
+.tour-guide-sidebar.workspace-sidebar {
+    flex: 0 0 auto;
+    min-height: calc(100vh - 58px);
+    width: 100%;
+}
+
+.tour-guide-sidebar .card-body {
+    padding: 1.1rem;
+}
+
+.tour-guide-sidebar .list-group {
+    gap: .25rem;
+}
+
+.tour-guide-sidebar .list-group-item {
+    align-items: center;
+    background: transparent;
+    border: 0;
+    border-radius: .7rem !important;
+    color: var(--bs-body-color);
+    display: flex;
+    font-weight: 550;
+    padding: .7rem .8rem;
+    text-decoration: none;
+}
+
+.tour-guide-sidebar .list-group-item:hover,
+.tour-guide-sidebar .list-group-item:focus-visible {
+    background: rgba(11, 94, 66, .08);
+    color: var(--vn-emerald);
+}
+
+.tour-guide-sidebar .list-group-item.active {
+    background: var(--vn-emerald) !important;
+    color: #fff !important;
+    font-weight: 650;
+    box-shadow: 0 4px 12px rgba(11, 94, 66, .2);
+}
+
+.tour-guide-sidebar .list-group-item[data-tour-guide-coming-soon] {
+    cursor: not-allowed;
+}
+
+/* Catalog cards keep equal-height actions and become comfortably tappable on
+   narrow screens instead of forcing desktop density into a phone viewport. */
+.public-catalog-card__body {
+    min-width: 0;
+}
+
+.public-catalog-card__footer {
+    flex-wrap: wrap;
+}
+
+.public-catalog-card__footer .btn {
+    flex-shrink: 0;
+}
+
+.main-navbar .navbar-collapse {
+    min-width: 0;
+}
+
+.main-navbar .nav-link.active {
+    color: #fff !important;
+    background: rgba(255, 255, 255, .1);
+    box-shadow: inset 0 -2px 0 var(--ethio-brand-gold);
+}
+
+.main-navbar .dropdown-toggle.active::after {
+    border-top-color: var(--ethio-brand-gold);
+}
+
+@media (max-width: 991.98px) {
+    .main-navbar .navbar-collapse {
+        background: var(--ethio-tour-nav-bg);
+        border-top: 1px solid rgba(255, 255, 255, .1);
+        margin-top: .75rem;
+        padding: .75rem 0 .25rem;
+    }
+
+    .main-navbar .navbar-nav {
+        align-items: stretch !important;
+    }
+
+    .main-navbar .nav-link {
+        min-height: 2.75rem;
+        padding: .7rem .8rem !important;
+    }
+
+    .main-navbar .dropdown-menu {
+        background: rgba(255, 255, 255, .98);
+        margin: 0 .8rem .35rem;
+    }
+
+    .main-navbar .d-flex.align-items-center.gap-2.ms-lg-2 {
+        align-items: stretch !important;
+        border-top: 1px solid rgba(255, 255, 255, .1);
+        flex-wrap: wrap;
+        margin: .5rem 0 0 !important;
+        padding-top: .75rem;
+    }
+
+    .workspace-sidebar {
+        max-width: min(88vw, 320px);
+    }
+}
+
+@media (max-width: 575.98px) {
+    .workspace-header {
+        height: 64px !important;
+    }
+
+    .workspace-header .container-fluid {
+        padding-left: .75rem !important;
+        padding-right: .75rem !important;
+    }
+
+    .workspace-header > .container-fluid > .d-flex {
+        gap: .45rem !important;
+    }
+
+    .workspace-header > .container-fluid > .d-flex > .d-flex:last-child {
+        gap: .35rem !important;
+    }
+
+    .workspace-header .navbar-brand {
+        gap: .4rem !important;
+        min-width: 0;
+    }
+
+    .workspace-header .navbar-brand .fw-bold {
+        font-size: .9rem !important;
+    }
+
+    .workspace-header .btn {
+        min-height: 2.35rem;
+        padding-left: .55rem !important;
+        padding-right: .55rem !important;
+    }
+
+    .workspace-content > .container,
+    .workspace-content > .container-fluid {
+        padding-left: .9rem !important;
+        padding-right: .9rem !important;
+    }
+
+    .workspace-breadcrumb {
+        padding-left: .9rem !important;
+        padding-right: .9rem !important;
+    }
+
+    .workspace-content .d-flex > .btn,
+    .workspace-content .d-flex > form,
+    .workspace-content .d-flex > form .btn {
+        max-width: 100%;
+    }
+
+    .tour-guide-sidebar .card-body {
+        padding: .85rem;
+    }
+
+    .tour-guide-sidebar .list-group {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .tour-guide-sidebar .list-group-item {
+        font-size: .9rem;
+        min-height: 2.8rem;
+    }
+
+    .public-page-hero {
+        border-radius: 1rem;
+        padding: 1.25rem;
+    }
+
+    .public-page-hero h1 {
+        font-size: 1.85rem;
+    }
+
+    .public-catalog-card__footer .btn {
+        flex: 1 1 100%;
+        width: 100%;
+    }
+
+    .landing-section {
+        padding: 3rem 0;
+    }
+}
+
+@media (max-width: 359.98px) {
+    /* Keep the 320px header from becoming a row of clipped controls. Account
+       remains available in the workspace drawer and the icon keeps logout
+       discoverable through its accessible name. */
+    .workspace-header .workspace-account-link {
+        display: none !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .btn,
+    .tour-guide-sidebar .list-group-item,
+    .public-catalog-card {
+        transition: none !important;
+    }
+}
+
+[data-bs-theme='dark'] body.workspace-body .text-dark,
+[data-bs-theme='dark'] body.workspace-body .text-body-emphasis {
+    color: var(--bs-body-color) !important;
+}
+
+[data-bs-theme='dark'] .form-control,
+[data-bs-theme='dark'] .form-select {
+    border-color: rgba(183, 218, 198, .28);
+}
+
+[data-bs-theme='dark'] .tour-guide-sidebar .list-group-item:hover,
+[data-bs-theme='dark'] .tour-guide-sidebar .list-group-item:focus-visible {
+    background: rgba(117, 196, 154, .14);
+    color: #d9f3e3;
+}
+
+/* Keep the itinerary map useful on phones instead of preserving the desktop
+   600px canvas height from the original layout. */
+.smart-trip-route-map,
+.smart-trip-route-map-canvas {
+    min-height: clamp(26rem, 58vh, 38rem) !important;
+}
+
+@media (max-width: 575.98px) {
+    .smart-trip-route-map,
+    .smart-trip-route-map-canvas {
+        min-height: 24rem !important;
+    }
+}

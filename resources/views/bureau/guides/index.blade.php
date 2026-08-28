@@ -56,7 +56,8 @@
                                     <img src="{{ $guide->profileImageUrl() }}"
                                          alt="{{ $displayName }}"
                                          class="rounded-circle border"
-                                         style="width: 44px; height: 44px; object-fit: cover;">
+                                         style="width: 44px; height: 44px; object-fit: cover;"
+                                         width="44" height="44" loading="lazy" decoding="async">
                                     <div>
                                         <div class="fw-bold text-dark">{{ $displayName }}</div>
                                         <div class="small text-muted">{{ $guide->user?->email }}</div>

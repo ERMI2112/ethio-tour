@@ -120,7 +120,7 @@ if (mapElement) {
                         <strong class="d-block text-dark">${escapeHtml(marker.title)}</strong>
                         <div class="small text-muted mb-2">📍 ${escapeHtml(marker.summary ?? '')}</div>
                         ${marker.price_hint ? `<div class="small fw-bold text-success mb-2">${escapeHtml(marker.price_hint)}</div>` : ''}
-                        ${marker.url ? `<a class="btn btn-sm btn-outline-success w-100 fw-semibold" href="${escapeHtml(marker.url)}" target="_blank">View Details &rarr;</a>` : ''}
+                        ${marker.url ? `<a class="btn btn-sm btn-outline-success w-100 fw-semibold" href="${escapeHtml(marker.url)}" target="_blank" rel="noopener">View Details &rarr;</a>` : ''}
                     </div>
                 `;
                 leafletMarker.bindPopup(popupHtml);

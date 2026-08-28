@@ -24,6 +24,7 @@
                            name="email"
                            type="email"
                            value="{{ old('email', $request->email) }}"
+                           autocomplete="email"
                            required
                            autofocus>
                 </div>
@@ -40,6 +41,7 @@
                            name="password"
                            type="password"
                            placeholder="••••••••"
+                           autocomplete="new-password"
                            required>
                 </div>
                 @error('password')
@@ -55,6 +57,7 @@
                            name="password_confirmation"
                            type="password"
                            placeholder="••••••••"
+                           autocomplete="new-password"
                            required>
                 </div>
                 @error('password_confirmation')

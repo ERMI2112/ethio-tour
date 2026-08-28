@@ -122,6 +122,8 @@
                 @endif
             @elseif ($workspaceRole === 'tourist')
                 <a @class(['nav-link', 'active' => request()->routeIs('tourist.dashboard')]) href="{{ route('tourist.dashboard') }}"><i class="bi bi-grid"></i><span>Dashboard</span></a>
+                <a class="nav-link" href="{{ route('destinations.index') }}"><i class="bi bi-compass"></i><span>Explore Ethiopia</span></a>
+                <a class="nav-link" href="{{ route('map') }}"><i class="bi bi-map"></i><span>Discovery map</span></a>
                 <a @class(['nav-link', 'active' => request()->routeIs('tourist.reservations.*')]) href="{{ route('tourist.reservations.index') }}"><i class="bi bi-journal-bookmark"></i><span>My Bookings</span></a>
                 @php($touristUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
                 <a @class(['nav-link d-flex justify-content-between align-items-center', 'active' => request()->routeIs('notifications.*')]) href="{{ route('notifications.index') }}"><span class="d-flex align-items-center gap-2"><i class="bi bi-bell"></i><span>Notifications</span></span>@if($touristUnreadNotifications)<span class="badge bg-danger rounded-pill">{{ $touristUnreadNotifications }}</span>@endif</a>
@@ -133,8 +135,12 @@
                 <a @class(['nav-link', 'active' => request()->routeIs('tour-guide.profile*')]) href="{{ route('tour-guide.profile') }}"><i class="bi bi-person-badge"></i><span>My Profile</span></a>
                 <a @class(['nav-link', 'active' => request()->routeIs('tour-guide.availability')]) href="{{ route('tour-guide.availability') }}"><i class="bi bi-calendar-event"></i><span>Availability</span></a>
                 <a @class(['nav-link', 'active' => request()->routeIs('tour-guide.requests.*')]) href="{{ route('tour-guide.requests.index') }}"><i class="bi bi-inbox"></i><span>Booking Requests</span></a>
+                <a @class(['nav-link', 'active' => request()->routeIs('tour-guide.tours') || request()->routeIs('tour-guide.packages.*')]) href="{{ route('tour-guide.tours') }}"><i class="bi bi-map"></i><span>My Tours</span></a>
+                <a @class(['nav-link', 'active' => request()->routeIs('tour-guide.reviews')]) href="{{ route('tour-guide.reviews') }}"><i class="bi bi-star"></i><span>Reviews</span></a>
+                <a @class(['nav-link', 'active' => request()->routeIs('tour-guide.earnings')]) href="{{ route('tour-guide.earnings') }}"><i class="bi bi-wallet2"></i><span>Earnings</span></a>
                 @php($guideUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
                 <a @class(['nav-link d-flex justify-content-between align-items-center', 'active' => request()->routeIs('notifications.*')]) href="{{ route('notifications.index') }}"><span class="d-flex align-items-center gap-2"><i class="bi bi-bell"></i><span>Notifications</span></span>@if($guideUnreadNotifications)<span class="badge bg-danger rounded-pill">{{ $guideUnreadNotifications }}</span>@endif</a>
+                <a @class(['nav-link', 'active' => request()->routeIs('tour-guide.settings')]) href="{{ route('tour-guide.settings') }}"><i class="bi bi-gear"></i><span>Settings</span></a>
             @endif
         </nav>
         <div class="mt-auto pt-3 border-top">
@@ -145,6 +151,10 @@
                 </a>
             @endif
             @if ($workspaceRole === 'tourist')
+                <a class="nav-link px-2 text-muted d-flex align-items-center gap-2 small" href="{{ route('account') }}">
+                    <i class="bi bi-person-gear"></i>
+                    <span>Account settings</span>
+                </a>
                 <a class="nav-link px-2 text-muted d-flex align-items-center gap-2 small" href="{{ route('home') }}">
                     <i class="bi bi-compass"></i>
                     <span>View Public Site</span>

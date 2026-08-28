@@ -5,7 +5,7 @@
 @section('content')
 <div class="container py-4 py-lg-5">
 
-    <div class="d-flex justify-content-between align-items-center mt-3 mb-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mt-3 mb-4">
         <div>
             <h1 class="h3 mb-1">Reservation #BK-{{ sprintf('%05d', $booking->booking_id) }}</h1>
             <p class="text-muted small mb-0">Requested on {{ $booking->booking_date ? $booking->booking_date->format('F d, Y at H:i') : $booking->created_at->format('F d, Y') }}</p>
@@ -47,7 +47,8 @@
                                 <img src="{{ $guideObj->profileImageUrl() }}"
                                      alt="{{ $guideName }}"
                                      class="rounded-circle border border-2 shadow-sm"
-                                     style="width: 70px; height: 70px; object-fit: cover;">
+                                     style="width: 70px; height: 70px; object-fit: cover;"
+                                     width="70" height="70" loading="lazy" decoding="async">
                             @endif
                             <div>
                                 <h3 class="h5 mb-1 text-dark fw-bold">{{ $guideName }}</h3>

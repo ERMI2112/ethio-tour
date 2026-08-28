@@ -1,13 +1,5 @@
 import './bootstrap';
 import 'bootstrap';
-import Alpine from 'alpinejs';
-import AOS from 'aos';
-import 'aos/dist/aos.css';
-import Swal from 'sweetalert2';
-import 'sweetalert2/dist/sweetalert2.min.css';
-
-window.Alpine = Alpine;
-window.Swal = Swal;
 
 // Theme Toggle (Dark / Light Mode)
 function initThemeToggle() {
@@ -59,9 +51,48 @@ window.setAppLanguage = function (lang) {
     }
 };
 
+async function initEnhancements() {
+    const animatedElements = document.querySelectorAll('[data-aos]');
+    if (animatedElements.length > 0) {
+        const [{ default: AOS }] = await Promise.all([
+            import('aos'),
+            import('aos/dist/aos.css'),
+        ]);
+
+        AOS.init({ duration: 550, easing: 'ease-out-cubic', once: true, offset: 24 });
+    }
+
+    const confirmForms = document.querySelectorAll('form[data-confirm]');
+    if (confirmForms.length > 0) {
+        const [{ default: Swal }] = await Promise.all([
+            import('sweetalert2'),
+            import('sweetalert2/dist/sweetalert2.min.css'),
+        ]);
+
+        window.Swal = Swal;
+
+        confirmForms.forEach((form) => {
+            form.addEventListener('submit', (event) => {
+                event.preventDefault();
+                const message = form.dataset.confirm || 'Are you sure you want to continue?';
+                Swal.fire({
+                    title: 'Please confirm',
+                    text: message,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Continue',
+                    cancelButtonText: 'Cancel',
+                    buttonsStyling: false,
+                    customClass: { confirmButton: 'btn btn-primary me-2', cancelButton: 'btn btn-outline-secondary' },
+                }).then((result) => {
+                    if (result.isConfirmed) form.submit();
+                });
+            });
+        });
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
-    Alpine.start();
-    AOS.init({ duration: 550, easing: 'ease-out-cubic', once: true, offset: 24 });
 
     initThemeToggle();
 
@@ -75,22 +106,5 @@ document.addEventListener('DOMContentLoaded', () => {
         window.setAppLanguage(savedLang);
     }
 
-    document.querySelectorAll('form[data-confirm]').forEach((form) => {
-        form.addEventListener('submit', (event) => {
-            event.preventDefault();
-            const message = form.dataset.confirm || 'Are you sure you want to continue?';
-            Swal.fire({
-                title: 'Please confirm',
-                text: message,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Continue',
-                cancelButtonText: 'Cancel',
-                buttonsStyling: false,
-                customClass: { confirmButton: 'btn btn-primary me-2', cancelButton: 'btn btn-outline-secondary' },
-            }).then((result) => {
-                if (result.isConfirmed) form.submit();
-            });
-        });
-    });
+    void initEnhancements();
 });

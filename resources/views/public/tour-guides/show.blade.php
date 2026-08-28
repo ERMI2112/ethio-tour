@@ -22,7 +22,8 @@
                     <img src="{{ $guide->profileImageUrl() }}"
                          alt="{{ $guideDisplayName }}"
                          class="rounded-circle border border-3 border-warning shadow"
-                         style="width: 120px; height: 120px; object-fit: cover;">
+                         style="width: 120px; height: 120px; object-fit: cover;"
+                         width="120" height="120" decoding="async">
                 </div>
                 <div class="col">
                     <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
@@ -108,7 +109,7 @@
                             <div class="border rounded-4 overflow-hidden mb-4 shadow-sm">
                                 {{-- Package Header with Cover Image --}}
                                 <div class="position-relative" style="height: 200px; background: #0c1e14;">
-                                    <img src="{{ $pkg->coverImageUrl() }}" alt="{{ $pkg->title }}" class="w-100 h-100" style="object-fit: cover; opacity: 0.85;">
+                                    <img src="{{ $pkg->coverImageUrl() }}" alt="{{ $pkg->title }}" class="w-100 h-100" style="object-fit: cover; opacity: 0.85;" loading="lazy" decoding="async">
                                     <div class="position-absolute bottom-0 start-0 w-100 p-4" style="background: linear-gradient(transparent, rgba(0,0,0,0.8));">
                                         <div class="d-flex flex-wrap gap-2 mb-2">
                                             <span class="badge bg-white text-dark fw-bold">{{ $pkg->duration_days }} {{ \Illuminate\Support\Str::plural('Day', $pkg->duration_days) }} / {{ $pkg->duration_days - 1 }} {{ \Illuminate\Support\Str::plural('Night', max(1, $pkg->duration_days - 1)) }}</span>

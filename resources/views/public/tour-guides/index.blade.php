@@ -130,6 +130,7 @@
                         <img src="{{ $guide->profileImageUrl() }}"
                              alt="{{ $displayName }}"
                              loading="lazy"
+                             decoding="async"
                              style="height: 220px; width: 100%; object-fit: cover;">
 
                         <div class="position-absolute top-0 start-0 m-3 d-flex flex-column gap-1.5" style="z-index: 5;">

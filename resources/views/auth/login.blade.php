@@ -31,6 +31,7 @@
                            type="email"
                            value="{{ old('email') }}"
                            placeholder="name@example.com"
+                           autocomplete="username"
                            required
                            autofocus>
                     <span class="auth-field-icon" aria-hidden="true">
@@ -53,6 +54,7 @@
                            name="password"
                            type="password"
                            placeholder="••••••••"
+                           autocomplete="current-password"
                            required>
                     <button type="button"
                             class="auth-password-toggle"

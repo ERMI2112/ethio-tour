@@ -23,11 +23,11 @@
 
         <div class="collapse navbar-collapse" id="primary-navigation">
             <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-1 gap-xl-2 align-items-lg-center">
-                <li class="nav-item"><a class="nav-link" href="{{ route('home') }}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="{{ route('destinations.index') }}">Destinations</a></li>
+                <li class="nav-item"><a @class(['nav-link', 'active' => request()->routeIs('home')]) @if(request()->routeIs('home')) aria-current="page" @endif href="{{ route('home') }}">Home</a></li>
+                <li class="nav-item"><a @class(['nav-link', 'active' => request()->routeIs('destinations.*')]) @if(request()->routeIs('destinations.*')) aria-current="page" @endif href="{{ route('destinations.index') }}">Destinations</a></li>
                 {{-- Plan Your Trip --}}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Plan Your Trip</a>
+                    <a @class(['nav-link dropdown-toggle', 'active' => request()->routeIs('tour-guides.*', 'tourism-services.*', 'transportation.*', 'museums.*', 'map')]) href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Plan Your Trip</a>
                     <ul class="dropdown-menu">
                         <li><div class="dropdown-header text-uppercase small">Plan with real public services</div></li>
                         <li><a class="dropdown-item" href="{{ route('tour-guides.index') }}">Tour Guides</a></li>
@@ -41,7 +41,7 @@
 
                 {{-- Events --}}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Events</a>
+                    <a @class(['nav-link dropdown-toggle', 'active' => request()->routeIs('events.*')]) href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Events</a>
                     <ul class="dropdown-menu">
                         <li><div class="dropdown-header text-uppercase small">Celebrations &amp; Gatherings</div></li>
                         <li><a class="dropdown-item" href="{{ route('events.index') }}">Cultural Events</a></li>
@@ -51,7 +51,7 @@
 
                 {{-- Things to Do --}}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Things to Do</a>
+                    <a @class(['nav-link dropdown-toggle', 'active' => request()->routeIs('heritage-sites.*', 'categories.*')]) href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Things to Do</a>
                     <ul class="dropdown-menu">
                         <li><div class="dropdown-header text-uppercase small">Experiences</div></li>
                         <li><a class="dropdown-item" href="{{ route('heritage-sites.index') }}">Culture &amp; Heritage</a></li>
@@ -62,7 +62,7 @@
 
                 {{-- Smart Trip (Includes Search Directory) --}}
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Smart Trip</a>
+                    <a @class(['nav-link dropdown-toggle', 'active' => request()->routeIs('smart-trip.*', 'search')]) href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Smart Trip</a>
                     <ul class="dropdown-menu">
                         <li><div class="dropdown-header text-uppercase small">Itinerary &amp; Planning</div></li>
                         <li><a class="dropdown-item" href="{{ auth()->user()?->role === 'tourist' ? route('smart-trip.create') : route('smart-trip.index') }}">Plan a Trip</a></li>

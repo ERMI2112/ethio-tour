@@ -4,7 +4,7 @@
 
 @section('content')
 <div class="container py-4 py-lg-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div>
             <h1 class="h3 mb-1">My Bookings</h1>
             <p class="text-muted small mb-0">View and manage your tourism booking requests</p>
@@ -16,30 +16,30 @@
 
     <div class="card border-0 shadow-sm mb-4">
         <div class="card-header bg-white py-3">
-            <div class="overflow-auto"><ul class="nav nav-pills card-header-pills flex-nowrap">
+            <div class="overflow-auto"><ul class="nav nav-pills card-header-pills flex-nowrap" aria-label="Booking status filters">
                 <li class="nav-item">
-                    <a class="nav-link {{ empty($status) ? 'active' : '' }}" href="{{ route('tourist.reservations.index') }}">All</a>
+                    <a class="nav-link {{ empty($status) ? 'active' : '' }}" href="{{ route('tourist.reservations.index') }}" @if(empty($status)) aria-current="page" @endif>All</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $status === 'pending' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'pending']) }}">Pending</a>
+                    <a class="nav-link {{ $status === 'pending' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'pending']) }}" @if($status === 'pending') aria-current="page" @endif>Pending</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $status === 'accepted' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'accepted']) }}">Accepted</a>
+                    <a class="nav-link {{ $status === 'accepted' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'accepted']) }}" @if($status === 'accepted') aria-current="page" @endif>Accepted</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $status === 'payment_pending' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'payment_pending']) }}">Awaiting Payment</a>
+                    <a class="nav-link {{ $status === 'payment_pending' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'payment_pending']) }}" @if($status === 'payment_pending') aria-current="page" @endif>Awaiting Payment</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $status === 'confirmed' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'confirmed']) }}">Confirmed</a>
+                    <a class="nav-link {{ $status === 'confirmed' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'confirmed']) }}" @if($status === 'confirmed') aria-current="page" @endif>Confirmed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $status === 'completed' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'completed']) }}">Completed</a>
+                    <a class="nav-link {{ $status === 'completed' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'completed']) }}" @if($status === 'completed') aria-current="page" @endif>Completed</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $status === 'rejected' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'rejected']) }}">Rejected</a>
+                    <a class="nav-link {{ $status === 'rejected' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'rejected']) }}" @if($status === 'rejected') aria-current="page" @endif>Rejected</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link {{ $status === 'cancelled' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'cancelled']) }}">Cancelled</a>
+                    <a class="nav-link {{ $status === 'cancelled' ? 'active' : '' }}" href="{{ route('tourist.reservations.index', ['status' => 'cancelled']) }}" @if($status === 'cancelled') aria-current="page" @endif>Cancelled</a>
                 </li>
             </ul></div>
         </div>
@@ -53,16 +53,16 @@
                 </div>
             @else
                 <div class="table-responsive">
-                    <table class="table table-hover align-middle mb-0">
+                    <table class="table table-hover align-middle mb-0" aria-label="My bookings">
                         <thead class="table-light">
                             <tr>
-                                <th>Booking Ref</th>
-                                <th>Service / Guide</th>
-                                <th>Dates</th>
-                                <th>Party size</th>
-                                <th>Cost</th>
-                                <th>Status</th>
-                                <th>Action</th>
+                                <th scope="col">Booking Ref</th>
+                                <th scope="col">Service / Guide</th>
+                                <th scope="col">Dates</th>
+                                <th scope="col">Party size</th>
+                                <th scope="col">Cost</th>
+                                <th scope="col">Status</th>
+                                <th scope="col"><span class="visually-hidden">Actions</span></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -136,7 +136,7 @@
                                         <x-ui.status-badge :status="$booking->status" />
                                     </td>
                                     <td>
-                                        <div class="d-flex gap-2">
+                                        <div class="d-flex flex-wrap gap-2">
                                             <a href="{{ route('tourist.reservations.show', $booking) }}" class="btn btn-outline-primary btn-sm">View</a>
                                             @if (in_array($booking->status, ['accepted', 'payment_pending'], true) && $booking->total_amount !== null && (float) $booking->total_amount > 0)
                                                 <form method="POST" action="{{ route('payments.initialize', $booking) }}">

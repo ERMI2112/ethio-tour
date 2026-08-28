@@ -35,12 +35,14 @@ class PortalWorkspaceLayoutTest extends TestCase
                 ->assertSee($case['label'])
                 ->assertSee($case['link'])
                 ->assertDontSee('Primary navigation', false)
-                ->assertDontSee('Explore Ethiopia');
+                ->assertSee('workspace-account-link', false);
 
             if ($case['email'] === 'tourist@test.com') {
-                $response->assertSee('View Public Site');
+                $response->assertSee('View Public Site')
+                    ->assertSee('Explore Ethiopia');
             } else {
-                $response->assertDontSee('View Public Site');
+                $response->assertDontSee('View Public Site')
+                    ->assertDontSee('Explore Ethiopia');
             }
 
             if ($case['email'] === 'guide@test.com') {

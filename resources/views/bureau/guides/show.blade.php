@@ -33,7 +33,8 @@
                         <img src="{{ $guide->profileImageUrl() }}"
                              alt="{{ $guideDisplayName }}"
                              class="rounded-circle border border-2 shadow-sm"
-                             style="width: 85px; height: 85px; object-fit: cover;">
+                             style="width: 85px; height: 85px; object-fit: cover;"
+                             width="85" height="85" decoding="async">
                         <div>
                             <h3 class="h5 mb-1 text-dark fw-bold">{{ $guideDisplayName }}</h3>
                             <div class="text-muted small">{{ $guide->user?->email }}</div>

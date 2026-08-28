@@ -23,6 +23,7 @@
                            name="password"
                            type="password"
                            placeholder="••••••••"
+                           autocomplete="current-password"
                            required
                            autofocus>
                 </div>

@@ -1,6 +1,6 @@
 @props(['title', 'message', 'icon' => 'bi-inbox'])
 
-<div {{ $attributes->merge(['class' => 'card border-0 bg-light']) }}>
+<div {{ $attributes->merge(['class' => 'card border-0 bg-light']) }} role="region" aria-label="{{ $title }}">
     <div class="card-body text-center py-5">
         <div class="empty-state-icon mx-auto mb-3" aria-hidden="true">
             <i class="bi {{ $icon }}"></i>

@@ -30,6 +30,7 @@
                            type="email"
                            value="{{ old('email') }}"
                            placeholder="name@example.com"
+                           autocomplete="email"
                            required
                            autofocus>
                     <span class="auth-field-icon" aria-hidden="true">

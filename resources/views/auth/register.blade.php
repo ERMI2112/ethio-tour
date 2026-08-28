@@ -30,6 +30,7 @@
                 <select class="form-select auth-select @error('account_type') is-invalid @enderror"
                         id="account_type"
                         name="account_type"
+                        autocomplete="off"
                         required>
                     <option value="tourist" @selected(old('account_type') === 'tourist')>Tourist / Traveler</option>
                     <option value="tour_guide" @selected(old('account_type') === 'tour_guide')>Tour Guide</option>
@@ -124,6 +125,7 @@
                            type="email"
                            value="{{ old('email') }}"
                            placeholder="name@example.com"
+                           autocomplete="email"
                            required>
                     <span class="auth-field-icon" aria-hidden="true">
                         <svg width="17" height="17" fill="currentColor" viewBox="0 0 16 16">
@@ -147,6 +149,7 @@
                                    name="password"
                                    type="password"
                                    placeholder="••••••••"
+                                   autocomplete="new-password"
                                    required>
                             <button type="button"
                                     class="auth-password-toggle"
@@ -170,6 +173,7 @@
                                    name="password_confirmation"
                                    type="password"
                                    placeholder="••••••••"
+                                   autocomplete="new-password"
                                    required>
                         </div>
                     </div>
