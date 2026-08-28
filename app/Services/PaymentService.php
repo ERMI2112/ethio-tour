@@ -13,7 +13,10 @@ class PaymentService
 {
     public const PAYABLE_BOOKING_STATUSES = ['accepted', 'payment_pending'];
 
-    public function __construct(private readonly PaymentGatewayInterface $gateway) {}
+    public function __construct(
+        private readonly PaymentGatewayInterface $gateway,
+        private readonly CommissionService $commission,
+    ) {}
 
     public function canPay(Booking $booking): bool
     {
@@ -166,11 +169,27 @@ class PaymentService
             $lockedPayment->update(['status' => 'success']);
             $confirmed = $booking->status !== 'confirmed';
 
+            // Monetization: snapshot the provider's plan commission at the
+            // moment the money settles. Guide bookings and providers in
+            // trial (no active subscription) are not commissionable.
+            $this->applyCommission($lockedPayment, $booking);
+
             if ($confirmed) {
                 $booking->update(['status' => 'confirmed']);
             }
 
             return ['payment' => $lockedPayment->fresh(), 'booking' => $booking->fresh(), 'confirmed' => $confirmed];
         });
+    }
+
+    private function applyCommission(Payment $payment, Booking $booking): void
+    {
+        $snapshot = $this->commission->snapshotFor($booking);
+
+        if ($snapshot === null) {
+            return;
+        }
+
+        $payment->update($snapshot);
     }
 }

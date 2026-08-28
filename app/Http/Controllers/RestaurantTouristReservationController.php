@@ -59,6 +59,13 @@ class RestaurantTouristReservationController extends Controller
         NotificationService $notifications,
     ): RedirectResponse {
         $this->ensureRestaurantService($tourismService);
+
+        $tourismService->loadMissing('serviceProvider');
+
+        if ($tourismService->serviceProvider?->hasExpiredSubscription()) {
+            return back()->with('error', 'This provider\'s subscription has expired, so new bookings are temporarily unavailable.');
+        }
+
         $validated = $request->validated();
         $tourist = $request->user()->tourist;
 

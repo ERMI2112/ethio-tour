@@ -207,6 +207,44 @@
                 </div>
             @endforeach
         </div>
+    {{-- Platform Revenue (commission captured at payment confirmation) --}}
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden bg-white">
+        <div class="card-header bg-white p-3.5 border-bottom d-flex justify-content-between align-items-center">
+            <h2 class="h6 fw-bold mb-0 text-dark" style="font-family: var(--font-display);">
+                <i class="bi bi-cash-coin text-success me-1.5"></i> Platform revenue
+            </h2>
+            <span class="small text-muted">Commission on successful payments</span>
+        </div>
+        <div class="card-body row g-3 p-3.5">
+            @foreach([
+                ['Payment volume', number_format((float) $paymentVolume, 2).' ETB', 'bi-wallet2 text-primary', 'bg-primary-subtle'],
+                ['Commission earned', number_format((float) $commissionTotal, 2).' ETB', 'bi-cash-stack text-success', 'bg-success-subtle'],
+                ['Provider net', number_format((float) $providerNetTotal, 2).' ETB', 'bi-building-check text-info', 'bg-info-subtle'],
+                ['Commissioned payments', $commissionedPayments, 'bi-receipt-cutoff text-warning', 'bg-warning-subtle'],
+            ] as [$label, $value, $icon, $bg])
+                <div class="col-6 col-md-3">
+                    <div class="card border rounded-4 p-3 {{ $bg }}">
+                        <div class="d-flex align-items-center gap-2 mb-1">
+                            <i class="bi {{ $icon }}"></i>
+                            <span class="small text-muted fw-bold text-uppercase" style="font-size: 0.7rem;">{{ $label }}</span>
+                        </div>
+                        <strong class="fs-5" style="font-family: var(--font-display);">{{ $value }}</strong>
+                    </div>
+                </div>
+            @endforeach
+            @if($commissionByRate->isNotEmpty())
+                <div class="col-12">
+                    <div class="small text-muted">
+                        Earned by commission tier:
+                        @foreach($commissionByRate as $tier)
+                            <span class="badge text-bg-light border">{{ $tier->commission_rate }}% — {{ number_format((float) $tier->earned, 2) }} ETB across {{ $tier->payments }} payment(s)</span>
+                        @endforeach
+                    </div>
+                </div>
+            @else
+                <div class="col-12"><div class="small text-muted">No commission has been captured yet. Commission is computed when a provider with an active subscription plan receives a successful payment.</div></div>
+            @endif
+        </div>
     </div>
 </div>
 @endsection

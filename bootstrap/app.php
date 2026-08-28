@@ -24,6 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
 
         // Remove stale UAT-prefixed records left by prior seeder runs.
         $schedule->command('cleanup:stale-uat')->daily()->withoutOverlapping();
+
+        // Expire lapsed provider subscriptions and send renewal reminders.
+        $schedule->command('subscriptions:expire')->daily()->withoutOverlapping();
     })
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->validateCsrfTokens(except: ['payments/chapa/webhook']);

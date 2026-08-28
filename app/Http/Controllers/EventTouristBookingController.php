@@ -13,6 +13,12 @@ class EventTouristBookingController extends Controller
 {
     public function store(StoreEventReservationRequest $request, CulturalEvent $culturalEvent, EventInventoryService $inventory, NotificationService $notifications): RedirectResponse
     {
+        $culturalEvent->loadMissing('serviceProvider');
+
+        if ($culturalEvent->serviceProvider?->hasExpiredSubscription()) {
+            return back()->with('error', 'This provider\'s subscription has expired, so new bookings are temporarily unavailable.');
+        }
+
         try {
             $booking = $inventory->reserve($request->user()->tourist, $culturalEvent, (int) $request->validated()['ticket_type_id'], (int) $request->validated()['quantity']);
         } catch (EventInventoryException $exception) {

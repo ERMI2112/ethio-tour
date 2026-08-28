@@ -19,6 +19,7 @@ use App\Models\TourismService;
 use App\Models\Tourist;
 use App\Models\TransportationReservation;
 use App\Models\TransportationVehicle;
+use App\Services\CommissionService;
 use Illuminate\Database\Seeder;
 
 /**
@@ -304,6 +305,12 @@ class DemoJourneySeeder extends Seeder
      * Locate (or create) a booking through its deterministic demo payment
      * reference. Payment rows use the unique gateway_reference column, which
      * makes the whole chain idempotent without touching real gateways.
+     *
+     * Monetization: demo payments carry the same commission snapshot a real
+     * Chapa confirmation would record, computed through CommissionService so
+     * business rules are never duplicated here. Demo rows seeded before
+     * commission existed are backfilled once; rows that already carry a
+     * snapshot are never altered.
      */
     private function bookingWithPayment(string $reference, array $attributes, float $amount): Booking
     {
@@ -312,12 +319,14 @@ class DemoJourneySeeder extends Seeder
         $existing = Payment::query()->where('gateway_reference', $gatewayReference)->first();
 
         if ($existing) {
+            $this->backfillCommission($existing);
+
             return $existing->booking;
         }
 
         $booking = Booking::create($attributes);
 
-        Payment::create([
+        $payment = new Payment([
             'booking_id' => $booking->booking_id,
             'amount' => $amount,
             'status' => 'success',
@@ -325,7 +334,39 @@ class DemoJourneySeeder extends Seeder
             'gateway_reference' => $gatewayReference,
         ]);
 
+        $snapshot = app(CommissionService::class)->snapshotFor($booking);
+
+        if ($snapshot !== null) {
+            $payment->fill($snapshot);
+        }
+
+        $payment->save();
+
         return $booking;
+    }
+
+    /**
+     * One-time repair for DEMO-SEED-* payments seeded before commission
+     * capture existed. Only touches demo rows whose commission fields are
+     * entirely unset; correct snapshots are left alone.
+     */
+    private function backfillCommission(Payment $payment): void
+    {
+        if ($payment->commission_rate !== null || $payment->commission_amount !== null || $payment->provider_net_amount !== null) {
+            return;
+        }
+
+        $booking = $payment->booking;
+
+        if (! $booking) {
+            return;
+        }
+
+        $snapshot = app(CommissionService::class)->snapshotFor($booking);
+
+        if ($snapshot !== null) {
+            $payment->update($snapshot);
+        }
     }
 
     private function review(Booking $booking, int $rating, string $comment): void
