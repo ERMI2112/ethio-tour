@@ -38,6 +38,13 @@ class TransportationTouristReservationController extends Controller
     public function store(StoreTransportationReservationRequest $request, TourismService $tourismService, TransportationAvailabilityService $availabilityService, BookingAmountService $amountService, NotificationService $notifications): RedirectResponse
     {
         $this->ensureTransportationService($tourismService);
+
+        $tourismService->loadMissing('serviceProvider');
+
+        if ($tourismService->serviceProvider?->hasExpiredSubscription()) {
+            return back()->with('error', 'This provider\'s subscription has expired, so new bookings are temporarily unavailable.');
+        }
+
         $data = $request->validated();
         $tourist = $request->user()->tourist;
 

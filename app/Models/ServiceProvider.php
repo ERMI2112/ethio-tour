@@ -104,6 +104,22 @@ class ServiceProvider extends Model
         return $this->hasMany(ProviderSubscription::class, 'provider_id', 'provider_id');
     }
 
+    public function hasActiveSubscription(): bool
+    {
+        return $this->providerSubscriptions()->where('status', 'active')->exists();
+    }
+
+    /**
+     * Pilot enforcement policy: only a provider whose subscription has
+     * lapsed into 'expired' is blocked from new bookings. Providers never
+     * assigned a plan are in an unrestricted trial.
+     */
+    public function hasExpiredSubscription(): bool
+    {
+        return ! $this->hasActiveSubscription()
+            && $this->providerSubscriptions()->where('status', 'expired')->exists();
+    }
+
     public function culturalEvents()
     {
         return $this->hasMany(CulturalEvent::class, 'provider_id', 'provider_id');

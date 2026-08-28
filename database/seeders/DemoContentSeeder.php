@@ -23,6 +23,7 @@ class DemoContentSeeder extends Seeder
         $this->seedHeritageSites();
         $this->seedSubscriptionPlans();
         $this->seedProviderSubscription();
+        $this->seedStarterSubscriptions();
     }
 
     private function seedHeritageSites(): void
@@ -165,5 +166,33 @@ class DemoContentSeeder extends Seeder
             'end_date' => now()->addDays(20)->toDateString(),
             'status' => 'active',
         ]);
+    }
+
+    /**
+     * Every approved demo provider without a plan sits on the free Starter
+     * tier, so the commission model is visible end-to-end in the demo.
+     * Idempotent: providers with an active subscription are skipped.
+     */
+    private function seedStarterSubscriptions(): void
+    {
+        $starter = SubscriptionPlan::query()->where('plan', 'Starter')->first();
+
+        if (! $starter) {
+            return;
+        }
+
+        ServiceProvider::query()
+            ->where('status', 'approved')
+            ->whereDoesntHave('providerSubscriptions', fn ($query) => $query->where('status', 'active'))
+            ->get()
+            ->each(function (ServiceProvider $provider) use ($starter): void {
+                ProviderSubscription::create([
+                    'provider_id' => $provider->provider_id,
+                    'plan_id' => $starter->plan_id,
+                    'start_date' => today()->toDateString(),
+                    'end_date' => today()->addDays($starter->duration)->toDateString(),
+                    'status' => 'active',
+                ]);
+            });
     }
 }

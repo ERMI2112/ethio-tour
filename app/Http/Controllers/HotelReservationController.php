@@ -57,6 +57,10 @@ class HotelReservationController extends Controller
             return back()->with('error', 'This service is not available for hotel reservation.');
         }
 
+        if ($tourismService->serviceProvider?->hasExpiredSubscription()) {
+            return back()->with('error', 'This provider\'s subscription has expired, so new bookings are temporarily unavailable.');
+        }
+
         $validated = $request->validated();
         $tourist = $request->user()->tourist;
 
