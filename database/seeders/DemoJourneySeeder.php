@@ -20,6 +20,7 @@ use App\Models\Tourist;
 use App\Models\TransportationReservation;
 use App\Models\TransportationVehicle;
 use App\Services\CommissionService;
+use App\Services\LedgerService;
 use Illuminate\Database\Seeder;
 
 /**
@@ -321,6 +322,11 @@ class DemoJourneySeeder extends Seeder
         if ($existing) {
             $this->backfillCommission($existing);
 
+            // Ledger coherence: demo payments record ledger entries through
+            // the same service as real payments; firstOrCreate + the unique
+            // (payment_id, entry_type) constraint keep re-runs idempotent.
+            app(LedgerService::class)->recordPayment($existing);
+
             return $existing->booking;
         }
 
@@ -341,6 +347,8 @@ class DemoJourneySeeder extends Seeder
         }
 
         $payment->save();
+
+        app(LedgerService::class)->recordPayment($payment->fresh());
 
         return $booking;
     }

@@ -3,13 +3,16 @@
 namespace App\Services;
 
 use App\Models\Booking;
+use App\Support\Money;
 
 /**
  * Resolves and computes platform commission for a booking payment.
  *
- * Single source of truth shared by the live payment confirmation flow
- * (PaymentService) and the demo seeding path, so seeded demo data obeys
- * exactly the same business rules as real Chapa settlements.
+ * Single source of truth for commission rules, shared by the live payment
+ * confirmation flow (PaymentService) and the demo seeding path, so seeded
+ * demo data obeys exactly the same business rules as real Chapa settlements.
+ *
+ * All math runs on integer minor units via Money — never on floats.
  *
  * Pilot policy:
  * - provider-service and event bookings use the provider's active
@@ -31,17 +34,17 @@ class CommissionService
             return null;
         }
 
-        $amount = (float) $booking->total_amount;
-        $commission = round($amount * $rate / 100, 2);
+        $grossMinor = Money::toMinor((string) $booking->total_amount);
+        $commissionMinor = Money::percentage($grossMinor, Money::percentToBasisPoints($rate));
 
         return [
-            'commission_rate' => number_format($rate, 2, '.', ''),
-            'commission_amount' => number_format($commission, 2, '.', ''),
-            'provider_net_amount' => number_format($amount - $commission, 2, '.', ''),
+            'commission_rate' => Money::normalize($rate),
+            'commission_amount' => Money::fromMinor($commissionMinor),
+            'provider_net_amount' => Money::fromMinor($grossMinor - $commissionMinor),
         ];
     }
 
-    public function resolveRate(Booking $booking): ?float
+    public function resolveRate(Booking $booking): ?string
     {
         $provider = null;
 
@@ -62,6 +65,6 @@ class CommissionService
             ?->subscriptionPlan
             ?->commission_rate;
 
-        return $rate === null ? null : (float) $rate;
+        return $rate === null ? null : (string) $rate;
     }
 }
