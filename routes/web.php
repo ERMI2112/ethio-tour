@@ -34,6 +34,7 @@ use App\Http\Controllers\HotelRoomController;
 use App\Http\Controllers\HotelServiceController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProviderEarningsController;
 use App\Http\Controllers\ProviderOnboardingController;
 use App\Http\Controllers\ProviderReportsController;
 use App\Http\Controllers\PublicCategoryController;
@@ -232,6 +233,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::prefix('hotel')->name('hotel.')->middleware(['role:service_provider', 'hotel-provider'])->group(function () {
         Route::get('/', [HotelProviderController::class, 'dashboard'])->name('dashboard');
         Route::get('/profile', [HotelProviderController::class, 'show'])->name('profile');
+        Route::get('/earnings', ProviderEarningsController::class)->name('earnings');
         Route::get('/profile/edit', [HotelProviderController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [HotelProviderController::class, 'update'])->name('profile.update');
 
@@ -247,6 +249,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::prefix('restaurant')->name('restaurant.')->middleware(['role:service_provider', 'restaurant-provider'])->group(function () {
         Route::get('/', [RestaurantProviderController::class, 'dashboard'])->name('dashboard');
         Route::get('/profile', [RestaurantProviderController::class, 'show'])->name('profile');
+        Route::get('/earnings', ProviderEarningsController::class)->name('earnings');
         Route::get('/profile/edit', [RestaurantProviderController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [RestaurantProviderController::class, 'update'])->name('profile.update');
         Route::get('/reviews', [RestaurantProviderController::class, 'reviews'])->name('reviews.index');
@@ -262,6 +265,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::prefix('transportation-portal')->name('transportation.')->middleware(['role:service_provider', 'transportation-provider'])->group(function () {
         Route::get('/', [TransportationProviderController::class, 'dashboard'])->name('dashboard');
         Route::get('/profile', [TransportationProviderController::class, 'show'])->name('profile');
+        Route::get('/earnings', ProviderEarningsController::class)->name('earnings');
         Route::get('/profile/edit', [TransportationProviderController::class, 'edit'])->name('profile.edit');
         Route::put('/profile', [TransportationProviderController::class, 'update'])->name('profile.update');
         Route::resource('services', TransportationServiceController::class)->except(['show'])->parameters(['services' => 'tourismService']);
@@ -275,6 +279,7 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::prefix('event-organizer')->name('event-organizer.')->middleware(['role:service_provider', 'event-organizer'])->group(function () {
         Route::get('/', [EventOrganizerController::class, 'dashboard'])->name('dashboard');
         Route::get('/profile', [EventOrganizerController::class, 'profile'])->name('profile');
+        Route::get('/earnings', ProviderEarningsController::class)->name('earnings');
         Route::resource('events', CulturalEventController::class)->parameters(['events' => 'culturalEvent']);
         Route::get('/events/{culturalEvent}/tickets', [EventTicketController::class, 'index'])->name('events.tickets');
         Route::post('/events/{culturalEvent}/tickets', [EventTicketController::class, 'store'])->name('events.tickets.store');

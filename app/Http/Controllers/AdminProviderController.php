@@ -8,6 +8,7 @@ use App\Models\ServiceProvider;
 use App\Models\SubscriptionPlan;
 use App\Services\AuditService;
 use App\Services\NotificationService;
+use App\Services\ProviderBalanceService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -41,6 +42,7 @@ class AdminProviderController extends Controller
         return view('admin.providers.show', [
             'provider' => $serviceProvider,
             'subscriptionPlans' => $subscriptionPlans,
+            'ledgerTotals' => app(ProviderBalanceService::class)->totalsFor($serviceProvider),
         ]);
     }
 

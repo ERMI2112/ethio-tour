@@ -6,6 +6,7 @@ use App\Contracts\PaymentGatewayInterface;
 use App\Exceptions\PaymentException;
 use App\Models\Booking;
 use App\Models\Payment;
+use App\Support\Money;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
@@ -16,13 +17,14 @@ class PaymentService
     public function __construct(
         private readonly PaymentGatewayInterface $gateway,
         private readonly CommissionService $commission,
+        private readonly LedgerService $ledger,
     ) {}
 
     public function canPay(Booking $booking): bool
     {
         return in_array($booking->status, self::PAYABLE_BOOKING_STATUSES, true)
             && $booking->total_amount !== null
-            && (float) $booking->total_amount > 0
+            && Money::isPositive((string) $booking->total_amount)
             && trim((string) $booking->currency) !== '';
     }
 
@@ -66,7 +68,7 @@ class PaymentService
 
             try {
                 $response = $this->gateway->initializeTransaction([
-                    'amount' => number_format((float) $lockedBooking->total_amount, 2, '.', ''),
+                    'amount' => Money::normalize((string) $lockedBooking->total_amount),
                     'currency' => strtoupper((string) $lockedBooking->currency),
                     'email' => (string) ($tourist?->user?->email ?? ''),
                     'first_name' => $name[0] ?? 'Ethio',
@@ -122,7 +124,7 @@ class PaymentService
 
         $existingBooking = $payment->booking;
 
-        if (! $existingBooking || $payment->amount === null || $existingBooking->total_amount === null || number_format((float) $payment->amount, 2, '.', '') !== number_format((float) $existingBooking->total_amount, 2, '.', '')) {
+        if (! $existingBooking || $payment->amount === null || $existingBooking->total_amount === null || Money::compare((string) $payment->amount, (string) $existingBooking->total_amount) !== 0) {
             $payment->update(['status' => 'failed']);
             throw new PaymentException('Payment amount does not match the booking.');
         }
@@ -142,10 +144,10 @@ class PaymentService
         $verifiedReference = (string) ($data['tx_ref'] ?? $data['reference'] ?? $verification['tx_ref'] ?? '');
         $verifiedStatus = strtolower((string) ($data['status'] ?? $verification['status'] ?? ''));
         $verifiedCurrency = strtoupper((string) ($data['currency'] ?? ''));
-        $verifiedAmount = number_format((float) ($data['amount'] ?? -1), 2, '.', '');
+        $verifiedAmount = Money::normalize((string) ($data['amount'] ?? '-1'));
 
         $matches = hash_equals($transactionReference, $verifiedReference)
-            && $verifiedAmount === number_format((float) $existingBooking->total_amount, 2, '.', '')
+            && $verifiedAmount === Money::normalize((string) $existingBooking->total_amount)
             && $verifiedCurrency === strtoupper((string) $payment->booking()->value('currency'))
             && in_array($verifiedStatus, ['success', 'successful', 'completed'], true);
 
@@ -173,6 +175,13 @@ class PaymentService
             // moment the money settles. Guide bookings and providers in
             // trial (no active subscription) are not commissionable.
             $this->applyCommission($lockedPayment, $booking);
+
+            // Financial ledger: record the consequences of this settlement
+            // in the same transaction — payment, commission snapshot, and
+            // ledger entries commit together or not at all. Recording is
+            // idempotent, so duplicate webhook/callback delivery cannot
+            // create duplicate entries.
+            $this->ledger->recordPayment($lockedPayment->fresh());
 
             if ($confirmed) {
                 $booking->update(['status' => 'confirmed']);

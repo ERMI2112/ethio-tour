@@ -77,6 +77,7 @@
                     <a @class(['nav-link', 'active' => request()->routeIs('hotel.services.*')]) href="{{ route('hotel.services.index') }}"><i class="bi bi-door-open"></i><span>Room types</span></a>
                     <a @class(['nav-link', 'active' => request()->routeIs('hotel.rooms.*')]) href="{{ route('hotel.rooms.index') }}"><i class="bi bi-key"></i><span>Rooms</span></a>
                     <a @class(['nav-link', 'active' => request()->routeIs('hotel.reservations.*')]) href="{{ route('hotel.reservations.index') }}"><i class="bi bi-calendar-check"></i><span>Reservations</span></a>
+                    <a @class(['nav-link', 'active' => request()->routeIs('hotel.earnings')]) href="{{ route('hotel.earnings') }}"><i class="bi bi-journal-text"></i><span>Earnings</span></a>
                     <a @class(['nav-link', 'active' => request()->routeIs('provider.reports')]) href="{{ route('provider.reports') }}"><i class="bi bi-graph-up"></i><span>Reports</span></a>
                     @php($hotelUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
                     <a @class(['nav-link d-flex justify-content-between align-items-center', 'active' => request()->routeIs('notifications.*')]) href="{{ route('notifications.index') }}"><span class="d-flex align-items-center gap-2"><i class="bi bi-bell"></i><span>Notifications</span></span>@if($hotelUnreadNotifications)<span class="badge bg-danger rounded-pill">{{ $hotelUnreadNotifications }}</span>@endif</a>
@@ -87,6 +88,7 @@
                     <a @class(['nav-link', 'active' => request()->routeIs('restaurant.tables.*')]) href="{{ route('restaurant.tables.index') }}"><i class="bi bi-layout-three-columns"></i><span>Table inventory</span></a>
                     <a @class(['nav-link', 'active' => request()->routeIs('restaurant.reviews.*')]) href="{{ route('restaurant.reviews.index') }}"><i class="bi bi-star"></i><span>Guest feedback</span></a>
                     <a @class(['nav-link', 'active' => request()->routeIs('restaurant.revenue.*')]) href="{{ route('restaurant.revenue.index') }}"><i class="bi bi-cash-stack"></i><span>Revenue</span></a>
+                    <a @class(['nav-link', 'active' => request()->routeIs('restaurant.earnings')]) href="{{ route('restaurant.earnings') }}"><i class="bi bi-journal-text"></i><span>Earnings</span></a>
                     <a @class(['nav-link', 'active' => request()->routeIs('provider.reports')]) href="{{ route('provider.reports') }}"><i class="bi bi-graph-up"></i><span>Reports</span></a>
                     @php($restaurantUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
                     <a @class(['nav-link d-flex justify-content-between align-items-center', 'active' => request()->routeIs('notifications.*')]) href="{{ route('notifications.index') }}"><span class="d-flex align-items-center gap-2"><i class="bi bi-bell"></i><span>Notifications</span></span>@if($restaurantUnreadNotifications)<span class="badge bg-danger rounded-pill">{{ $restaurantUnreadNotifications }}</span>@endif</a>
@@ -100,6 +102,7 @@
                     <a @class(['nav-link', 'active' => request()->routeIs('transportation.services.*')]) href="{{ route('transportation.services.index') }}"><i class="bi bi-signpost-split"></i><span>Services</span></a>
                     <a @class(['nav-link', 'active' => request()->routeIs('transportation.vehicles.*')]) href="{{ route('transportation.vehicles.index') }}"><i class="bi bi-car-front"></i><span>Vehicles</span></a>
                     <a @class(['nav-link', 'active' => request()->routeIs('transportation.reservations.*')]) href="{{ route('transportation.reservations.index') }}"><i class="bi bi-calendar-check"></i><span>Reservations</span></a>
+                    <a @class(['nav-link', 'active' => request()->routeIs('transportation.earnings')]) href="{{ route('transportation.earnings') }}"><i class="bi bi-journal-text"></i><span>Earnings</span></a>
                     <a @class(['nav-link', 'active' => request()->routeIs('provider.reports')]) href="{{ route('provider.reports') }}"><i class="bi bi-graph-up"></i><span>Reports</span></a>
                     @php($transportUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
                     <a @class(['nav-link d-flex justify-content-between align-items-center', 'active' => request()->routeIs('notifications.*')]) href="{{ route('notifications.index') }}"><span class="d-flex align-items-center gap-2"><i class="bi bi-bell"></i><span>Notifications</span></span>@if($transportUnreadNotifications)<span class="badge bg-danger rounded-pill">{{ $transportUnreadNotifications }}</span>@endif</a>
@@ -108,6 +111,7 @@
                     <a @class(['nav-link', 'active' => request()->routeIs('event-organizer.profile*')]) href="{{ route('event-organizer.profile') }}"><i class="bi bi-calendar-event"></i><span>Profile</span></a>
                     <a @class(['nav-link', 'active' => request()->routeIs('event-organizer.events.*')]) href="{{ route('event-organizer.events.index') }}"><i class="bi bi-ticket-perforated"></i><span>Events</span></a>
                     <a @class(['nav-link', 'active' => request()->routeIs('event-organizer.events.bookings')]) href="{{ route('event-organizer.events.bookings') }}"><i class="bi bi-people"></i><span>Bookings</span></a>
+                    <a @class(['nav-link', 'active' => request()->routeIs('event-organizer.earnings')]) href="{{ route('event-organizer.earnings') }}"><i class="bi bi-journal-text"></i><span>Earnings</span></a>
                     <a @class(['nav-link', 'active' => request()->routeIs('provider.reports')]) href="{{ route('provider.reports') }}"><i class="bi bi-graph-up"></i><span>Reports</span></a>
                     @php($eventUnreadNotifications = auth()->user()->notifications()->where('read_status', false)->count())
                     <a @class(['nav-link d-flex justify-content-between align-items-center', 'active' => request()->routeIs('notifications.*')]) href="{{ route('notifications.index') }}"><span class="d-flex align-items-center gap-2"><i class="bi bi-bell"></i><span>Notifications</span></span>@if($eventUnreadNotifications)<span class="badge bg-danger rounded-pill">{{ $eventUnreadNotifications }}</span>@endif</a>

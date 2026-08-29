@@ -6,6 +6,7 @@ use App\Models\Booking;
 use App\Models\HeritageSite;
 use App\Models\Notification;
 use App\Models\Payment;
+use App\Models\ProviderLedgerEntry;
 use App\Models\ProviderSubscription;
 use App\Models\Review;
 use App\Models\SubscriptionPlan;
@@ -121,6 +122,12 @@ class DemoSeederIntegrityTest extends TestCase
         $this->assertSame(5, Payment::where('gateway_reference', 'like', 'DEMO-SEED-%')->count());
         $this->assertSame('225.00', Payment::where('gateway_reference', 'DEMO-SEED-HOTEL-001')->value('commission_amount'));
         $this->assertNull(Payment::where('gateway_reference', 'DEMO-SEED-GUIDE-001')->value('commission_rate'));
+
+        // Ledger coherence: every demo payment produced ledger entries
+        // (earning for all five; commission for the four commissioned ones),
+        // and the second run duplicated none of them.
+        $this->assertSame(5, ProviderLedgerEntry::where('entry_type', 'earning')->count());
+        $this->assertSame(4, ProviderLedgerEntry::where('entry_type', 'commission')->count());
     }
 
     public function test_consolidated_seeder_is_idempotent(): void

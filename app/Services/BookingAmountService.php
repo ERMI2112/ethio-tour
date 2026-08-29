@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\TourGuide;
 use App\Models\TourismService;
+use App\Support\Money;
 use Carbon\CarbonImmutable;
 use Carbon\CarbonInterface;
 use Illuminate\Validation\ValidationException;
@@ -156,9 +157,6 @@ class BookingAmountService
 
     private function multiplyMoney(string $amount, int $multiplier): string
     {
-        [$whole, $fraction] = array_pad(explode('.', $amount, 2), 2, '0');
-        $cents = ((int) $whole * 100) + (int) str_pad(substr($fraction, 0, 2), 2, '0');
-
-        return number_format(($cents * $multiplier) / 100, 2, '.', '');
+        return Money::multiply($amount, $multiplier);
     }
 }
