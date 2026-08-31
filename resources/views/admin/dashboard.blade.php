@@ -234,7 +234,7 @@
             </div>
             <div class="list-group list-group-flush">
                 @forelse ($adminNotifications as $notification)
-                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-start gap-3 p-3.5 {{ $notification->read_status ? '' : 'bg-primary-subtle bg-opacity-25' }}" href="{{ route('notifications.index') }}">
+                    <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-start gap-3 p-3.5 {{ $notification->read_status ? '' : 'bg-primary-subtle bg-opacity-25' }}" href="{{ route('notifications.navigate', $notification) }}">
                         <span class="d-flex align-items-start gap-3">
                             <span class="badge bg-light text-dark border rounded-2 px-2 py-0.5 text-uppercase font-monospace" style="font-size: 0.68rem;">{{ str_replace('_', ' ', $notification->type) }}</span>
                             <span>

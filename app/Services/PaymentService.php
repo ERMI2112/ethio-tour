@@ -49,10 +49,6 @@ class PaymentService
                 throw new PaymentException('This booking has already been paid.');
             }
 
-            if ($payment?->status === 'pending') {
-                throw new PaymentException('A payment attempt is already in progress for this booking.');
-            }
-
             $txRef = 'ETHIO-'.strtoupper(bin2hex(random_bytes(12)));
             $payment ??= new Payment(['booking_id' => $lockedBooking->booking_id]);
             $payment->fill([

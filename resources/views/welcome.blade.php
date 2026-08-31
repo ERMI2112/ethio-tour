@@ -14,7 +14,7 @@
                             <span class="badge bg-warning text-dark fw-bold px-3 py-2 text-uppercase">Land of Origins</span>
                             <span class="landing-kicker mb-0">A practical guide to Ethiopia</span>
                         </div>
-                        <h1 class="display-3 fw-bold text-white mb-3 landing-hero-title">Find your next story in Ethiopia.</h1>
+                        <h1 class="display-3 fw-bold text-white mb-3 landing-hero-title" data-text-reveal>Find your next story in Ethiopia.</h1>
                         <p class="lead text-white-50 mb-4 landing-hero-copy">Discover Ethiopia beyond the itinerary: find the places, people, food, stays, transport, and events that make each journey unforgettable.</p>
                         <form action="{{ route('search') }}" method="GET" class="landing-search mb-4" role="search">
                             <label class="visually-hidden" for="landing-search">Search Ethiopia</label>

@@ -71,6 +71,67 @@ class NotificationCenterTest extends TestCase
         $this->assertDatabaseHas('notifications', ['user_id' => $administrator->user_id, 'title' => 'Platform alert: New booking request', 'read_status' => 0]);
     }
 
+    public function test_user_can_navigate_notification_which_marks_it_as_read_and_redirects_to_target(): void
+    {
+        $user = User::factory()->create(['role' => 'tourist', 'is_active' => true]);
+        $notification = Notification::create([
+            'user_id' => $user->user_id,
+            'type' => 'booking_accepted',
+            'title' => 'Hotel reservation accepted',
+            'message' => 'Your reservation was accepted.',
+            'channel' => 'in_app',
+            'read_status' => false,
+            'sent_date' => now(),
+            'action_url' => route('tourist.reservations.index'),
+        ]);
+
+        $response = $this->actingAs($user)->get(route('notifications.navigate', $notification));
+
+        $response->assertRedirect(route('tourist.reservations.index'));
+        $this->assertDatabaseHas('notifications', [
+            'notification_id' => $notification->notification_id,
+            'read_status' => 1,
+        ]);
+    }
+
+    public function test_tourist_notification_with_booking_id_dynamically_resolves_to_booking_detail(): void
+    {
+        $user = User::factory()->create(['role' => 'tourist', 'is_active' => true]);
+        $notification = Notification::create([
+            'user_id' => $user->user_id,
+            'type' => 'payment_success',
+            'title' => 'Payment confirmed',
+            'message' => 'Your payment for booking #15 was verified and the booking is confirmed.',
+            'channel' => 'in_app',
+            'read_status' => false,
+            'sent_date' => now(),
+        ]);
+
+        $response = $this->actingAs($user)->get(route('notifications.navigate', $notification));
+
+        $response->assertRedirect(route('tourist.reservations.show', 15));
+        $this->assertTrue($notification->fresh()->read_status);
+    }
+
+    public function test_other_user_cannot_navigate_private_notification(): void
+    {
+        $owner = User::factory()->create(['role' => 'tourist', 'is_active' => true]);
+        $other = User::factory()->create(['role' => 'tourist', 'is_active' => true]);
+
+        $notification = Notification::create([
+            'user_id' => $owner->user_id,
+            'type' => 'booking_accepted',
+            'title' => 'Private Alert',
+            'message' => 'Private content',
+            'channel' => 'in_app',
+            'read_status' => false,
+            'sent_date' => now(),
+        ]);
+
+        $this->actingAs($other)->get(route('notifications.navigate', $notification))->assertNotFound();
+        $this->assertFalse($notification->fresh()->read_status);
+    }
+
     private function createNotifications(User $user, int $count, bool $read, string $title = 'Test notification')
     {
         return collect(range(1, $count))->map(fn () => Notification::create([

@@ -78,7 +78,14 @@ class HotelProviderReservationController extends Controller
             return back()->with('error', 'Acceptance failed: '.$e->getMessage());
         }
 
-        $notifications->createForUserAndAdministrators($booking->fresh('tourist')->tourist?->user, 'booking_accepted', 'Hotel reservation accepted', 'Your hotel reservation was accepted and a room was allocated. It is awaiting payment.');
+        $notifications->createForUserAndAdministrators(
+            $booking->fresh('tourist')->tourist?->user,
+            'booking_accepted',
+            'Hotel reservation accepted',
+            'Your hotel reservation was accepted and a room was allocated. It is awaiting payment.',
+            null,
+            route('tourist.reservations.show', $booking),
+        );
 
         return back()->with('success', 'Reservation accepted successfully. Physical room allocated and status updated to payment_pending.');
     }
@@ -95,7 +102,14 @@ class HotelProviderReservationController extends Controller
             $booking->update(['status' => 'rejected']);
         });
 
-        $notifications->createForUserAndAdministrators($booking->fresh('tourist')->tourist?->user, 'booking_rejected', 'Hotel reservation rejected', 'Your hotel reservation request was rejected by the provider.');
+        $notifications->createForUserAndAdministrators(
+            $booking->fresh('tourist')->tourist?->user,
+            'booking_rejected',
+            'Hotel reservation rejected',
+            'Your hotel reservation request was rejected by the provider.',
+            null,
+            route('tourist.reservations.show', $booking),
+        );
 
         return back()->with('success', 'Reservation request rejected.');
     }

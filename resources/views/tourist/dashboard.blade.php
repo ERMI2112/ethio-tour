@@ -329,14 +329,25 @@
                 </div>
                 <div class="list-group list-group-flush">
                     @forelse ($recentNotifications as $notification)
-                        <a class="list-group-item list-group-item-action p-3 {{ ! $notification->read_status ? 'bg-primary-subtle bg-opacity-25' : '' }}" href="{{ route('notifications.index') }}">
-                            <div class="d-flex justify-content-between align-items-start gap-2">
-                                <strong class="small text-dark d-block mb-0.5">{{ $notification->title }}</strong>
-                                @if(! $notification->read_status)
-                                    <span class="badge bg-primary p-1 rounded-circle" style="width: 6px; height: 6px;" title="Unread"></span>
-                                @endif
+                        <a class="list-group-item list-group-item-action p-3 {{ ! $notification->read_status ? 'bg-primary-subtle bg-opacity-25' : '' }}" href="{{ route('notifications.navigate', $notification) }}">
+                            <div class="d-flex align-items-start gap-2.5">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 {{ $notification->read_status ? 'bg-light text-muted' : 'bg-primary-subtle text-primary' }}" style="width: 32px; height: 32px; font-size: 0.9rem;">
+                                    <i class="bi {{ $notification->category_icon }}"></i>
+                                </div>
+                                <div class="flex-grow-1 min-w-0">
+                                    <div class="d-flex justify-content-between align-items-start gap-2">
+                                        <strong class="small text-dark d-block mb-0.5 text-truncate">{{ $notification->title }}</strong>
+                                        @if(! $notification->read_status)
+                                            <span class="badge bg-primary p-1 rounded-circle" style="width: 6px; height: 6px;" title="Unread"></span>
+                                        @endif
+                                    </div>
+                                    <p class="small text-muted mb-1 text-truncate" style="font-size: 0.78rem;">{{ $notification->message }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <span class="small text-muted" style="font-size: 0.72rem;">{{ $notification->sent_date?->diffForHumans() }}</span>
+                                        <span class="small text-primary fw-semibold" style="font-size: 0.75rem;">{{ $notification->action_label }} &rarr;</span>
+                                    </div>
+                                </div>
                             </div>
-                            <span class="d-block small text-muted">{{ $notification->sent_date?->diffForHumans() }}</span>
                         </a>
                     @empty
                         <div class="p-4 text-center text-muted small">

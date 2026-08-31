@@ -36,8 +36,22 @@ class BookingCompletionService
             $locked->update(['status' => 'completed']);
             $recipient = $locked->fresh('tourist.user')->tourist?->user;
             $reference = '#'.$locked->booking_id;
-            $this->notifications->createForUserAndAdministrators($recipient, 'booking_completed', 'Booking completed', 'Your booking '.$reference.' has completed. It is now eligible for review.');
-            $this->notifications->createForUserAndAdministrators($recipient, 'review_available', 'Review available', 'You can now leave a review for completed booking '.$reference.'.');
+            $this->notifications->createForUserAndAdministrators(
+                $recipient,
+                'booking_completed',
+                'Booking completed',
+                'Your booking '.$reference.' has completed. It is now eligible for review.',
+                null,
+                route('tourist.reservations.show', $locked),
+            );
+            $this->notifications->createForUserAndAdministrators(
+                $recipient,
+                'review_available',
+                'Review available',
+                'You can now leave a review for completed booking '.$reference.'.',
+                null,
+                route('tourist.reviews.index'),
+            );
 
             return true;
         }, attempts: 3);

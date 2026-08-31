@@ -61,17 +61,26 @@ class PaymentIntegrationTest extends TestCase
         $this->assertSame('failed', $booking->fresh()->payment->status);
     }
 
-    public function test_an_active_payment_attempt_is_not_initialized_again(): void
+    public function test_an_active_pending_payment_can_be_continued_with_fresh_checkout_url(): void
     {
         $owner = $this->touristUser();
         $booking = $this->booking($owner, 'accepted', '100.00');
         $gateway = Mockery::mock(PaymentGatewayInterface::class);
-        $gateway->shouldReceive('initializeTransaction')->once()->andReturn(['status' => 'success', 'data' => ['checkout_url' => 'https://checkout.test/tx']]);
+        $gateway->shouldReceive('initializeTransaction')->twice()->andReturn(
+            ['status' => 'success', 'data' => ['checkout_url' => 'https://checkout.test/tx1']],
+            ['status' => 'success', 'data' => ['checkout_url' => 'https://checkout.test/tx2']],
+        );
         $this->app->instance(PaymentGatewayInterface::class, $gateway);
 
-        $this->actingAs($owner)->post(route('payments.initialize', $booking))->assertRedirect();
-        $this->actingAs($owner)->post(route('payments.initialize', $booking))->assertSessionHas('error', 'A payment attempt is already in progress for this booking.');
+        $this->actingAs($owner)->post(route('payments.initialize', $booking))->assertRedirect('https://checkout.test/tx1');
+        $firstRef = $booking->fresh()->payment->gateway_reference;
+
+        $this->actingAs($owner)->post(route('payments.initialize', $booking))->assertRedirect('https://checkout.test/tx2');
+        $secondRef = $booking->fresh()->payment->gateway_reference;
+
+        $this->assertNotSame($firstRef, $secondRef);
         $this->assertDatabaseCount('payments', 1);
+        $this->assertSame('payment_pending', $booking->fresh()->status);
     }
 
     public function test_failed_payment_can_retry_without_creating_a_second_payment(): void
@@ -200,6 +209,21 @@ class PaymentIntegrationTest extends TestCase
         $this->assertSame('https://checkout.test/abc', data_get($result, 'data.checkout_url'));
         Http::assertSent(fn ($request) => $request->url() === 'https://chapa.test/v1/transaction/initialize' && $request->header('Authorization')[0] === 'Bearer CHASECK_TEST-example');
         Http::assertSent(fn ($request) => $request->url() === 'https://chapa.test/v1/transaction/verify/ETHIO-ABC');
+    }
+
+    public function test_security_headers_allow_chapa_checkout_in_csp_form_action(): void
+    {
+        $owner = $this->touristUser();
+        $booking = $this->booking($owner, 'accepted', '100.00');
+        $gateway = Mockery::mock(PaymentGatewayInterface::class);
+        $gateway->shouldReceive('initializeTransaction')->once()->andReturn(['status' => 'success', 'data' => ['checkout_url' => 'https://checkout.chapa.co/checkout/payment/123']]);
+        $this->app->instance(PaymentGatewayInterface::class, $gateway);
+
+        $response = $this->actingAs($owner)->post(route('payments.initialize', $booking));
+        $response->assertRedirect('https://checkout.chapa.co/checkout/payment/123');
+
+        $csp = (string) $response->headers->get('Content-Security-Policy');
+        $this->assertStringContainsString("form-action 'self' https://checkout.chapa.co https://*.chapa.co", $csp);
     }
 
     private function touristUser(?string $email = null): User

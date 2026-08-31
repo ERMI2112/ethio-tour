@@ -33,7 +33,7 @@ class SecurityHeaders
             "frame-ancestors 'self'",
             "object-src 'none'",
             "base-uri 'self'",
-            "form-action 'self'",
+            "form-action 'self' https://checkout.chapa.co https://*.chapa.co",
         ]));
 
         // HSTS only makes sense (and is only honoured) over HTTPS, so it is

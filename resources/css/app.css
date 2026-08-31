@@ -430,8 +430,32 @@ button:focus-visible {
 .landing-hero-title {
     font-size: clamp(2.25rem, 4vw, 3rem);
     font-weight: 700;
-    line-height: 1.15;
+    line-height: 1.18;
     letter-spacing: -0.02em;
+    max-width: 18ch;
+}
+
+/* GSAP Text Reveal (Animmaster line-by-line reveal) */
+.text-reveal-line {
+    overflow: hidden;
+    display: block;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+}
+
+.text-reveal-line-inner {
+    display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .text-reveal-line {
+        overflow: visible !important;
+    }
+
+    .text-reveal-line-inner {
+        transform: none !important;
+        opacity: 1 !important;
+    }
 }
 
 .landing-section-title {
@@ -1591,6 +1615,7 @@ button:focus-visible {
 
     .landing-hero-title {
         font-size: 2.35rem;
+        max-width: 100%;
     }
 
     .landing-search .input-group {

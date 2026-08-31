@@ -37,7 +37,14 @@ class PaymentController extends Controller
         }
 
         if ($result['confirmed']) {
-            $notifications->createForUserAndAdministrators($result['booking']->tourist?->user, 'payment_success', 'Payment confirmed', 'Your payment for booking #'.$result['booking']->booking_id.' was verified and the booking is confirmed.');
+            $notifications->createForUserAndAdministrators(
+                $result['booking']->tourist?->user,
+                'payment_success',
+                'Payment confirmed',
+                'Your payment for booking #'.$result['booking']->booking_id.' was verified and the booking is confirmed.',
+                null,
+                route('tourist.reservations.show', $result['booking']),
+            );
         }
 
         if ($request->user() && (int) $result['booking']->tourist?->user?->user_id === (int) $request->user()->user_id) {
@@ -67,7 +74,14 @@ class PaymentController extends Controller
         }
 
         if ($result['confirmed']) {
-            $notifications->createForUserAndAdministrators($result['booking']->tourist?->user, 'payment_success', 'Payment confirmed', 'Your payment for booking #'.$result['booking']->booking_id.' was verified and the booking is confirmed.');
+            $notifications->createForUserAndAdministrators(
+                $result['booking']->tourist?->user,
+                'payment_success',
+                'Payment confirmed',
+                'Your payment for booking #'.$result['booking']->booking_id.' was verified and the booking is confirmed.',
+                null,
+                route('tourist.reservations.show', $result['booking']),
+            );
         }
 
         return response(['message' => 'Webhook processed.'], 200);

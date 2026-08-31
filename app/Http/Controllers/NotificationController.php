@@ -24,6 +24,17 @@ class NotificationController extends Controller
         return back()->with('success', 'Notification marked as read.');
     }
 
+    public function navigate(Request $request, Notification $notification): RedirectResponse
+    {
+        abort_unless((int) $notification->user_id === (int) $request->user()->user_id, 404);
+
+        if (! $notification->read_status) {
+            $notification->update(['read_status' => true]);
+        }
+
+        return redirect()->to($notification->target_url);
+    }
+
     public function markAllRead(Request $request): RedirectResponse
     {
         $request->user()->notifications()->where('read_status', false)->update(['read_status' => true]);

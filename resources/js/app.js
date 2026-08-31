@@ -1,5 +1,6 @@
 import './bootstrap';
 import 'bootstrap';
+import { initHeroTextReveal } from './animations/text-reveal';
 
 // Theme Toggle (Dark / Light Mode)
 function initThemeToggle() {
@@ -106,5 +107,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.setAppLanguage(savedLang);
     }
 
+    initHeroTextReveal();
     void initEnhancements();
 });

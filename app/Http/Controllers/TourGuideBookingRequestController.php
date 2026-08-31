@@ -103,7 +103,14 @@ class TourGuideBookingRequestController extends Controller
             return back()->with('error', $exception->getMessage());
         }
 
-        $notifications->createForUserAndAdministrators($booking->fresh('tourist')->tourist?->user, 'booking_accepted', 'Tour guide request accepted', 'Your tour guide booking request was accepted.');
+        $notifications->createForUserAndAdministrators(
+            $booking->fresh('tourist')->tourist?->user,
+            'booking_accepted',
+            'Tour guide request accepted',
+            'Your tour guide booking request was accepted.',
+            null,
+            route('tourist.reservations.show', $booking),
+        );
 
         return back()->with('success', 'Booking request accepted.');
     }
@@ -130,7 +137,14 @@ class TourGuideBookingRequestController extends Controller
             return back()->with('error', $exception->getMessage());
         }
 
-        $notifications->createForUserAndAdministrators($booking->fresh('tourist')->tourist?->user, 'booking_rejected', 'Tour guide request rejected', 'Your tour guide booking request was rejected.');
+        $notifications->createForUserAndAdministrators(
+            $booking->fresh('tourist')->tourist?->user,
+            'booking_rejected',
+            'Tour guide request rejected',
+            'Your tour guide booking request was rejected.',
+            null,
+            route('tourist.reservations.show', $booking),
+        );
 
         return back()->with('success', 'Booking request rejected.');
     }
